@@ -7,13 +7,7 @@
  * …and overwrite this file.
  */
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface Database {
   public: {
@@ -93,9 +87,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
-        Update: Partial<
-          Database['public']['Tables']['news_articles']['Insert']
-        >;
+        Update: Partial<Database['public']['Tables']['news_articles']['Insert']>;
         Relationships: [
           {
             foreignKeyName: 'news_articles_author_id_fkey';
@@ -115,9 +107,7 @@ export interface Database {
           article_id: string;
           tag_slug: string;
         };
-        Update: Partial<
-          Database['public']['Tables']['news_article_tags']['Insert']
-        >;
+        Update: Partial<Database['public']['Tables']['news_article_tags']['Insert']>;
         Relationships: [
           {
             foreignKeyName: 'news_article_tags_article_id_fkey';
@@ -159,9 +149,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
-        Update: Partial<
-          Database['public']['Tables']['monthly_reviews']['Insert']
-        >;
+        Update: Partial<Database['public']['Tables']['monthly_reviews']['Insert']>;
         Relationships: [];
       };
 
@@ -176,9 +164,7 @@ export interface Database {
           article_id: string;
           position?: number;
         };
-        Update: Partial<
-          Database['public']['Tables']['monthly_review_articles']['Insert']
-        >;
+        Update: Partial<Database['public']['Tables']['monthly_review_articles']['Insert']>;
         Relationships: [
           {
             foreignKeyName: 'monthly_review_articles_review_id_fkey';
@@ -201,12 +187,7 @@ export interface Database {
     Functions: { [_ in never]: never };
 
     Enums: {
-      news_category:
-        | 'announcement'
-        | 'product'
-        | 'ecosystem'
-        | 'engineering'
-        | 'community';
+      news_category: 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
       news_status: 'draft' | 'published' | 'archived';
     };
 

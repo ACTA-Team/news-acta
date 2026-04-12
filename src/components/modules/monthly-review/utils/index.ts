@@ -3,10 +3,7 @@
  */
 
 /** "2026-03" -> "March 2026" */
-export function formatPeriodLabel(
-  period: string,
-  locale: string = 'en-US',
-): string {
+export function formatPeriodLabel(period: string, locale: string = 'en-US'): string {
   const [yearStr, monthStr] = period.split('-');
   const year = Number(yearStr);
   const month = Number(monthStr);

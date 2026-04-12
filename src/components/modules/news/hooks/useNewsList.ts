@@ -33,7 +33,7 @@ export function useNewsList({
   const supabaseRef = useRef(createClient());
   const [data, setData] = useState<NewsListResponse | null>(initialData ?? null);
   const [filters, setFiltersState] = useState<NewsListFilters>(
-    initialFilters ?? { page: 1, pageSize: NEWS_DEFAULT_PAGE_SIZE },
+    initialFilters ?? { page: 1, pageSize: NEWS_DEFAULT_PAGE_SIZE }
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -62,13 +62,13 @@ export function useNewsList({
       setFiltersState(next);
       void load(next);
     },
-    [load],
+    [load]
   );
 
   const refresh = useCallback(() => load(filters), [load, filters]);
 
   return useMemo(
     () => ({ data, filters, isLoading, error, setFilters, refresh }),
-    [data, filters, isLoading, error, setFilters, refresh],
+    [data, filters, isLoading, error, setFilters, refresh]
   );
 }

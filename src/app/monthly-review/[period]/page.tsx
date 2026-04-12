@@ -15,9 +15,7 @@ interface PageProps {
   params: Promise<{ period: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { period } = await params;
   if (!MONTHLY_REVIEW_PERIOD_REGEX.test(period)) {
     return buildMetadata({

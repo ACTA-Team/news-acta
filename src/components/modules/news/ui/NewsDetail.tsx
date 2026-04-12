@@ -1,8 +1,5 @@
 import type { NewsDetailProps } from '@/@types/news';
-import {
-  formatPublishedDate,
-  getCategoryLabel,
-} from '@/components/modules/news/utils';
+import { formatPublishedDate, getCategoryLabel } from '@/components/modules/news/utils';
 
 /**
  * News article detail view. Server Component.
@@ -14,9 +11,7 @@ export function NewsDetail({ article }: NewsDetailProps) {
       <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-zinc-500">
         <span>{getCategoryLabel(article.category)}</span>
         <span aria-hidden>·</span>
-        <time dateTime={article.publishedAt}>
-          {formatPublishedDate(article.publishedAt)}
-        </time>
+        <time dateTime={article.publishedAt}>{formatPublishedDate(article.publishedAt)}</time>
         <span aria-hidden>·</span>
         <span>{article.readingTimeMinutes} min read</span>
       </div>
@@ -25,9 +20,7 @@ export function NewsDetail({ article }: NewsDetailProps) {
         {article.title}
       </h1>
 
-      <p className="text-lg text-zinc-600 dark:text-zinc-400">
-        {article.summary}
-      </p>
+      <p className="text-lg text-zinc-600 dark:text-zinc-400">{article.summary}</p>
 
       <div className="flex items-center gap-3 border-y border-zinc-200 py-4 text-sm dark:border-zinc-800">
         <div className="flex flex-col">

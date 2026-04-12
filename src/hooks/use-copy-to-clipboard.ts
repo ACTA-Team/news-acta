@@ -20,7 +20,7 @@ export function useCopyToClipboard(resetMs: number = 2000) {
         return false;
       }
     },
-    [resetMs],
+    [resetMs]
   );
 
   return { copied, copy };

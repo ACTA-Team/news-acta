@@ -9,9 +9,7 @@ interface UseMonthlyReviewsArgs {
   initialData?: MonthlyReviewListItem[];
 }
 
-export function useMonthlyReviews({
-  initialData,
-}: UseMonthlyReviewsArgs = {}) {
+export function useMonthlyReviews({ initialData }: UseMonthlyReviewsArgs = {}) {
   const supabaseRef = useRef(createClient());
   const [data, setData] = useState<MonthlyReviewListItem[]>(initialData ?? []);
   const [isLoading, setIsLoading] = useState(false);

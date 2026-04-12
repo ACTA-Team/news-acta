@@ -25,12 +25,7 @@ function withUtm(url: string, platform: SharePlatform): string {
   return u.toString();
 }
 
-export function buildXShareUrl({
-  url,
-  title,
-  hashtags,
-  via,
-}: ShareTarget): string {
+export function buildXShareUrl({ url, title, hashtags, via }: ShareTarget): string {
   const tracked = withUtm(url, 'x');
   const params = new URLSearchParams({ text: title, url: tracked });
   if (hashtags?.length) params.set('hashtags', hashtags.join(','));

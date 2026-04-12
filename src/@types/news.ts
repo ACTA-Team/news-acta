@@ -6,12 +6,7 @@
  * UI consumes types from this file, not the other way around.
  */
 
-export type NewsCategory =
-  | 'announcement'
-  | 'product'
-  | 'ecosystem'
-  | 'engineering'
-  | 'community';
+export type NewsCategory = 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
 
 export type NewsStatus = 'draft' | 'published' | 'archived';
 

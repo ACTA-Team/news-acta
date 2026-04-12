@@ -49,9 +49,7 @@ export function buildMetadata({
       description: resolvedDescription,
       images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
       locale: siteConfig.locale,
-      ...(type === 'article'
-        ? { publishedTime, modifiedTime, authors, tags }
-        : {}),
+      ...(type === 'article' ? { publishedTime, modifiedTime, authors, tags } : {}),
     },
     twitter: {
       card: 'summary_large_image',

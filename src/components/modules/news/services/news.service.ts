@@ -1,8 +1,4 @@
-import type {
-  NewsArticle,
-  NewsListFilters,
-  NewsListResponse,
-} from '@/@types/news';
+import type { NewsArticle, NewsListFilters, NewsListResponse } from '@/@types/news';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
 import { NEWS_DEFAULT_PAGE_SIZE } from '@/components/modules/news/constants';
 
@@ -70,7 +66,7 @@ function mapArticle(row: ArticleRowWithRelations): NewsArticle {
 
 export async function fetchNewsList(
   supabase: TypedSupabaseClient,
-  filters: NewsListFilters = {},
+  filters: NewsListFilters = {}
 ): Promise<NewsListResponse> {
   const page = filters.page ?? 1;
   const pageSize = filters.pageSize ?? NEWS_DEFAULT_PAGE_SIZE;
@@ -100,10 +96,7 @@ export async function fetchNewsList(
     // Filter by tag via the join table. Inner join forces the match.
     const tagQuery = supabase
       .from('news_articles')
-      .select(
-        `${ARTICLE_SELECT}, news_article_tags!inner(tag_slug)`,
-        { count: 'exact' },
-      )
+      .select(`${ARTICLE_SELECT}, news_article_tags!inner(tag_slug)`, { count: 'exact' })
       .eq('status', 'published')
       .eq('news_article_tags.tag_slug', filters.tag)
       .order('published_at', { ascending: false })
@@ -136,7 +129,7 @@ export async function fetchNewsList(
 
 export async function fetchNewsBySlug(
   supabase: TypedSupabaseClient,
-  slug: string,
+  slug: string
 ): Promise<NewsArticle | null> {
   const { data, error } = await supabase
     .from('news_articles')

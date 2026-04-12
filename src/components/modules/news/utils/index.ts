@@ -11,10 +11,7 @@ export function getCategoryLabel(category: NewsCategory): string {
   return NEWS_CATEGORIES.find((c) => c.value === category)?.label ?? category;
 }
 
-export function formatPublishedDate(
-  isoDate: string,
-  locale: string = 'en-US',
-): string {
+export function formatPublishedDate(isoDate: string, locale: string = 'en-US'): string {
   const date = new Date(isoDate);
   if (Number.isNaN(date.getTime())) return isoDate;
   return date.toLocaleDateString(locale, {
@@ -32,11 +29,10 @@ export function estimateReadingTime(content: string): number {
 
 export function sortArticlesByDate(
   articles: NewsArticle[],
-  direction: 'asc' | 'desc' = 'desc',
+  direction: 'asc' | 'desc' = 'desc'
 ): NewsArticle[] {
   return [...articles].sort((a, b) => {
-    const diff =
-      new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
+    const diff = new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
     return direction === 'asc' ? diff : -diff;
   });
 }

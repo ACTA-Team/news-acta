@@ -19,12 +19,7 @@ interface ShareButtonsProps {
  * Share button row. Client Component because it uses clipboard + local state.
  * Content-agnostic: it takes URL and title via props.
  */
-export function ShareButtons({
-  url,
-  title,
-  description,
-  hashtags,
-}: ShareButtonsProps) {
+export function ShareButtons({ url, title, description, hashtags }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const target = {
@@ -47,9 +42,7 @@ export function ShareButtons({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="mr-2 text-xs font-medium uppercase tracking-wider text-zinc-500">
-        Share
-      </span>
+      <span className="mr-2 text-xs font-medium uppercase tracking-wider text-zinc-500">Share</span>
 
       <a
         href={buildXShareUrl(target)}

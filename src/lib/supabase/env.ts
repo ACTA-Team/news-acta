@@ -10,7 +10,7 @@ function readEnv(key: string): string {
   if (!value || value.length === 0) {
     throw new Error(
       `Missing required environment variable: ${key}. ` +
-        `Check .env.local or your deployment settings.`,
+        `Check .env.local or your deployment settings.`
     );
   }
   return value;

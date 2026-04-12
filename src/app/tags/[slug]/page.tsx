@@ -10,9 +10,7 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
   const tag = await fetchTagBySlug(supabase, slug);
@@ -39,15 +37,10 @@ export default async function TagPage({ params }: PageProps) {
           #{tag.label}
         </h1>
         {tag.description ? (
-          <p className="max-w-2xl text-zinc-600 dark:text-zinc-400">
-            {tag.description}
-          </p>
+          <p className="max-w-2xl text-zinc-600 dark:text-zinc-400">{tag.description}</p>
         ) : null}
       </header>
-      <NewsList
-        initialData={initialData}
-        initialFilters={{ tag: slug, page: 1 }}
-      />
+      <NewsList initialData={initialData} initialFilters={{ tag: slug, page: 1 }} />
     </Container>
   );
 }

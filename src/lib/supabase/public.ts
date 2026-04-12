@@ -13,11 +13,7 @@ import { supabaseEnv } from '@/lib/supabase/env';
  * Do NOT use for user-specific queries — it has no session.
  */
 export function createPublicClient(): TypedSupabaseClient {
-  return createSupabaseClient<Database>(
-    supabaseEnv.url,
-    supabaseEnv.anonKey,
-    {
-      auth: { persistSession: false, autoRefreshToken: false },
-    },
-  );
+  return createSupabaseClient<Database>(supabaseEnv.url, supabaseEnv.anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }

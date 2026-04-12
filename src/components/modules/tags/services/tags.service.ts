@@ -12,9 +12,7 @@ function mapTag(row: TagRow, postCount?: number): Tag {
   };
 }
 
-export async function fetchTags(
-  supabase: TypedSupabaseClient,
-): Promise<Tag[]> {
+export async function fetchTags(supabase: TypedSupabaseClient): Promise<Tag[]> {
   const { data, error } = await supabase
     .from('tags')
     .select('*')
@@ -26,13 +24,9 @@ export async function fetchTags(
 
 export async function fetchTagBySlug(
   supabase: TypedSupabaseClient,
-  slug: string,
+  slug: string
 ): Promise<Tag | null> {
-  const { data, error } = await supabase
-    .from('tags')
-    .select('*')
-    .eq('slug', slug)
-    .maybeSingle();
+  const { data, error } = await supabase.from('tags').select('*').eq('slug', slug).maybeSingle();
 
   if (error) throw error;
   if (!data) return null;

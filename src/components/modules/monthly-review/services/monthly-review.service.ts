@@ -15,7 +15,10 @@ type ReviewRow = Database['public']['Tables']['monthly_reviews']['Row'];
 type ArticleRow = Database['public']['Tables']['news_articles']['Row'];
 
 type ReviewRowWithArticles = ReviewRow & {
-  featured: { position: number; article: Pick<ArticleRow, 'id' | 'slug' | 'title' | 'summary'> | null }[];
+  featured: {
+    position: number;
+    article: Pick<ArticleRow, 'id' | 'slug' | 'title' | 'summary'> | null;
+  }[];
 };
 
 const REVIEW_LIST_SELECT = `
@@ -39,7 +42,9 @@ const REVIEW_DETAIL_SELECT = `
   )
 ` as const;
 
-function mapListItem(row: Pick<ReviewRow, 'id' | 'period' | 'title' | 'summary' | 'published_at'>): MonthlyReviewListItem {
+function mapListItem(
+  row: Pick<ReviewRow, 'id' | 'period' | 'title' | 'summary' | 'published_at'>
+): MonthlyReviewListItem {
   return {
     id: row.id,
     period: row.period,
@@ -75,7 +80,7 @@ function mapDetail(row: ReviewRowWithArticles): MonthlyReview {
 }
 
 export async function fetchMonthlyReviews(
-  supabase: TypedSupabaseClient,
+  supabase: TypedSupabaseClient
 ): Promise<MonthlyReviewListItem[]> {
   const { data, error } = await supabase
     .from('monthly_reviews')
@@ -88,7 +93,7 @@ export async function fetchMonthlyReviews(
 
 export async function fetchMonthlyReviewByPeriod(
   supabase: TypedSupabaseClient,
-  period: string,
+  period: string
 ): Promise<MonthlyReview | null> {
   const { data, error } = await supabase
     .from('monthly_reviews')

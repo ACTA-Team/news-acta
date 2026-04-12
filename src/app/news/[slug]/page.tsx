@@ -12,9 +12,7 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
   const article = await fetchNewsBySlug(supabase, slug);
@@ -51,9 +49,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
           description={article.summary}
           hashtags={['ACTA', ...article.tags]}
         />
-        <TagCloud
-          tags={article.tags.map((t) => ({ slug: t, label: t }))}
-        />
+        <TagCloud tags={article.tags.map((t) => ({ slug: t, label: t }))} />
       </div>
     </Container>
   );

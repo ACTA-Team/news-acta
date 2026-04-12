@@ -9,9 +9,7 @@ export function AuthorCard({ author, compact }: AuthorCardProps) {
     >
       <div className="h-12 w-12 shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-800" />
       <div className="flex flex-col">
-        <span className="font-medium text-zinc-900 dark:text-zinc-100">
-          {author.name}
-        </span>
+        <span className="font-medium text-zinc-900 dark:text-zinc-100">{author.name}</span>
         {!compact && author.role ? (
           <span className="text-sm text-zinc-500">{author.role}</span>
         ) : null}

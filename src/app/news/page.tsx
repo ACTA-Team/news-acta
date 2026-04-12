@@ -1,8 +1,4 @@
-import {
-  NewsHeader,
-  NewsList,
-  fetchNewsList,
-} from '@/components/modules/news';
+import { NewsHeader, NewsList, fetchNewsList } from '@/components/modules/news';
 import { createClient } from '@/lib/supabase/server';
 import { Container } from '@/layouts';
 import { buildMetadata } from '@/lib/seo';

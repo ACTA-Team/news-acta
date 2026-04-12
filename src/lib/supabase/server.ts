@@ -16,25 +16,21 @@ import { supabaseEnv } from '@/lib/supabase/env';
 export async function createClient(): Promise<TypedSupabaseClient> {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(
-    supabaseEnv.url,
-    supabaseEnv.anonKey,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // It is safe to ignore: middleware keeps the session fresh.
-          }
-        },
+  return createServerClient<Database>(supabaseEnv.url, supabaseEnv.anonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // The `setAll` method was called from a Server Component.
+          // It is safe to ignore: middleware keeps the session fresh.
+        }
       },
     },
-  );
+  });
 }

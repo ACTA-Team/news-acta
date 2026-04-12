@@ -16,10 +16,7 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
   };
 
   return (
-    <nav
-      aria-label="Filter news by category"
-      className="flex flex-wrap items-center gap-2"
-    >
+    <nav aria-label="Filter news by category" className="flex flex-wrap items-center gap-2">
       <FilterChip active={!active} onClick={() => handleSelect(undefined)}>
         All
       </FilterChip>
@@ -51,7 +48,7 @@ function FilterChip({ active, onClick, children }: FilterChipProps) {
         'rounded-full border px-3 py-1 text-sm transition-colors',
         active
           ? 'border-zinc-900 bg-zinc-900 text-zinc-50 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
-          : 'border-zinc-200 text-zinc-700 hover:border-zinc-300 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-700',
+          : 'border-zinc-200 text-zinc-700 hover:border-zinc-300 dark:border-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-700'
       )}
     >
       {children}

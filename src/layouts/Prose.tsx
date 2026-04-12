@@ -5,11 +5,7 @@ import { cn } from '@/lib/utils';
  * Centralizes widths, fonts and rhythm so every post looks the same
  * without depending on the `@tailwindcss/typography` plugin.
  */
-export function Prose({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function Prose({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
@@ -22,7 +18,7 @@ export function Prose({
         '[&>blockquote]:mt-5 [&>blockquote]:border-l-2 [&>blockquote]:border-zinc-300 [&>blockquote]:pl-4 [&>blockquote]:italic',
         '[&>pre]:mt-5 [&>pre]:rounded-lg [&>pre]:bg-zinc-900 [&>pre]:p-4 [&>pre]:text-zinc-100',
         '[&>a]:underline [&>a]:decoration-zinc-400 [&>a]:underline-offset-2 hover:[&>a]:decoration-zinc-700',
-        className,
+        className
       )}
       {...props}
     >

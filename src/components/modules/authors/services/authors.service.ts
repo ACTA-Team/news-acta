@@ -26,9 +26,7 @@ function mapAuthor(row: AuthorRow): Author {
   };
 }
 
-export async function fetchAuthors(
-  supabase: TypedSupabaseClient,
-): Promise<Author[]> {
+export async function fetchAuthors(supabase: TypedSupabaseClient): Promise<Author[]> {
   const { data, error } = await supabase
     .from('authors')
     .select('*')
@@ -40,13 +38,9 @@ export async function fetchAuthors(
 
 export async function fetchAuthorBySlug(
   supabase: TypedSupabaseClient,
-  slug: string,
+  slug: string
 ): Promise<Author | null> {
-  const { data, error } = await supabase
-    .from('authors')
-    .select('*')
-    .eq('slug', slug)
-    .maybeSingle();
+  const { data, error } = await supabase.from('authors').select('*').eq('slug', slug).maybeSingle();
 
   if (error) throw error;
   if (!data) return null;

@@ -24,12 +24,7 @@ export { useNewsDetail } from './hooks/useNewsDetail';
 export { fetchNewsList, fetchNewsBySlug } from './services/news.service';
 
 // Constants
-export {
-  NEWS_CATEGORIES,
-  NEWS_DEFAULT_PAGE_SIZE,
-  NEWS_ROUTES,
-  NEWS_QUERY_KEYS,
-} from './constants';
+export { NEWS_CATEGORIES, NEWS_DEFAULT_PAGE_SIZE, NEWS_ROUTES, NEWS_QUERY_KEYS } from './constants';
 
 // Utils
 export {

@@ -1,10 +1,7 @@
 import Link from 'next/link';
 import type { NewsCardProps } from '@/@types/news';
 import { NEWS_ROUTES } from '@/components/modules/news/constants';
-import {
-  formatPublishedDate,
-  getCategoryLabel,
-} from '@/components/modules/news/utils';
+import { formatPublishedDate, getCategoryLabel } from '@/components/modules/news/utils';
 
 /**
  * Presentational card for a news article. Server Component.
@@ -18,9 +15,7 @@ export function NewsCard({ article }: NewsCardProps) {
           {getCategoryLabel(article.category)}
         </span>
         <span aria-hidden>·</span>
-        <time dateTime={article.publishedAt}>
-          {formatPublishedDate(article.publishedAt)}
-        </time>
+        <time dateTime={article.publishedAt}>{formatPublishedDate(article.publishedAt)}</time>
         <span aria-hidden>·</span>
         <span>{article.readingTimeMinutes} min read</span>
       </div>
@@ -32,14 +27,10 @@ export function NewsCard({ article }: NewsCardProps) {
         {article.title}
       </Link>
 
-      <p className="line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400">
-        {article.summary}
-      </p>
+      <p className="line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400">{article.summary}</p>
 
       <footer className="mt-auto flex items-center gap-2 pt-3 text-xs text-zinc-500">
-        <span className="font-medium text-zinc-700 dark:text-zinc-300">
-          {article.author.name}
-        </span>
+        <span className="font-medium text-zinc-700 dark:text-zinc-300">{article.author.name}</span>
         {article.author.role ? <span>· {article.author.role}</span> : null}
       </footer>
     </article>

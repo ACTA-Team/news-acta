@@ -11,9 +11,7 @@ export const siteConfig = {
   shortName: 'ACTA',
   description:
     'Official ACTA blog: announcements, monthly reviews, product updates and strategic articles from the ecosystem.',
-  url:
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ??
-    'https://news.acta.build',
+  url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://news.acta.build',
   locale: 'en-US',
   defaultOgImage: '/og/default.png',
 

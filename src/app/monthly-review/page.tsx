@@ -1,7 +1,4 @@
-import {
-  MonthlyReviewList,
-  fetchMonthlyReviews,
-} from '@/components/modules/monthly-review';
+import { MonthlyReviewList, fetchMonthlyReviews } from '@/components/modules/monthly-review';
 import { createClient } from '@/lib/supabase/server';
 import { Container } from '@/layouts';
 import { buildMetadata } from '@/lib/seo';

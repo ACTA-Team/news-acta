@@ -30,57 +30,54 @@ export default async function OgImage({ params }: Params) {
   const category = article?.category ?? 'ACTA News';
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: 80,
+        background: 'linear-gradient(135deg, #0a0a0a 0%, #18181b 50%, #27272a 100%)',
+        color: 'white',
+        fontFamily: 'sans-serif',
+      }}
+    >
       <div
         style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: 80,
-          background:
-            'linear-gradient(135deg, #0a0a0a 0%, #18181b 50%, #27272a 100%)',
-          color: 'white',
-          fontFamily: 'sans-serif',
+          fontSize: 28,
+          textTransform: 'uppercase',
+          letterSpacing: 6,
+          opacity: 0.7,
         }}
       >
-        <div
-          style={{
-            fontSize: 28,
-            textTransform: 'uppercase',
-            letterSpacing: 6,
-            opacity: 0.7,
-          }}
-        >
-          {category}
-        </div>
-
-        <div
-          style={{
-            fontSize: 72,
-            fontWeight: 700,
-            lineHeight: 1.1,
-            maxWidth: '90%',
-          }}
-        >
-          {title}
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: 24,
-            opacity: 0.8,
-          }}
-        >
-          <span>{siteConfig.name}</span>
-          <span>{siteConfig.social.x.handle}</span>
-        </div>
+        {category}
       </div>
-    ),
-    { ...size },
+
+      <div
+        style={{
+          fontSize: 72,
+          fontWeight: 700,
+          lineHeight: 1.1,
+          maxWidth: '90%',
+        }}
+      >
+        {title}
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: 24,
+          opacity: 0.8,
+        }}
+      >
+        <span>{siteConfig.name}</span>
+        <span>{siteConfig.social.x.handle}</span>
+      </div>
+    </div>,
+    { ...size }
   );
 }
