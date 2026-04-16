@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:efferd.com)",
+      "Bash(find .eslintrc* .prettierrc* -type f)",
+      "Bash(ls -la .eslintrc*)"
+    ]
+  }
+}
