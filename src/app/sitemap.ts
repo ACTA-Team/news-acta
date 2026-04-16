@@ -12,18 +12,6 @@ import { absoluteUrl } from '@/lib/url';
 export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createClient();
-
-  const [news, reviews] = await Promise.all([
-    fetchNewsList(supabase, { page: 1, pageSize: 200 }).catch(() => ({
-      items: [],
-      total: 0,
-      page: 1,
-      pageSize: 200,
-    })),
-    fetchMonthlyReviews(supabase).catch(() => []),
-  ]);
-
   const staticEntries: MetadataRoute.Sitemap = [
     { url: siteConfig.url, lastModified: new Date(), priority: 1 },
     { url: absoluteUrl('/news'), lastModified: new Date(), priority: 0.9 },
@@ -34,6 +22,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     { url: absoluteUrl('/authors'), lastModified: new Date(), priority: 0.5 },
   ];
+
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    return staticEntries;
+  }
+
+  const [news, reviews] = await Promise.all([
+    fetchNewsList(supabase, { page: 1, pageSize: 200 }).catch(() => ({
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: 200,
+    })),
+    fetchMonthlyReviews(supabase).catch(() => []),
+  ]);
 
   const newsEntries: MetadataRoute.Sitemap = news.items.map((article) => ({
     url: absoluteUrl(`/news/${article.slug}`),

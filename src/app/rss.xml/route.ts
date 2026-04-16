@@ -19,11 +19,16 @@ function escapeXml(value: string): string {
 }
 
 export async function GET() {
-  const supabase = await createClient();
-  const { items } = await fetchNewsList(supabase, {
-    page: 1,
-    pageSize: 30,
-  }).catch(() => ({ items: [], total: 0, page: 1, pageSize: 30 }));
+  let items: Awaited<ReturnType<typeof fetchNewsList>>['items'] = [];
+  try {
+    const supabase = await createClient();
+    ({ items } = await fetchNewsList(supabase, {
+      page: 1,
+      pageSize: 30,
+    }).catch(() => ({ items: [], total: 0, page: 1, pageSize: 30 })));
+  } catch {
+    items = [];
+  }
 
   const rssItems = items
     .map((article) => {
