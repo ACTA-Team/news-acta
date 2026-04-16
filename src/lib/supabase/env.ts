@@ -16,7 +16,16 @@ function readEnv(key: string): string {
   return value;
 }
 
+/**
+ * Lazy getters so the module can be imported during `next build` without
+ * requiring env vars to be present. Values are only read when actually
+ * accessed (i.e., at request time when a Supabase client is created).
+ */
 export const supabaseEnv = {
-  url: readEnv('NEXT_PUBLIC_SUPABASE_URL'),
-  anonKey: readEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+  get url() {
+    return readEnv('NEXT_PUBLIC_SUPABASE_URL');
+  },
+  get anonKey() {
+    return readEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  },
 } as const;
