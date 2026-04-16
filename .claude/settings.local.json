@@ -3,7 +3,13 @@
     "allow": [
       "WebFetch(domain:efferd.com)",
       "Bash(find .eslintrc* .prettierrc* -type f)",
-      "Bash(ls -la .eslintrc*)"
+      "Bash(ls -la .eslintrc*)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(npx prettier *)",
+      "Bash(gh run *)",
+      "Bash(gh api *)",
+      "Bash(NEXT_PUBLIC_SUPABASE_URL=\"\" NEXT_PUBLIC_SUPABASE_ANON_KEY=\"\" npm run build)"
     ]
   }
 }
