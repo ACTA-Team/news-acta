@@ -18,7 +18,26 @@ function readEnv(key: string): string {
 
 function hasEnv(key: string): boolean {
   const value = process.env[key];
-  return typeof value === 'string' && value.length > 0;
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function looksLikePlaceholder(value: string): boolean {
+  return value.includes('<') || value.includes('>') || value.includes('your-');
+}
+
+function hasValidSupabaseUrl(): boolean {
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (typeof value !== 'string') return false;
+
+  const normalized = value.trim();
+  if (normalized.length === 0 || looksLikePlaceholder(normalized)) return false;
+
+  try {
+    const parsed = new URL(normalized);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -36,5 +55,9 @@ export const supabaseEnv = {
 } as const;
 
 export function hasSupabasePublicEnv(): boolean {
-  return hasEnv('NEXT_PUBLIC_SUPABASE_URL') && hasEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const hasValidAnonKey =
+    typeof anonKey === 'string' && anonKey.trim().length > 0 && !looksLikePlaceholder(anonKey);
+
+  return hasValidSupabaseUrl() && hasValidAnonKey && hasEnv('NEXT_PUBLIC_SUPABASE_URL');
 }
