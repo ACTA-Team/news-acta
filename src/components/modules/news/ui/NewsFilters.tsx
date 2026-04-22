@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import type { NewsFiltersProps, NewsCategory } from '@/@types/news';
 import { NEWS_CATEGORIES } from '@/components/modules/news/constants';
@@ -14,32 +14,50 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
   const active = value.category;
   const [searchTerm, setSearchTerm] = useState(value.search ?? '');
   const hasSearch = searchTerm.trim().length > 0;
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestValueRef = useRef(value);
 
   useEffect(() => {
-    setSearchTerm(value.search ?? '');
-  }, [value.search]);
+    latestValueRef.current = value;
+  }, [value]);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      const nextSearch = searchTerm.trim().length > 0 ? searchTerm : undefined;
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 
-      if (nextSearch === value.search) {
+  const scheduleSearchUpdate = (nextSearch: string | undefined) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      const latest = latestValueRef.current;
+      if (latest.search === nextSearch) {
         return;
       }
 
       onChange({
-        ...value,
+        ...latest,
         search: nextSearch,
         page: 1,
       });
     }, 300);
+  };
 
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [onChange, searchTerm, value]);
+  const handleSearchChange = (nextSearch: string) => {
+    setSearchTerm(nextSearch);
+    scheduleSearchUpdate(nextSearch.trim().length > 0 ? nextSearch : undefined);
+  };
 
   const handleSelect = (next: NewsCategory | undefined) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
     onChange({
       ...value,
       category: next,
@@ -49,6 +67,10 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
   };
 
   const handleClearSearch = () => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
     setSearchTerm('');
     onChange({
       ...value,
@@ -65,7 +87,7 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
           <input
             type="text"
             value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
+            onChange={(event) => handleSearchChange(event.target.value)}
             placeholder="Search articles..."
             className="h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 pr-10 text-sm text-zinc-900 outline-none transition focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-600"
             aria-label="Search articles"
