@@ -16,6 +16,11 @@ function readEnv(key: string): string {
   return value;
 }
 
+function hasEnv(key: string): boolean {
+  const value = process.env[key];
+  return typeof value === 'string' && value.length > 0;
+}
+
 /**
  * Lazy getters so the module can be imported during `next build` without
  * requiring env vars to be present. Values are only read when actually
@@ -29,3 +34,7 @@ export const supabaseEnv = {
     return readEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
   },
 } as const;
+
+export function hasSupabasePublicEnv(): boolean {
+  return hasEnv('NEXT_PUBLIC_SUPABASE_URL') && hasEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+}
