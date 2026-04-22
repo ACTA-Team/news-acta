@@ -1,5 +1,10 @@
 import type { NewsListResponse } from '@/@types/news';
-import { NEWS_DEFAULT_PAGE_SIZE, NewsHeader, NewsList, fetchNewsList } from '@/components/modules/news';
+import {
+  NEWS_DEFAULT_PAGE_SIZE,
+  NewsHeader,
+  NewsList,
+  fetchNewsList,
+} from '@/components/modules/news';
 import { hasSupabasePublicEnv } from '@/lib/supabase/env';
 import { createClient } from '@/lib/supabase/server';
 import { Container } from '@/layouts';
