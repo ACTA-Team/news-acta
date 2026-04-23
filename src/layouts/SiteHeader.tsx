@@ -21,9 +21,7 @@ export function SiteHeader() {
           href="/"
           className="group flex items-center gap-2 text-lg font-bold tracking-tight text-zinc-950 transition-colors hover:text-zinc-700 dark:text-zinc-50 dark:hover:text-zinc-300"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-sm transition-transform group-hover:scale-105">
-            <Sparkles className="h-4 w-4" />
-          </div>
+          
           <span className="hidden sm:block">{siteConfig.name}</span>
           <span className="sm:hidden">{siteConfig.shortName}</span>
         </Link>
@@ -49,11 +47,7 @@ export function SiteHeader() {
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
         >
-          {isMobileMenuOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
       </Container>
 
