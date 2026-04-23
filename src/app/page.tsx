@@ -58,7 +58,8 @@ export default async function HomePage() {
                 Built for stories that move the ACTA ecosystem forward.
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300 sm:text-xl">
-                Official updates, engineering insights, community highlights and monthly reviews from the ACTA network — all in one editorial home.
+                Official updates, engineering insights, community highlights and monthly reviews
+                from the ACTA network — all in one editorial home.
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Link href={NEWS_ROUTES.index} className="w-full sm:w-auto">
@@ -74,11 +75,16 @@ export default async function HomePage() {
 
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-slate-950/30 backdrop-blur-xl">
               <div className="space-y-5">
-                <div className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">Start here</div>
+                <div className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-300">
+                  Start here
+                </div>
                 <div className="space-y-3">
-                  <h2 className="text-3xl font-semibold text-white">Your gateway to ACTA content</h2>
+                  <h2 className="text-3xl font-semibold text-white">
+                    Your gateway to ACTA content
+                  </h2>
                   <p className="text-sm leading-7 text-slate-300">
-                    Discover everything from product announcements to author-led analysis, curated for builders and partners.
+                    Discover everything from product announcements to author-led analysis, curated
+                    for builders and partners.
                   </p>
                 </div>
                 <div className="grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
@@ -101,12 +107,15 @@ export default async function HomePage() {
       <section className="bg-white py-16 dark:bg-zinc-950 dark:text-zinc-100">
         <Container className="space-y-10">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-500">What ACTA News offers</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-500">
+              What ACTA News offers
+            </p>
             <h2 className="mt-4 text-4xl font-semibold tracking-tight text-zinc-950 dark:text-white">
               The editorial hub for every ACTA update.
             </h2>
             <p className="mt-4 text-base leading-7 text-zinc-600 dark:text-zinc-300">
-              Real stories, published once and surfaced everywhere the community needs them — product, protocol, strategy, and community coverage.
+              Real stories, published once and surfaced everywhere the community needs them —
+              product, protocol, strategy, and community coverage.
             </p>
           </div>
 
@@ -121,8 +130,12 @@ export default async function HomePage() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-600 dark:bg-sky-400/10 dark:text-sky-300">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="mt-6 text-xl font-semibold text-zinc-950 dark:text-white">{feature.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">{feature.description}</p>
+                  <h3 className="mt-6 text-xl font-semibold text-zinc-950 dark:text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+                    {feature.description}
+                  </p>
                 </div>
               );
             })}
@@ -134,7 +147,9 @@ export default async function HomePage() {
         <Container className="space-y-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-500">Latest articles</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-500">
+                Latest articles
+              </p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
                 Fresh ACTA stories from the community.
               </h2>
@@ -164,15 +179,21 @@ export default async function HomePage() {
         <section className="bg-zinc-50 py-16 dark:bg-zinc-950">
           <Container className="grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-center">
             <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-500">Monthly review</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-500">
+                Monthly review
+              </p>
               <h2 className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950 dark:text-white">
                 Latest ACTA review and featured highlights.
               </h2>
               <p className="mt-5 text-base leading-7 text-zinc-600 dark:text-zinc-300">
-                Explore the newest monthly recap, which gathers progress updates, ecosystem metrics, and featured stories in one editorial summary.
+                Explore the newest monthly recap, which gathers progress updates, ecosystem metrics,
+                and featured stories in one editorial summary.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href={MONTHLY_REVIEW_ROUTES.detail(latestReview.period)} className="w-full sm:w-auto">
+                <Link
+                  href={MONTHLY_REVIEW_ROUTES.detail(latestReview.period)}
+                  className="w-full sm:w-auto"
+                >
                   <Button size="lg">Read the latest review</Button>
                 </Link>
                 <Link href={MONTHLY_REVIEW_ROUTES.index} className="w-full sm:w-auto">
@@ -191,27 +212,41 @@ export default async function HomePage() {
       <section className="rounded-5xl border border-zinc-200 bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 p-10 text-white shadow-2xl shadow-slate-950/20 dark:border-zinc-700">
         <Container className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-center">
           <div className="space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-400">Ready to explore</p>
-            <h2 className="text-3xl font-semibold tracking-tight text-white">Dive into ACTA News today.</h2>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-400">
+              Ready to explore
+            </p>
+            <h2 className="text-3xl font-semibold tracking-tight text-white">
+              Dive into ACTA News today.
+            </h2>
             <p className="max-w-2xl text-base leading-7 text-slate-300">
-              Jump straight into the stories, monthly reviews, and author voices that shape the ACTA roadmap and community conversation.
+              Jump straight into the stories, monthly reviews, and author voices that shape the ACTA
+              roadmap and community conversation.
             </p>
           </div>
 
           <div className="grid gap-3 rounded-4xl bg-white/5 p-5 shadow-inner shadow-slate-950/30">
-            <Link href={NEWS_ROUTES.index} className="rounded-3xl bg-slate-950/80 px-5 py-4 transition hover:bg-slate-900">
+            <Link
+              href={NEWS_ROUTES.index}
+              className="rounded-3xl bg-slate-950/80 px-5 py-4 transition hover:bg-slate-900"
+            >
               <div className="flex items-center gap-3 text-base font-semibold text-white">
                 <BookOpen className="h-5 w-5" />
                 View all news
               </div>
             </Link>
-            <Link href={MONTHLY_REVIEW_ROUTES.index} className="rounded-3xl bg-slate-950/80 px-5 py-4 transition hover:bg-slate-900">
+            <Link
+              href={MONTHLY_REVIEW_ROUTES.index}
+              className="rounded-3xl bg-slate-950/80 px-5 py-4 transition hover:bg-slate-900"
+            >
               <div className="flex items-center gap-3 text-base font-semibold text-white">
                 <Clock3 className="h-5 w-5" />
                 Review monthly updates
               </div>
             </Link>
-            <Link href="/authors" className="rounded-3xl bg-slate-950/80 px-5 py-4 transition hover:bg-slate-900">
+            <Link
+              href="/authors"
+              className="rounded-3xl bg-slate-950/80 px-5 py-4 transition hover:bg-slate-900"
+            >
               <div className="flex items-center gap-3 text-base font-semibold text-white">
                 <Users className="h-5 w-5" />
                 Meet ACTA authors
