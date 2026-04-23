@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { Container } from '@/layouts/Container';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+
 
 export function SiteHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
