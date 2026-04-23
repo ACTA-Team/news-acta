@@ -5,8 +5,7 @@
  * something is missing so misconfigured deploys fail loud.
  */
 
-function readEnv(key: string): string {
-  const value = process.env[key];
+function assertEnv(value: string | undefined, key: string): string {
   if (!value || value.length === 0) {
     throw new Error(
       `Missing required environment variable: ${key}. ` +
@@ -16,16 +15,7 @@ function readEnv(key: string): string {
   return value;
 }
 
-/**
- * Lazy getters so the module can be imported during `next build` without
- * requiring env vars to be present. Values are only read when actually
- * accessed (i.e., at request time when a Supabase client is created).
- */
 export const supabaseEnv = {
-  get url() {
-    return readEnv('NEXT_PUBLIC_SUPABASE_URL');
-  },
-  get anonKey() {
-    return readEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
-  },
+  url: assertEnv(process.env.NEXT_PUBLIC_SUPABASE_URL, 'NEXT_PUBLIC_SUPABASE_URL'),
+  anonKey: assertEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY'),
 } as const;
