@@ -7,7 +7,6 @@ import { siteConfig } from '@/config/site';
 import { Container } from '@/layouts/Container';
 import { Button } from '@/components/ui/button';
 
-
 export function SiteHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
