@@ -21,7 +21,6 @@ export function SiteHeader() {
           href="/"
           className="group flex items-center gap-2 text-lg font-bold tracking-tight text-zinc-950 transition-colors hover:text-zinc-700 dark:text-zinc-50 dark:hover:text-zinc-300"
         >
-          
           <span className="hidden sm:block">{siteConfig.name}</span>
           <span className="sm:hidden">{siteConfig.shortName}</span>
         </Link>

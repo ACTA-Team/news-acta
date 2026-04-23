@@ -66,7 +66,7 @@ export default async function HomePage() {
                   <Button size="lg">Browse latest stories</Button>
                 </Link>
                 <Link href={MONTHLY_REVIEW_ROUTES.index} className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg">
+                  <Button  size="lg" >
                     Monthly reviews
                   </Button>
                 </Link>
