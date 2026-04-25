@@ -51,8 +51,12 @@ export default function RootLayout({
     <html
       lang={siteConfig.locale}
       className={`${fontSans.variable} ${fontMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="flex min-h-dvh flex-col bg-background text-foreground">
+      <body
+        className="flex min-h-dvh flex-col bg-background text-foreground"
+        suppressHydrationWarning
+      >
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
