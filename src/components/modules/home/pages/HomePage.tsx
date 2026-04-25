@@ -6,7 +6,11 @@ import { Button } from '@/components/ui/Button';
 import { siteConfig } from '@/config/site';
 import { Container } from '@/layouts';
 import { createClient } from '@/lib/supabase/server';
-import { MonthlyReviewCard, MONTHLY_REVIEW_ROUTES, fetchMonthlyReviews } from '@/components/modules/monthly-review';
+import {
+  MonthlyReviewCard,
+  MONTHLY_REVIEW_ROUTES,
+  fetchMonthlyReviews,
+} from '@/components/modules/monthly-review';
 import { NEWS_ROUTES, NewsCard, fetchNewsList } from '@/components/modules/news';
 
 const featureItems = [
@@ -64,7 +68,9 @@ export async function HomePageContent() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/60 bg-muted/50 text-foreground">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-5 text-base font-semibold text-foreground">{feature.title}</h3>
+                    <h3 className="mt-5 text-base font-semibold text-foreground">
+                      {feature.title}
+                    </h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {feature.description}
                     </p>

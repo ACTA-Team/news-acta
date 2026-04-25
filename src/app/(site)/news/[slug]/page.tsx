@@ -1,7 +1,4 @@
-import {
-  generateNewsDetailMetadata,
-  NewsDetailPageContent,
-} from '@/components/modules/news';
+import { generateNewsDetailMetadata, NewsDetailPageContent } from '@/components/modules/news';
 
 export const generateMetadata = generateNewsDetailMetadata;
 
