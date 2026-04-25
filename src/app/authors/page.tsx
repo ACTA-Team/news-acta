@@ -14,8 +14,12 @@ export const metadata = buildMetadata({
 function AuthorsPageHeader() {
   return (
     <header className="border-b border-border/80 pb-8">
-      <p className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">ACTA News</p>
-      <h1 className="mt-2 text-3xl font-medium tracking-tight text-foreground sm:text-4xl">Contributors</h1>
+      <p className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        ACTA News
+      </p>
+      <h1 className="mt-2 text-3xl font-medium tracking-tight text-foreground sm:text-4xl">
+        Contributors
+      </h1>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
         People who publish and co-author stories across the ecosystem.
       </p>
