@@ -1,7 +1,7 @@
 import type { SVGProps } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Rss } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 import { siteConfig } from '@/config/site';
 import { Button } from '@/components/ui/button';
@@ -38,10 +38,31 @@ const footerLinkClass = 'text-muted-foreground transition-colors hover:text-fore
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
-  const social = [
-    { href: siteConfig.social.x.url, label: 'X', icon: XIcon },
-    { href: siteConfig.social.github.url, label: 'GitHub', icon: GitHubIcon },
-    { href: siteConfig.social.instagram.url, label: 'Instagram', icon: InstagramIcon },
+  const socialLinks = [
+    {
+      key: 'website',
+      href: siteConfig.social.website.url,
+      label: 'ACTA — acta.build',
+      node: <Globe className="size-4" strokeWidth={1.5} aria-hidden />,
+    },
+    {
+      key: 'x',
+      href: siteConfig.social.x.url,
+      label: 'X',
+      node: <XIcon className="size-4" aria-hidden />,
+    },
+    {
+      key: 'github',
+      href: siteConfig.social.github.url,
+      label: 'GitHub',
+      node: <GitHubIcon className="size-4" aria-hidden />,
+    },
+    {
+      key: 'instagram',
+      href: siteConfig.social.instagram.url,
+      label: 'Instagram',
+      node: <InstagramIcon className="size-4" aria-hidden />,
+    },
   ] as const;
 
   return (
@@ -68,18 +89,13 @@ export function SiteFooter() {
             <span className="sr-only">{siteConfig.name}</span>
           </Link>
           <div className="flex items-center gap-0.5">
-            {social.map(({ href, label, icon: Icon }) => (
-              <Button key={label} asChild size="icon-sm" variant="ghost">
-                <a href={href} target="_blank" rel="noreferrer" aria-label={label}>
-                  <Icon className="size-4" />
+            {socialLinks.map(({ key, href, label, node }) => (
+              <Button key={key} asChild size="icon-sm" variant="ghost">
+                <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                  {node}
                 </a>
               </Button>
             ))}
-            <Button asChild size="icon-sm" variant="ghost">
-              <a href={siteConfig.rssPath} aria-label="RSS feed">
-                <Rss className="size-4" />
-              </a>
-            </Button>
           </div>
         </div>
 
@@ -92,11 +108,6 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href={siteConfig.rssPath} className={footerLinkClass}>
-                RSS
-              </Link>
-            </li>
           </ul>
         </nav>
 
