@@ -20,7 +20,10 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full">
       {/* Spacer: only the inner shell gets the frosted bar — the outer <header> stays a transparent track */}
       <div
-        className={cn('px-3 transition-[padding] duration-200 ease-out sm:px-4', scrolled && 'pt-1.5')}
+        className={cn(
+          'px-3 transition-[padding] duration-200 ease-out sm:px-4',
+          scrolled && 'pt-1.5'
+        )}
       >
         <div
           className={cn(
@@ -28,7 +31,7 @@ export function SiteHeader() {
             'transition-[background-color,box-shadow,border-color,backdrop-filter] duration-200 ease-out',
             scrolled
               ? 'rounded-2xl border border-border/60 bg-background/85 shadow-sm backdrop-blur-md dark:bg-background/80'
-              : 'rounded-2xl border border-transparent bg-transparent',
+              : 'rounded-2xl border border-transparent bg-transparent'
           )}
         >
           <nav
@@ -55,7 +58,12 @@ export function SiteHeader() {
                   <Link href={item.href}>{item.label}</Link>
                 </Button>
               ))}
-              <Button asChild size="sm" variant="ghost" className="shrink-0 text-[0.8125rem] text-muted-foreground">
+              <Button
+                asChild
+                size="sm"
+                variant="ghost"
+                className="shrink-0 text-[0.8125rem] text-muted-foreground"
+              >
                 <Link href={siteConfig.rssPath}>RSS</Link>
               </Button>
             </div>

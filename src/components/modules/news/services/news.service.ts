@@ -1,7 +1,10 @@
 import type { NewsArticle, NewsListFilters, NewsListResponse } from '@/@types/news';
 import { NEWS_DEFAULT_PAGE_SIZE } from '@/components/modules/news/constants';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
-import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrest-error';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrest-error';
 
 /**
  * Service layer for the `news` module.

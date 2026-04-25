@@ -5,7 +5,10 @@ import type {
   MonthlyReviewMetric,
 } from '@/@types/monthly-review';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
-import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrest-error';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrest-error';
 
 /**
  * Service layer for the `monthly-review` module.

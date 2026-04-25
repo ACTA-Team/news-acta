@@ -44,9 +44,7 @@ export function SiteFooter() {
   ] as const;
 
   return (
-    <footer
-      className={cn('mt-24 w-full border-t border-border/80 bg-background', 'px-4 md:px-6')}
-    >
+    <footer className={cn('mt-24 w-full border-t border-border/80 bg-background', 'px-4 md:px-6')}>
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-lg font-semibold tracking-tight text-foreground">{siteConfig.name}</p>

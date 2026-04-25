@@ -8,9 +8,7 @@ const MISSING_IN_CACHE = 'PGRST205';
 
 function messageLooksLikeMissingSchema(m: string | undefined): boolean {
   if (!m) return false;
-  return (
-    m.includes('Could not find the table') || m.includes('Could not find the relation')
-  );
+  return m.includes('Could not find the table') || m.includes('Could not find the relation');
 }
 
 export function isMissingSchemaCacheError(
@@ -28,6 +26,6 @@ export function warnMissingMigrationsOnce(): void {
   if (g.__actaSchemaWarned) return;
   g.__actaSchemaWarned = true;
   console.warn(
-    '[acta-news] Supabase: public schema tables are missing. Apply supabase/migrations/0001_initial_schema.sql in the Supabase SQL editor, or run: npx supabase link && npx supabase db push',
+    '[acta-news] Supabase: public schema tables are missing. Apply supabase/migrations/0001_initial_schema.sql in the Supabase SQL editor, or run: npx supabase link && npx supabase db push'
   );
 }

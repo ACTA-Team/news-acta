@@ -1,6 +1,9 @@
 import type { Tag } from '@/@types/tag';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
-import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrest-error';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrest-error';
 
 type TagRow = Database['public']['Tables']['tags']['Row'];
 

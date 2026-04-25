@@ -75,7 +75,9 @@ export default async function HomePage() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/60 bg-muted/50 text-foreground">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-5 text-base font-semibold text-foreground">{feature.title}</h3>
+                    <h3 className="mt-5 text-base font-semibold text-foreground">
+                      {feature.title}
+                    </h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {feature.description}
                     </p>
@@ -132,7 +134,9 @@ export default async function HomePage() {
                 </p>
                 <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:gap-3">
                   <Button asChild>
-                    <Link href={MONTHLY_REVIEW_ROUTES.detail(latestReview.period)}>Latest issue</Link>
+                    <Link href={MONTHLY_REVIEW_ROUTES.detail(latestReview.period)}>
+                      Latest issue
+                    </Link>
                   </Button>
                   <Button asChild variant="outline">
                     <Link href={MONTHLY_REVIEW_ROUTES.index}>All reviews</Link>
@@ -149,22 +153,39 @@ export default async function HomePage() {
             <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-border/80 bg-card/30 px-6 py-8 sm:flex-row sm:items-center sm:px-10">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Keep exploring</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Jump to the most-used destinations.</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Jump to the most-used destinations.
+                </p>
               </div>
               <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-2">
-                <Button asChild variant="outline" size="sm" className="justify-start sm:justify-center">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="justify-start sm:justify-center"
+                >
                   <Link href={NEWS_ROUTES.index}>
                     <BookOpen className="size-4" />
                     News
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="sm" className="justify-start sm:justify-center">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="justify-start sm:justify-center"
+                >
                   <Link href={MONTHLY_REVIEW_ROUTES.index}>
                     <Clock3 className="size-4" />
                     Reviews
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="sm" className="justify-start sm:justify-center">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="justify-start sm:justify-center"
+                >
                   <Link href="/authors">
                     <Users className="size-4" />
                     Authors

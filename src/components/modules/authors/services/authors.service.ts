@@ -1,6 +1,9 @@
 import type { Author } from '@/@types/author';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
-import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrest-error';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrest-error';
 
 type AuthorRow = Database['public']['Tables']['authors']['Row'];
 

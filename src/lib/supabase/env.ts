@@ -46,25 +46,17 @@ function hasValidSupabaseUrl(): boolean {
  */
 export const supabaseEnv = {
   get url() {
-    return assertEnv(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      'NEXT_PUBLIC_SUPABASE_URL'
-    );
+    return assertEnv(process.env.NEXT_PUBLIC_SUPABASE_URL, 'NEXT_PUBLIC_SUPABASE_URL');
   },
   get anonKey() {
-    return assertEnv(
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      'NEXT_PUBLIC_SUPABASE_ANON_KEY'
-    );
+    return assertEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY');
   },
 } as const;
 
 export function hasSupabasePublicEnv(): boolean {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const hasValidAnonKey =
-    typeof anonKey === 'string' &&
-    anonKey.trim().length > 0 &&
-    !looksLikePlaceholder(anonKey);
+    typeof anonKey === 'string' && anonKey.trim().length > 0 && !looksLikePlaceholder(anonKey);
 
   return hasValidSupabaseUrl() && hasValidAnonKey && hasEnv('NEXT_PUBLIC_SUPABASE_URL');
 }
