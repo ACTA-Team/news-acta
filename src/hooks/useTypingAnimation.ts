@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type RefObject,
-} from 'react';
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { useInView } from 'motion/react';
 
 import type { TypingAnimationBehavior, TypingAnimationElement } from '@/@types/typing-animation';

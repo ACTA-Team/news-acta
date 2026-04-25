@@ -49,22 +49,27 @@ function TypingAnimationImpl({
 }: TypingAnimationProps) {
   const MotionComponent = motionElements[Component] as TypingAnimationMotionComponent;
 
-  const { displayedText, shouldShowCursor, getCursorChar, elementRef, blinkCursor: blink } =
-    useTypingAnimation({
-      children,
-      words,
-      duration,
-      typeSpeed,
-      deleteSpeed,
-      delay,
-      pauseDelay,
-      loop,
-      as: Component,
-      startOnView,
-      showCursor,
-      blinkCursor,
-      cursorStyle,
-    });
+  const {
+    displayedText,
+    shouldShowCursor,
+    getCursorChar,
+    elementRef,
+    blinkCursor: blink,
+  } = useTypingAnimation({
+    children,
+    words,
+    duration,
+    typeSpeed,
+    deleteSpeed,
+    delay,
+    pauseDelay,
+    loop,
+    as: Component,
+    startOnView,
+    showCursor,
+    blinkCursor,
+    cursorStyle,
+  });
 
   return (
     <MotionComponent

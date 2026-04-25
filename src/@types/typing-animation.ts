@@ -26,6 +26,7 @@ export type TypingAnimationBehavior = {
 /**
  * Public props for the {@link TypingAnimation} component.
  */
-export type TypingAnimationProps = Omit<MotionProps, 'children'> & TypingAnimationBehavior & {
-  className?: string;
-};
+export type TypingAnimationProps = Omit<MotionProps, 'children'> &
+  TypingAnimationBehavior & {
+    className?: string;
+  };

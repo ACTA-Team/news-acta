@@ -14,9 +14,10 @@ export default function TermsOfServicePage() {
     <LegalDocPage title="Terms of Service" lastUpdated={LEGAL_LAST_UPDATED}>
       <p>
         These Terms of Service (&ldquo;Terms&rdquo;) form a legal agreement between you and ACTA
-        (&ldquo;ACTA,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) regarding your
-        access to and use of the ACTA News website, associated applications, and related services
-        (collectively, the &ldquo;Services&rdquo;). If you do not agree, do not use the Services.
+        (&ldquo;ACTA,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) regarding
+        your access to and use of the ACTA News website, associated applications, and related
+        services (collectively, the &ldquo;Services&rdquo;). If you do not agree, do not use the
+        Services.
       </p>
       <p>
         These Terms describe important rights and obligations. We encourage you to read them
@@ -28,17 +29,17 @@ export default function TermsOfServicePage() {
       <p>
         By creating an account, accessing, or using the Services, you agree to these Terms and our
         Privacy Policy. We may change these Terms from time to time. We will post the updated Terms
-        on this page and update the &ldquo;Last updated&rdquo; date. Your continued use after changes
-        become effective constitutes acceptance of the revised Terms. If you do not agree, you must
-        stop using the Services.
+        on this page and update the &ldquo;Last updated&rdquo; date. Your continued use after
+        changes become effective constitutes acceptance of the revised Terms. If you do not agree,
+        you must stop using the Services.
       </p>
 
       <h2>2. The Services</h2>
       <p>
         ACTA News publishes editorial and informational content, including news, articles, and
-        periodic reviews. We may add, modify, or discontinue features, content, or integrations.
-        The Services are provided on an &ldquo;as is&rdquo; and &ldquo;as available&rdquo; basis to
-        the maximum extent permitted by law.
+        periodic reviews. We may add, modify, or discontinue features, content, or integrations. The
+        Services are provided on an &ldquo;as is&rdquo; and &ldquo;as available&rdquo; basis to the
+        maximum extent permitted by law.
       </p>
 
       <h2>3. Eligibility</h2>
@@ -64,13 +65,16 @@ export default function TermsOfServicePage() {
       <p>You agree not to:</p>
       <ul>
         <li>Violate any law, regulation, or third-party rights</li>
-        <li>Attempt to gain unauthorized access to the Services, systems, or other users&rsquo; data</li>
         <li>
-          Interfere with or disrupt the Services, including by transmitting malware, spam, or harmful
-          code
+          Attempt to gain unauthorized access to the Services, systems, or other users&rsquo; data
         </li>
-        <li>Scrape, index, or collect data in bulk without our prior written consent, where such use is
-          prohibited
+        <li>
+          Interfere with or disrupt the Services, including by transmitting malware, spam, or
+          harmful code
+        </li>
+        <li>
+          Scrape, index, or collect data in bulk without our prior written consent, where such use
+          is prohibited
         </li>
         <li>Impersonate any person or entity, or misrepresent your affiliation</li>
         <li>
@@ -83,10 +87,10 @@ export default function TermsOfServicePage() {
       <h3>Our content</h3>
       <p>
         Text, graphics, logos, and other materials made available by ACTA through the Services
-        (excluding third-party or user content as identified) are owned by ACTA or our licensors
-        and are protected by copyright, trademark, and other laws. You may not copy, modify,
-        distribute, or create derivative works except as allowed by us in writing or as permitted
-        for sharing via built-in features (e.g. links and ordinary browser viewing).
+        (excluding third-party or user content as identified) are owned by ACTA or our licensors and
+        are protected by copyright, trademark, and other laws. You may not copy, modify, distribute,
+        or create derivative works except as allowed by us in writing or as permitted for sharing
+        via built-in features (e.g. links and ordinary browser viewing).
       </p>
       <h3>Your content</h3>
       <p>
@@ -106,12 +110,12 @@ export default function TermsOfServicePage() {
 
       <h2>8. Disclaimers</h2>
       <p>
-        THE SERVICES AND ALL CONTENT ARE PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS
-        AVAILABLE&rdquo; WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY,
-        INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND
-        NON-INFRINGEMENT. ACTA DOES NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR
-        FREE, OR FREE OF HARMFUL COMPONENTS. EDITORIAL CONTENT IS FOR INFORMATIONAL PURPOSES; IT
-        IS NOT LEGAL, FINANCIAL, INVESTMENT, OR PROFESSIONAL ADVICE.
+        THE SERVICES AND ALL CONTENT ARE PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE&rdquo;
+        WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING WARRANTIES
+        OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. ACTA DOES
+        NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR FREE, OR FREE OF HARMFUL
+        COMPONENTS. EDITORIAL CONTENT IS FOR INFORMATIONAL PURPOSES; IT IS NOT LEGAL, FINANCIAL,
+        INVESTMENT, OR PROFESSIONAL ADVICE.
       </p>
 
       <h2>9. Limitation of liability</h2>
@@ -126,16 +130,16 @@ export default function TermsOfServicePage() {
         OUR TOTAL LIABILITY FOR ANY CLAIMS ARISING OUT OF OR RELATING TO THE SERVICES OR THESE TERMS
         WILL NOT EXCEED THE GREATER OF (A) THE AMOUNT YOU PAID US FOR THE SERVICES DURING THE TWELVE
         (12) MONTHS BEFORE THE CLAIM, OR (B) FIFTY U.S. DOLLARS (US $50.00), IF THE SERVICES WERE
-        FREE TO USE. SOME JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS; IN THOSE JURISDICTIONS, OUR
-        LIABILITY IS LIMITED TO THE MAXIMUM EXTENT PERMITTED BY LAW.
+        FREE TO USE. SOME JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS; IN THOSE JURISDICTIONS,
+        OUR LIABILITY IS LIMITED TO THE MAXIMUM EXTENT PERMITTED BY LAW.
       </p>
 
       <h2>10. Indemnity</h2>
       <p>
         You will defend, indemnify, and hold harmless ACTA and its affiliates, officers, directors,
-        and employees from and against any claims, damages, losses, or expenses (including reasonable
-        attorneys&rsquo; fees) arising out of your use of the Services, your content, or your
-        violation of these Terms or applicable law, except to the extent caused by our gross
+        and employees from and against any claims, damages, losses, or expenses (including
+        reasonable attorneys&rsquo; fees) arising out of your use of the Services, your content, or
+        your violation of these Terms or applicable law, except to the extent caused by our gross
         negligence or willful misconduct.
       </p>
 
@@ -146,9 +150,9 @@ export default function TermsOfServicePage() {
         International Sale of Goods does not apply. Subject to applicable law, the exclusive
         jurisdiction and venue for disputes arising from these Terms or the Services will be the
         state and federal courts located in San Francisco County, California, and you consent to
-        personal jurisdiction in those courts. If you are a consumer, mandatory consumer
-        protections in your country of residence may still apply to you; nothing in this section
-        limits those rights.
+        personal jurisdiction in those courts. If you are a consumer, mandatory consumer protections
+        in your country of residence may still apply to you; nothing in this section limits those
+        rights.
       </p>
 
       <h2>12. General</h2>

@@ -24,8 +24,8 @@ export default function PrivacyPolicyPage() {
         please do not use the Services.
       </p>
       <p>
-        We process personal information in accordance with applicable data protection laws. Depending
-        on your location, you may have specific rights, which are summarized below.
+        We process personal information in accordance with applicable data protection laws.
+        Depending on your location, you may have specific rights, which are summarized below.
       </p>
 
       <h2>1. Who we are</h2>
@@ -33,8 +33,8 @@ export default function PrivacyPolicyPage() {
         ACTA operates the Services in connection with its ecosystem of products and public
         communications. For the purposes of the EU/UK General Data Protection Regulation
         (&ldquo;GDPR&rdquo;), ACTA is typically the data controller of personal information we
-        determine the purposes and means of processing for the Services, unless a separate
-        agreement states otherwise. Contact details: see Section 10.
+        determine the purposes and means of processing for the Services, unless a separate agreement
+        states otherwise. Contact details: see Section 10.
       </p>
 
       <h2>2. Information we collect</h2>
@@ -49,7 +49,9 @@ export default function PrivacyPolicyPage() {
       </ul>
       <h3>2.2 Collected automatically</h3>
       <ul>
-        <li>Device and log data, such as IP address, browser type, operating system, and timestamps</li>
+        <li>
+          Device and log data, such as IP address, browser type, operating system, and timestamps
+        </li>
         <li>
           Usage data, such as pages viewed, links clicked, referring URLs, and general interaction
           patterns
@@ -63,8 +65,8 @@ export default function PrivacyPolicyPage() {
       <p>
         If you use social or single sign-on providers, we may receive a limited set of data from
         those providers as permitted by your settings and their policies (for example, profile
-        identifiers and email). We may also receive aggregated or business contact information
-        from partners where lawful.
+        identifiers and email). We may also receive aggregated or business contact information from
+        partners where lawful.
       </p>
 
       <h2>3. How we use information</h2>
@@ -72,13 +74,15 @@ export default function PrivacyPolicyPage() {
       <ul>
         <li>Provide, secure, and improve the Services, including performance and compatibility</li>
         <li>Authenticate you, manage your account, and send service-related communications</li>
-        <li>Publish, distribute, and promote content consistent with our editorial and community
+        <li>
+          Publish, distribute, and promote content consistent with our editorial and community
           standards
         </li>
         <li>Detect, prevent, and address fraud, abuse, security issues, and technical problems</li>
         <li>Comply with law, legal process, and regulatory obligations</li>
         <li>Exercise or defend legal claims</li>
-        <li>Where allowed by law, send you updates about the Services; you can opt out of marketing
+        <li>
+          Where allowed by law, send you updates about the Services; you can opt out of marketing
           where that choice is offered
         </li>
       </ul>
@@ -86,8 +90,8 @@ export default function PrivacyPolicyPage() {
         <strong>Legal bases (EEA/UK):</strong> We rely on performance of a contract, legitimate
         interests (such as improving security and user experience, balanced against your rights),
         and consent where required (e.g. non-essential cookies, where applicable). We process
-        information as necessary to comply with legal obligations. Where we rely on consent, you
-        may withdraw it at any time.
+        information as necessary to comply with legal obligations. Where we rely on consent, you may
+        withdraw it at any time.
       </p>
 
       <h2>4. How we share information</h2>
@@ -157,13 +161,12 @@ export default function PrivacyPolicyPage() {
       <p>
         Depending on your location, you may have the right to access, correct, delete, or export
         your personal information, restrict or object to certain processing, or withdraw consent
-        where applicable. You may have the right to lodge a complaint with a supervisory
-        authority. To exercise rights, contact us as described in Section 12.
+        where applicable. You may have the right to lodge a complaint with a supervisory authority.
+        To exercise rights, contact us as described in Section 12.
       </p>
       <p>
-        <strong>EEA/UK:</strong> You may have additional rights under the GDPR, including
-        data portability and restriction of processing, where applicable to our processing
-        activities.
+        <strong>EEA/UK:</strong> You may have additional rights under the GDPR, including data
+        portability and restriction of processing, where applicable to our processing activities.
       </p>
       <p>
         <strong>California (CCPA/CPRA):</strong> If you are a California resident, you have the
@@ -171,14 +174,14 @@ export default function PrivacyPolicyPage() {
         &ldquo;sale&rdquo; or &ldquo;sharing&rdquo; for cross-context behavioral advertising, as
         those terms are defined. We do not &ldquo;sell&rdquo; personal information in the
         traditional sense, as described above. We do not knowingly sell or share personal
-        information of consumers under 16 for those purposes. You may designate an authorized
-        agent where permitted. We will not discriminate for exercising CCPA/CPRA rights. To
-        exercise rights, contact us below; we will verify and respond in accordance with the law.
+        information of consumers under 16 for those purposes. You may designate an authorized agent
+        where permitted. We will not discriminate for exercising CCPA/CPRA rights. To exercise
+        rights, contact us below; we will verify and respond in accordance with the law.
       </p>
       <p>
         <strong>Other U.S. states:</strong> Similar rights may apply under state privacy laws in
-        Colorado, Virginia, and other states as they take effect. Contact us to exercise
-        applicable rights.
+        Colorado, Virginia, and other states as they take effect. Contact us to exercise applicable
+        rights.
       </p>
 
       <h2>11. Marketing communications</h2>
@@ -194,8 +197,8 @@ export default function PrivacyPolicyPage() {
           acta.build
         </a>
         . We will respond in line with applicable law, including timeframes required in your
-        jurisdiction. You may also contact your local data protection authority if you have
-        concerns we cannot resolve.
+        jurisdiction. You may also contact your local data protection authority if you have concerns
+        we cannot resolve.
       </p>
 
       <h2>13. Changes to this policy</h2>
