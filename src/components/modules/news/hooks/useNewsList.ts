@@ -5,6 +5,8 @@ import type { NewsListFilters, NewsListResponse } from '@/@types/news';
 import { fetchNewsList } from '@/components/modules/news/services/news.service';
 import { NEWS_DEFAULT_PAGE_SIZE } from '@/components/modules/news/constants';
 import { createClient } from '@/lib/supabase/client';
+import type { TypedSupabaseClient } from '@/lib/supabase/client';
+import { hasSupabasePublicEnv } from '@/lib/supabase/env';
 
 interface UseNewsListArgs {
   initialData?: NewsListResponse;
@@ -30,7 +32,7 @@ export function useNewsList({
   initialData,
   initialFilters,
 }: UseNewsListArgs = {}): UseNewsListResult {
-  const supabaseRef = useRef(createClient());
+  const supabaseRef = useRef<TypedSupabaseClient | null>(null);
   const [data, setData] = useState<NewsListResponse | null>(initialData ?? null);
   const [filters, setFiltersState] = useState<NewsListFilters>(
     initialFilters ?? { page: 1, pageSize: NEWS_DEFAULT_PAGE_SIZE }
@@ -39,6 +41,30 @@ export function useNewsList({
   const [error, setError] = useState<Error | null>(null);
 
   const load = useCallback(async (next: NewsListFilters) => {
+    if (!hasSupabasePublicEnv()) {
+      if (process.env.NODE_ENV === 'development') {
+        setData({
+          items: [],
+          total: 0,
+          page: next.page ?? 1,
+          pageSize: next.pageSize ?? NEWS_DEFAULT_PAGE_SIZE,
+        });
+        setError(null);
+        return;
+      }
+
+      setError(
+        new Error(
+          'Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL and/or NEXT_PUBLIC_SUPABASE_ANON_KEY.'
+        )
+      );
+      return;
+    }
+
+    if (!supabaseRef.current) {
+      supabaseRef.current = createClient();
+    }
+
     setIsLoading(true);
     setError(null);
     try {

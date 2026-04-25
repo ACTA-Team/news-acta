@@ -29,8 +29,11 @@ cd acta-news
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
+
+Fill in the Supabase values in `.env.local` before using auth-related flows.
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
