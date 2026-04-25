@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
+import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
+import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 import { useScroll } from '@/hooks/use-scroll';
-import { Button } from '@/components/ui/button';
 
 /**
  * Efferd @efferd/header-2 — single scroll surface (no nested bars / ghost header).
@@ -40,13 +42,31 @@ export function SiteHeader() {
           >
             <Link
               href="/"
-              className="truncate rounded-md px-1.5 py-1 font-semibold text-[0.95rem] tracking-[-0.02em] text-foreground transition-colors hover:text-foreground/85"
+              className="flex shrink-0 items-center gap-2 rounded-md py-0.5 pr-2 transition-opacity hover:opacity-90"
               onClick={() => setIsMobileOpen(false)}
             >
-              {siteConfig.name}
+              <Image
+                src="/black.png"
+                alt=""
+                width={140}
+                height={40}
+                className="h-7 w-auto dark:hidden"
+                priority
+                sizes="140px"
+              />
+              <Image
+                src="/white.png"
+                alt=""
+                width={140}
+                height={40}
+                className="hidden h-7 w-auto dark:block"
+                priority
+                sizes="140px"
+              />
+              <span className="sr-only">{siteConfig.name}</span>
             </Link>
 
-            <div className="hidden min-w-0 items-center gap-0.5 md:flex">
+            <div className="hidden min-w-0 flex-1 items-center justify-end gap-0.5 md:flex">
               {siteConfig.nav.map((item) => (
                 <Button
                   key={item.href}
@@ -58,17 +78,17 @@ export function SiteHeader() {
                   <Link href={item.href}>{item.label}</Link>
                 </Button>
               ))}
-              <Button
-                asChild
-                size="sm"
-                variant="ghost"
-                className="shrink-0 text-[0.8125rem] text-muted-foreground"
-              >
-                <Link href={siteConfig.rssPath}>RSS</Link>
-              </Button>
+              <AnimatedThemeToggler
+                variant="circle"
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&_svg]:size-4"
+              />
             </div>
 
-            <div className="flex items-center gap-1 md:hidden">
+            <div className="flex items-center gap-0.5 md:hidden">
+              <AnimatedThemeToggler
+                variant="circle"
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&_svg]:size-4"
+              />
               <Button
                 variant="ghost"
                 size="icon"
@@ -96,13 +116,6 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href={siteConfig.rssPath}
-              className="mt-0.5 block rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted"
-              onClick={() => setIsMobileOpen(false)}
-            >
-              RSS
-            </Link>
           </div>
         </div>
       ) : null}

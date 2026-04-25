@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
+import { HomeHeroTypingTitle } from '@/components/blocks/home-hero-typing-title';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -53,14 +54,9 @@ export function HomeHero({ className }: HomeHeroProps) {
           <ArrowRight className="size-3.5 -translate-x-0.5 text-muted-foreground transition group-hover:translate-x-0" />
         </Link>
 
-        <h1
-          className={cn(
-            'text-balance text-4xl font-medium leading-[1.1] tracking-tight text-foreground md:text-5xl',
-            'animate-in fade-in slide-in-from-bottom-3 fill-mode-both delay-150 duration-500'
-          )}
-        >
-          The editorial home for the {siteConfig.shortName} ecosystem
-        </h1>
+        <HomeHeroTypingTitle
+          line={`The editorial home for the ${siteConfig.shortName} ecosystem`}
+        />
 
         <p
           className={cn(

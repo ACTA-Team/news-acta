@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Rss } from 'lucide-react';
 
@@ -47,7 +48,25 @@ export function SiteFooter() {
     <footer className={cn('mt-24 w-full border-t border-border/80 bg-background', 'px-4 md:px-6')}>
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-lg font-semibold tracking-tight text-foreground">{siteConfig.name}</p>
+          <Link href="/" className="inline-flex shrink-0 items-center self-start">
+            <Image
+              src="/black.png"
+              alt=""
+              width={140}
+              height={40}
+              className="h-7 w-auto dark:hidden"
+              sizes="140px"
+            />
+            <Image
+              src="/white.png"
+              alt=""
+              width={140}
+              height={40}
+              className="hidden h-7 w-auto dark:block"
+              sizes="140px"
+            />
+            <span className="sr-only">{siteConfig.name}</span>
+          </Link>
           <div className="flex items-center gap-0.5">
             {social.map(({ href, label, icon: Icon }) => (
               <Button key={label} asChild size="icon-sm" variant="ghost">

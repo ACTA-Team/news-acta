@@ -5,6 +5,8 @@ import './globals.css';
 import { siteConfig } from '@/config/site';
 import { SiteHeader, SiteFooter } from '@/layouts';
 
+const THEME_INIT = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d)}catch(e){}})();`;
+
 const fontSans = Plus_Jakarta_Sans({
   variable: '--font-app-sans',
   subsets: ['latin'],
@@ -57,6 +59,7 @@ export default function RootLayout({
         className="flex min-h-dvh flex-col bg-background text-foreground"
         suppressHydrationWarning
       >
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
