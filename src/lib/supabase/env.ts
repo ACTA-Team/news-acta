@@ -15,7 +15,56 @@ function assertEnv(value: string | undefined, key: string): string {
   return value;
 }
 
+function hasEnv(key: string): boolean {
+  const value = process.env[key];
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function looksLikePlaceholder(value: string): boolean {
+  return value.includes('<') || value.includes('>') || value.includes('your-');
+}
+
+function hasValidSupabaseUrl(): boolean {
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (typeof value !== 'string') return false;
+
+  const normalized = value.trim();
+  if (normalized.length === 0 || looksLikePlaceholder(normalized)) return false;
+
+  try {
+    const parsed = new URL(normalized);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Lazy getters so the module can be imported during `next build` without
+ * requiring env vars to be present. Values are only read when actually
+ * accessed (i.e., at request time when a Supabase client is created).
+ */
 export const supabaseEnv = {
-  url: assertEnv(process.env.NEXT_PUBLIC_SUPABASE_URL, 'NEXT_PUBLIC_SUPABASE_URL'),
-  anonKey: assertEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY'),
+  get url() {
+    return assertEnv(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      'NEXT_PUBLIC_SUPABASE_URL'
+    );
+  },
+  get anonKey() {
+    return assertEnv(
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY'
+    );
+  },
 } as const;
+
+export function hasSupabasePublicEnv(): boolean {
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const hasValidAnonKey =
+    typeof anonKey === 'string' &&
+    anonKey.trim().length > 0 &&
+    !looksLikePlaceholder(anonKey);
+
+  return hasValidSupabaseUrl() && hasValidAnonKey && hasEnv('NEXT_PUBLIC_SUPABASE_URL');
+}

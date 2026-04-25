@@ -1,7 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { Database } from '@/lib/supabase/database.types';
-import { supabaseEnv } from '@/lib/supabase/env';
+import { hasSupabasePublicEnv, supabaseEnv } from '@/lib/supabase/env';
+
+let hasLoggedMissingEnvWarning = false;
 
 /**
  * Session refresh helper used by the root `middleware.ts`.
@@ -11,6 +13,21 @@ import { supabaseEnv } from '@/lib/supabase/env';
  * call: it is what actually rotates the cookies.
  */
 export async function updateSession(request: NextRequest): Promise<NextResponse> {
+  if (!hasSupabasePublicEnv()) {
+    if (process.env.NODE_ENV !== 'development') {
+      throw new Error(
+        'Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL and/or NEXT_PUBLIC_SUPABASE_ANON_KEY.'
+      );
+    }
+
+    if (!hasLoggedMissingEnvWarning) {
+      hasLoggedMissingEnvWarning = true;
+      console.warn('Supabase env vars are missing. Skipping auth session refresh in development.');
+    }
+
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient<Database>(supabaseEnv.url, supabaseEnv.anonKey, {
