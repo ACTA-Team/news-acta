@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/inputGroup';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/InputGroup';
 import { legalRoutes } from '@/config/legal';
 import { siteConfig } from '@/config/site';
 import { AtSignIcon, ChevronLeftIcon } from 'lucide-react';
