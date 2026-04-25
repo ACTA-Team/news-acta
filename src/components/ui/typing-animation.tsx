@@ -56,7 +56,11 @@ interface TypingAnimationProps extends Omit<MotionProps, 'children'> {
   cursorStyle?: 'line' | 'block' | 'underscore';
 }
 
-export function TypingAnimation({
+/**
+ * State reset when `words` / `children` change is done by remounting via `key` on the
+ * public `TypingAnimation` wrapper (avoids setState in an effect; satisfies react-hooks).
+ */
+function TypingAnimationImpl({
   children,
   words,
   className,
@@ -92,17 +96,6 @@ export function TypingAnimation({
   const deletingSpeed = deleteSpeed ?? typingSpeed / 2;
 
   const shouldStart = startOnView ? isInView : true;
-  const animationSourceKey = useMemo(
-    () => (words ? words.join('\u0000') : (children ?? '')),
-    [words, children]
-  );
-
-  useEffect(() => {
-    setDisplayedText('');
-    setCurrentWordIndex(0);
-    setCurrentCharIndex(0);
-    setPhase('typing');
-  }, [animationSourceKey]);
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -216,4 +209,12 @@ export function TypingAnimation({
       )}
     </MotionComponent>
   );
+}
+
+export function TypingAnimation(props: TypingAnimationProps) {
+  const animationKey = useMemo(
+    () => (props.words ? props.words.join('\u0000') : (props.children ?? '')),
+    [props.words, props.children]
+  );
+  return <TypingAnimationImpl key={animationKey} {...props} />;
 }
