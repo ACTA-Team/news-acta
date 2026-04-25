@@ -1,3 +1,5 @@
+import type { HTMLAttributes } from 'react';
+
 import { cn } from '@/lib/utils';
 
 /**
@@ -5,7 +7,7 @@ import { cn } from '@/lib/utils';
  * Centralizes widths, fonts and rhythm so every post looks the same
  * without depending on the `@tailwindcss/typography` plugin.
  */
-export function Prose({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function Prose({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(

@@ -1,6 +1,6 @@
 'use client';
 
-import { TypingAnimation } from '@/components/ui/typing-animation';
+import { TypingAnimation } from '@/components/ui/TypingAnimation';
 import { cn } from '@/lib/utils';
 
 type HomeHeroTypingTitleProps = {

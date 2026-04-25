@@ -21,6 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     { url: absoluteUrl('/authors'), lastModified: new Date(), priority: 0.5 },
+    { url: absoluteUrl('/terms'), lastModified: new Date(), priority: 0.3 },
+    { url: absoluteUrl('/privacy'), lastModified: new Date(), priority: 0.3 },
   ];
 
   let supabase;

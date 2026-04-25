@@ -1,5 +1,5 @@
 import { buildMetadata } from '@/lib/seo';
-import { NotFoundContent } from '@/components/blocks/not-found-content';
+import { NotFoundContent } from '@/components/blocks';
 import { SiteFooter, SiteHeader } from '@/layouts';
 
 export const metadata = buildMetadata({

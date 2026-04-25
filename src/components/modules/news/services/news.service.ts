@@ -4,7 +4,7 @@ import type { Database, TypedSupabaseClient } from '@/lib/supabase';
 import {
   isMissingSchemaCacheError,
   warnMissingMigrationsOnce,
-} from '@/lib/supabase/postgrest-error';
+} from '@/lib/supabase/postgrestError';
 
 /**
  * Service layer for the `news` module.

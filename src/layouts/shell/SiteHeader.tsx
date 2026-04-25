@@ -5,11 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
-import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
-import { Button } from '@/components/ui/button';
+import { AnimatedThemeToggler } from '@/components/ui/AnimatedThemeToggler';
+import { Button } from '@/components/ui/Button';
 import { siteConfig } from '@/config/site';
+import { useScroll } from '@/hooks/useScroll';
 import { cn } from '@/lib/utils';
-import { useScroll } from '@/hooks/use-scroll';
 
 /**
  * Efferd @efferd/header-2 — single scroll surface (no nested bars / ghost header).

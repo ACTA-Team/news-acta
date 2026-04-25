@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { BookOpen, Clock3, Sparkles, Users } from 'lucide-react';
 
-import { HomeHero } from '@/components/blocks/home-hero';
+import { HomeHero } from '@/components/blocks';
 import { buildMetadata } from '@/lib/seo';
 import { createClient } from '@/lib/supabase/server';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { NewsCard, fetchNewsList, NEWS_ROUTES } from '@/components/modules/news';
 import {
   MonthlyReviewCard,

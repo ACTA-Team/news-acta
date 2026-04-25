@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { Compass, Home } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-} from '@/components/ui/empty';
+} from '@/components/ui/Empty';
 import { NEWS_ROUTES } from '@/components/modules/news';
 
 /**

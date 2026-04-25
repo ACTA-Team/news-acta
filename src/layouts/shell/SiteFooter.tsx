@@ -3,8 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Globe } from 'lucide-react';
 
+import { Button } from '@/components/ui/Button';
+import { legalRoutes } from '@/config/legal';
 import { siteConfig } from '@/config/site';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 /**
@@ -108,6 +109,16 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href={legalRoutes.terms} className={footerLinkClass}>
+                Terms
+              </Link>
+            </li>
+            <li>
+              <Link href={legalRoutes.privacy} className={footerLinkClass}>
+                Privacy
+              </Link>
+            </li>
           </ul>
         </nav>
 

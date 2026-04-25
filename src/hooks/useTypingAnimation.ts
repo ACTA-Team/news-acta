@@ -5,96 +5,56 @@ import {
   useMemo,
   useRef,
   useState,
-  type ComponentType,
-  type RefAttributes,
   type RefObject,
 } from 'react';
-import {
-  motion,
-  useInView,
-  type DOMMotionComponents,
-  type HTMLMotionProps,
-  type MotionProps,
-} from 'motion/react';
+import { useInView } from 'motion/react';
 
-import { cn } from '@/lib/utils';
+import type { TypingAnimationBehavior, TypingAnimationElement } from '@/@types/typing-animation';
 
-const motionElements = {
-  article: motion.article,
-  div: motion.div,
-  h1: motion.h1,
-  h2: motion.h2,
-  h3: motion.h3,
-  h4: motion.h4,
-  h5: motion.h5,
-  h6: motion.h6,
-  li: motion.li,
-  p: motion.p,
-  section: motion.section,
-  span: motion.span,
-} as const;
+type Phase = 'typing' | 'pause' | 'deleting';
 
-type MotionElementType = Extract<keyof DOMMotionComponents, keyof typeof motionElements>;
-type TypingAnimationMotionComponent = ComponentType<
-  Omit<HTMLMotionProps<'span'>, 'ref'> & RefAttributes<HTMLElement>
->;
-
-interface TypingAnimationProps extends Omit<MotionProps, 'children'> {
-  children?: string;
-  words?: string[];
-  className?: string;
-  duration?: number;
-  typeSpeed?: number;
-  deleteSpeed?: number;
-  delay?: number;
-  pauseDelay?: number;
-  loop?: boolean;
-  as?: MotionElementType;
-  startOnView?: boolean;
-  showCursor?: boolean;
-  blinkCursor?: boolean;
-  cursorStyle?: 'line' | 'block' | 'underscore';
-}
+export type TypingAnimationViewModel = {
+  displayedText: string;
+  shouldShowCursor: boolean;
+  getCursorChar: () => string;
+  elementRef: RefObject<HTMLElement | null>;
+  blinkCursor: boolean;
+};
 
 /**
- * State reset when `words` / `children` change is done by remounting via `key` on the
- * public `TypingAnimation` wrapper (avoids setState in an effect; satisfies react-hooks).
+ * Typing / deleting loop for {@link TypingAnimation}. Presentation stays in the component (motion + cursor span).
  */
-function TypingAnimationImpl({
-  children,
-  words,
-  className,
-  duration = 100,
-  typeSpeed,
-  deleteSpeed,
-  delay = 0,
-  pauseDelay = 1000,
-  loop = false,
-  as: Component = 'span',
-  startOnView = true,
-  showCursor = true,
-  blinkCursor = true,
-  cursorStyle = 'line',
-  ...props
-}: TypingAnimationProps) {
-  const MotionComponent = motionElements[Component] as TypingAnimationMotionComponent;
-
-  const [displayedText, setDisplayedText] = useState<string>('');
+export function useTypingAnimation(
+  params: TypingAnimationBehavior & { as: TypingAnimationElement }
+): TypingAnimationViewModel {
+  const {
+    children,
+    words,
+    duration = 100,
+    typeSpeed,
+    deleteSpeed,
+    delay = 0,
+    pauseDelay = 1000,
+    loop = false,
+    startOnView = true,
+    showCursor = true,
+    blinkCursor = true,
+    cursorStyle = 'line',
+  } = params;
+  const [displayedText, setDisplayedText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [phase, setPhase] = useState<'typing' | 'pause' | 'deleting'>('typing');
+  const [phase, setPhase] = useState<Phase>('typing');
   const elementRef = useRef<HTMLElement | null>(null);
-  const isInView = useInView(elementRef as RefObject<Element>, {
+  const isInView = useInView(elementRef as RefObject<Element | null>, {
     amount: 0.3,
     once: true,
   });
 
   const wordsToAnimate = useMemo(() => words ?? (children ? [children] : []), [words, children]);
   const hasMultipleWords = wordsToAnimate.length > 1;
-
   const typingSpeed = typeSpeed ?? duration;
   const deletingSpeed = deleteSpeed ?? typingSpeed / 2;
-
   const shouldStart = startOnView ? isInView : true;
 
   useEffect(() => {
@@ -191,30 +151,11 @@ function TypingAnimationImpl({
     }
   };
 
-  return (
-    <MotionComponent
-      ref={elementRef}
-      className={cn(
-        'leading-20 tracking-[-0.02em]',
-        Component === 'span' && 'inline-block',
-        className
-      )}
-      {...props}
-    >
-      {displayedText}
-      {shouldShowCursor && (
-        <span className={cn('inline-block', blinkCursor && 'animate-blink-cursor')}>
-          {getCursorChar()}
-        </span>
-      )}
-    </MotionComponent>
-  );
-}
-
-export function TypingAnimation(props: TypingAnimationProps) {
-  const animationKey = useMemo(
-    () => (props.words ? props.words.join('\u0000') : (props.children ?? '')),
-    [props.words, props.children]
-  );
-  return <TypingAnimationImpl key={animationKey} {...props} />;
+  return {
+    displayedText,
+    shouldShowCursor: Boolean(shouldShowCursor),
+    getCursorChar,
+    elementRef,
+    blinkCursor,
+  };
 }

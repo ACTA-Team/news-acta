@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
-import { HomeHeroTypingTitle } from '@/components/blocks/home-hero-typing-title';
-import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { NEWS_ROUTES } from '@/components/modules/news';
 import { MONTHLY_REVIEW_ROUTES } from '@/components/modules/monthly-review';
+import { siteConfig } from '@/config/site';
+import { cn } from '@/lib/utils';
+
+import { HomeHeroTypingTitle } from './HomeHeroTypingTitle';
 
 type HomeHeroProps = {
   className?: string;

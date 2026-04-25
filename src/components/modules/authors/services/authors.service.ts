@@ -3,7 +3,7 @@ import type { Database, TypedSupabaseClient } from '@/lib/supabase';
 import {
   isMissingSchemaCacheError,
   warnMissingMigrationsOnce,
-} from '@/lib/supabase/postgrest-error';
+} from '@/lib/supabase/postgrestError';
 
 type AuthorRow = Database['public']['Tables']['authors']['Row'];
 

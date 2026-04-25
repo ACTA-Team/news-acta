@@ -1,27 +1,19 @@
-import { cn } from '@/lib/utils';
+'use client';
+
 import React from 'react';
 import { createPortal } from 'react-dom';
+
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { cn } from '@/lib/utils';
 
 function Portal({ className, ...props }: React.ComponentProps<'div'>) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
-
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    const originalPaddingRight = document.body.style.paddingRight;
-
-    document.body.style.overflow = 'hidden';
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
-
-    return () => {
-      document.body.style.overflow = originalStyle;
-      document.body.style.paddingRight = originalPaddingRight;
-    };
   }, []);
+
+  useBodyScrollLock(mounted);
 
   if (!mounted) {
     return null;

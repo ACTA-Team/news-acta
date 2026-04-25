@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 
 /**
  * Reusable global hook to copy text to the clipboard with feedback.
- * Lives in `src/hooks` because it does not belong to any specific module.
  */
 export function useCopyToClipboard(resetMs: number = 2000) {
   const [copied, setCopied] = useState(false);

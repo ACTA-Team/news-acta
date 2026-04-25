@@ -1,4 +1,4 @@
-import { AuthPage } from '@/components/blocks/auth-page';
+import { AuthPage } from '@/components/blocks';
 import { buildMetadata } from '@/lib/seo';
 import { siteConfig } from '@/config/site';
 
