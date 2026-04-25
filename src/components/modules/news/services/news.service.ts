@@ -1,6 +1,7 @@
 import type { NewsArticle, NewsListFilters, NewsListResponse } from '@/@types/news';
-import type { Database, TypedSupabaseClient } from '@/lib/supabase';
 import { NEWS_DEFAULT_PAGE_SIZE } from '@/components/modules/news/constants';
+import type { Database, TypedSupabaseClient } from '@/lib/supabase';
+import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrest-error';
 
 /**
  * Service layer for the `news` module.
@@ -103,7 +104,13 @@ export async function fetchNewsList(
       .range(from, to);
 
     const { data, count, error } = await tagQuery;
-    if (error) throw error;
+    if (error) {
+      if (isMissingSchemaCacheError(error)) {
+        warnMissingMigrationsOnce();
+        return { items: [], total: 0, page, pageSize };
+      }
+      throw error;
+    }
 
     const rows = (data ?? []) as unknown as ArticleRowWithRelations[];
     return {
@@ -115,7 +122,13 @@ export async function fetchNewsList(
   }
 
   const { data, count, error } = await query;
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return { items: [], total: 0, page, pageSize };
+    }
+    throw error;
+  }
 
   const rows = (data ?? []) as unknown as ArticleRowWithRelations[];
 
@@ -138,7 +151,13 @@ export async function fetchNewsBySlug(
     .eq('status', 'published')
     .maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return null;
+    }
+    throw error;
+  }
   if (!data) return null;
 
   return mapArticle(data as unknown as ArticleRowWithRelations);

@@ -5,6 +5,7 @@ import type {
   MonthlyReviewMetric,
 } from '@/@types/monthly-review';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
+import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrest-error';
 
 /**
  * Service layer for the `monthly-review` module.
@@ -87,7 +88,13 @@ export async function fetchMonthlyReviews(
     .select(REVIEW_LIST_SELECT)
     .order('published_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return [];
+    }
+    throw error;
+  }
   return (data ?? []).map(mapListItem);
 }
 
@@ -101,7 +108,13 @@ export async function fetchMonthlyReviewByPeriod(
     .eq('period', period)
     .maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return null;
+    }
+    throw error;
+  }
   if (!data) return null;
 
   return mapDetail(data as unknown as ReviewRowWithArticles);

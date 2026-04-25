@@ -1,18 +1,20 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
 import { siteConfig } from '@/config/site';
 import { SiteHeader, SiteFooter } from '@/layouts';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const fontSans = Plus_Jakarta_Sans({
+  variable: '--font-app-sans',
   subsets: ['latin'],
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const fontMono = JetBrains_Mono({
+  variable: '--font-app-mono',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -48,11 +50,11 @@ export default function RootLayout({
   return (
     <html
       lang={siteConfig.locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fontSans.variable} ${fontMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-zinc-50 dark:bg-black">
+      <body className="flex min-h-dvh flex-col bg-background text-foreground">
         <SiteHeader />
-        <div className="flex-1">{children}</div>
+        <main className="flex-1">{children}</main>
         <SiteFooter />
       </body>
     </html>

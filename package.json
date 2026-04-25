@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:push": "npx supabase db push"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
