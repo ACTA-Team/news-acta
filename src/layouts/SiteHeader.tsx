@@ -78,12 +78,7 @@ export function SiteHeader() {
                   <Link href={item.href}>{item.label}</Link>
                 </Button>
               ))}
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="shrink-0 text-[0.8125rem]"
-              >
+              <Button asChild variant="outline" size="sm" className="shrink-0 text-[0.8125rem]">
                 <Link href="/login">Log in</Link>
               </Button>
               <AnimatedThemeToggler
@@ -124,12 +119,7 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="mt-1 w-full justify-center"
-            >
+            <Button asChild variant="outline" size="sm" className="mt-1 w-full justify-center">
               <Link href="/login" onClick={() => setIsMobileOpen(false)}>
                 Log in
               </Link>

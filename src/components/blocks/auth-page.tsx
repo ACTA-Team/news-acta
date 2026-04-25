@@ -7,11 +7,7 @@ import Link from 'next/link';
 import { AuthDivider } from '@/components/auth-divider';
 import { Button } from '@/components/ui/button';
 import { FloatingPaths } from '@/components/floating-paths';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { siteConfig } from '@/config/site';
 import { AtSignIcon, ChevronLeftIcon } from 'lucide-react';
 
@@ -48,10 +44,12 @@ export function AuthPage() {
         <div className="z-10 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-pretty text-xl text-foreground/90">
-              &ldquo;{siteConfig.name} is where we share how ACTA grows — from protocol updates to community
-              stories.&rdquo;
+              &ldquo;{siteConfig.name} is where we share how ACTA grows — from protocol updates to
+              community stories.&rdquo;
             </p>
-            <footer className="font-mono text-sm font-semibold text-muted-foreground">— ACTA</footer>
+            <footer className="font-mono text-sm font-semibold text-muted-foreground">
+              — ACTA
+            </footer>
           </blockquote>
         </div>
         <div className="absolute inset-0">
@@ -60,10 +58,7 @@ export function AuthPage() {
         </div>
       </div>
       <div className="relative flex min-h-screen flex-col justify-center px-8">
-        <div
-          aria-hidden
-          className="absolute inset-0 isolate -z-10 opacity-60 contain-strict"
-        >
+        <div aria-hidden className="absolute inset-0 isolate -z-10 opacity-60 contain-strict">
           <div className="absolute top-0 right-0 h-320 w-140 -translate-y-87.5 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,--theme(--color-foreground/.06)_0,hsla(0,0%,55%,.02)_50%,--theme(--color-foreground/.01)_80%)]" />
           <div className="absolute top-0 right-0 h-320 w-60 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,--theme(--color-foreground/.04)_0,--theme(--color-foreground/.01)_80%,transparent_100%)] [translate:5%_-50%]" />
           <div className="absolute top-0 right-0 h-320 w-60 -translate-y-87.5 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,--theme(--color-foreground/.04)_0,--theme(--color-foreground/.01)_80%,transparent_100%)]" />
@@ -98,8 +93,8 @@ export function AuthPage() {
           <div className="flex flex-col space-y-1">
             <h1 className="text-2xl font-bold tracking-wide">Sign in</h1>
             <p className="text-base text-muted-foreground">
-              Access the {siteConfig.shortName} editorial workspace. UI preview — authentication is not
-              connected yet.
+              Access the {siteConfig.shortName} editorial workspace. UI preview — authentication is
+              not connected yet.
             </p>
           </div>
           <div className="space-y-2">
