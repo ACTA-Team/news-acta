@@ -5,8 +5,7 @@
  * something is missing so misconfigured deploys fail loud.
  */
 
-function readEnv(key: string): string {
-  const value = process.env[key];
+function assertEnv(value: string | undefined, key: string): string {
   if (!value || value.length === 0) {
     throw new Error(
       `Missing required environment variable: ${key}. ` +
@@ -47,17 +46,25 @@ function hasValidSupabaseUrl(): boolean {
  */
 export const supabaseEnv = {
   get url() {
-    return readEnv('NEXT_PUBLIC_SUPABASE_URL');
+    return assertEnv(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      'NEXT_PUBLIC_SUPABASE_URL'
+    );
   },
   get anonKey() {
-    return readEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    return assertEnv(
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY'
+    );
   },
 } as const;
 
 export function hasSupabasePublicEnv(): boolean {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const hasValidAnonKey =
-    typeof anonKey === 'string' && anonKey.trim().length > 0 && !looksLikePlaceholder(anonKey);
+    typeof anonKey === 'string' &&
+    anonKey.trim().length > 0 &&
+    !looksLikePlaceholder(anonKey);
 
   return hasValidSupabaseUrl() && hasValidAnonKey && hasEnv('NEXT_PUBLIC_SUPABASE_URL');
 }
