@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Globe } from 'lucide-react';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { legalRoutes } from '@/config/legal';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';

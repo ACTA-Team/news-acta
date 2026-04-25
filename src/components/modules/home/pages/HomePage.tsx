@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { BookOpen, Clock3, Sparkles, Users } from 'lucide-react';
 
 import { HomeHero } from '@/components/blocks';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { Container } from '@/layouts';
 import { createClient } from '@/lib/supabase/server';

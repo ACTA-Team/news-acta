@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { NEWS_ROUTES } from '@/components/modules/news';
 import { MONTHLY_REVIEW_ROUTES } from '@/components/modules/monthly-review';
 import { siteConfig } from '@/config/site';

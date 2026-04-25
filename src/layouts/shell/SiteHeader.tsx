@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
 import { AnimatedThemeToggler } from '@/components/ui/AnimatedThemeToggler';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { useScroll } from '@/hooks/useScroll';
 import { cn } from '@/lib/utils';
