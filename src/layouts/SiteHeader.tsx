@@ -78,6 +78,14 @@ export function SiteHeader() {
                   <Link href={item.href}>{item.label}</Link>
                 </Button>
               ))}
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="shrink-0 text-[0.8125rem]"
+              >
+                <Link href="/login">Log in</Link>
+              </Button>
               <AnimatedThemeToggler
                 variant="circle"
                 className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&_svg]:size-4"
@@ -116,6 +124,16 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="mt-1 w-full justify-center"
+            >
+              <Link href="/login" onClick={() => setIsMobileOpen(false)}>
+                Log in
+              </Link>
+            </Button>
           </div>
         </div>
       ) : null}

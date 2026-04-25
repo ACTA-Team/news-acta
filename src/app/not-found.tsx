@@ -1,5 +1,6 @@
 import { buildMetadata } from '@/lib/seo';
 import { NotFoundContent } from '@/components/blocks/not-found-content';
+import { SiteFooter, SiteHeader } from '@/layouts';
 
 export const metadata = buildMetadata({
   title: 'Not found',
@@ -8,5 +9,13 @@ export const metadata = buildMetadata({
 });
 
 export default function NotFound() {
-  return <NotFoundContent />;
+  return (
+    <>
+      <SiteHeader />
+      <main className="flex-1">
+        <NotFoundContent />
+      </main>
+      <SiteFooter />
+    </>
+  );
 }
