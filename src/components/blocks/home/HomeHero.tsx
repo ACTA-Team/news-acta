@@ -106,17 +106,10 @@ export function HomeHero({ className }: HomeHeroProps) {
         >
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-lg border border-border/60 bg-card/50 p-2 shadow-xl ring-1 ring-border/40 dark:bg-background/30">
             <img
-              alt=""
-              className="z-2 aspect-video rounded-md border border-border/40 object-cover dark:hidden"
+              alt="ACTA dashboard preview"
+              className="z-2 h-auto w-full rounded-md border border-border/40 object-contain"
               height={1080}
-              src="https://storage.efferd.com/screen/dashboard-light.webp"
-              width={1920}
-            />
-            <img
-              alt=""
-              className="hidden aspect-video rounded-md border border-border/40 object-cover dark:block"
-              height={1080}
-              src="https://storage.efferd.com/screen/dashboard-dark.webp"
+              src="/image.png"
               width={1920}
             />
           </div>
