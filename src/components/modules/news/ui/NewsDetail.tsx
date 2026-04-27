@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import type { NewsDetailProps } from '@/@types/news';
 import { formatPublishedDate, getCategoryLabel } from '@/components/modules/news/utils';
 
@@ -33,19 +32,6 @@ export function NewsDetail({ article }: NewsDetailProps) {
           ) : null}
         </div>
       </div>
-
-      {article.coverImageUrl && (
-        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
-          <Image
-            src={article.coverImageUrl}
-            alt={article.title}
-            fill
-            priority
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 768px"
-          />
-        </div>
-      )}
 
       <div
         className="prose prose-zinc max-w-none dark:prose-invert"
