@@ -45,7 +45,8 @@ export async function sendAdminMagicLinkAction(
   }
 
   const supabase = await createClient();
-  const redirectBase = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'http://localhost:3000';
+  const redirectBase =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'http://localhost:3000';
 
   await supabase.auth.signInWithOtp({
     email,
@@ -115,7 +116,11 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
     const { error } = await supabase.from('news_articles').update(payload).eq('id', articleId);
     if (error) throw error;
   } else {
-    const { data, error } = await supabase.from('news_articles').insert(payload).select('id').single();
+    const { data, error } = await supabase
+      .from('news_articles')
+      .insert(payload)
+      .select('id')
+      .single();
     if (error) throw error;
     articleId = data.id;
   }

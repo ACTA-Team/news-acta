@@ -6,7 +6,10 @@ export async function AdminDashboardPageContent() {
   const supabase = await createClient();
   const [{ count: totalArticles }, { count: drafts }, { count: published }] = await Promise.all([
     supabase.from('news_articles').select('id', { count: 'exact', head: true }),
-    supabase.from('news_articles').select('id', { count: 'exact', head: true }).eq('status', 'draft'),
+    supabase
+      .from('news_articles')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'draft'),
     supabase
       .from('news_articles')
       .select('id', { count: 'exact', head: true })

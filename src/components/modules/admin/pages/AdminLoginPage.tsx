@@ -81,7 +81,9 @@ export function AdminLoginPageContent() {
           </p>
 
           {state.type !== 'idle' ? (
-            <p className={`text-sm ${state.type === 'error' ? 'text-destructive' : 'text-muted-foreground'}`}>
+            <p
+              className={`text-sm ${state.type === 'error' ? 'text-destructive' : 'text-muted-foreground'}`}
+            >
               {state.message}
             </p>
           ) : null}
