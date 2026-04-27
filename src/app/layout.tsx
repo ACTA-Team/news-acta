@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 import { siteConfig } from '@/config/site';
@@ -58,7 +59,9 @@ export default function RootLayout({
         className="flex min-h-dvh flex-col bg-background text-foreground"
         suppressHydrationWarning
       >
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT}
+        </Script>
         {children}
       </body>
     </html>

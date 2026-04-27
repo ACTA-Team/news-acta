@@ -180,11 +180,29 @@ export interface Database {
           },
         ];
       };
+
+      admin_users: {
+        Row: {
+          email: string;
+          created_at: string;
+        };
+        Insert: {
+          email: string;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['admin_users']['Insert']>;
+        Relationships: [];
+      };
     };
 
     Views: { [_ in never]: never };
 
-    Functions: { [_ in never]: never };
+    Functions: {
+      is_admin: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+    };
 
     Enums: {
       news_category: 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';

@@ -17,6 +17,8 @@ import { FloatingPaths } from './FloatingPaths';
  * Efferd @efferd/auth-5 — sign-in surface (UI only, no auth wiring).
  */
 export function AuthPage() {
+  const heroQuote = `${siteConfig.name} is where we share how ACTA grows - from protocol updates to community stories.`;
+
   return (
     <main className="relative md:min-h-screen md:overflow-hidden lg:grid lg:grid-cols-2">
       <div className="relative hidden h-full flex-col border-r bg-secondary p-10 lg:flex dark:bg-secondary/20">
@@ -46,11 +48,12 @@ export function AuthPage() {
         <div className="z-10 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-pretty text-xl text-foreground/90">
-              &ldquo;{siteConfig.name} is where we share how ACTA grows — from protocol updates to
-              community stories.&rdquo;
+              {'"'}
+              {heroQuote}
+              {'"'}
             </p>
             <footer className="font-mono text-sm font-semibold text-muted-foreground">
-              — ACTA
+              - ACTA
             </footer>
           </blockquote>
         </div>
@@ -95,7 +98,7 @@ export function AuthPage() {
           <div className="flex flex-col space-y-1">
             <h1 className="text-2xl font-bold tracking-wide">Sign in</h1>
             <p className="text-base text-muted-foreground">
-              Access the {siteConfig.shortName} editorial workspace. UI preview — authentication is
+              Access the {siteConfig.shortName} editorial workspace. UI preview - authentication is
               not connected yet.
             </p>
           </div>

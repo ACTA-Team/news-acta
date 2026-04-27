@@ -51,3 +51,8 @@ insert into public.monthly_reviews (period, title, summary, highlights, metrics,
     now()
   )
 on conflict (period) do nothing;
+
+-- Admin users (email-only access to /admin)
+insert into public.admin_users (email) values
+  ('josue@acta.build')
+on conflict (email) do nothing;

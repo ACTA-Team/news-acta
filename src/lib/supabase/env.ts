@@ -51,6 +51,9 @@ export const supabaseEnv = {
   get anonKey() {
     return assertEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, 'NEXT_PUBLIC_SUPABASE_ANON_KEY');
   },
+  get serviceRoleKey() {
+    return assertEnv(process.env.SUPABASE_SERVICE_ROLE_KEY, 'SUPABASE_SERVICE_ROLE_KEY');
+  },
 } as const;
 
 export function hasSupabasePublicEnv(): boolean {
