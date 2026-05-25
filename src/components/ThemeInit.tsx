@@ -7,7 +7,8 @@ export function ThemeInit() {
     try {
       const t = localStorage.getItem('theme');
       const isDark =
-        t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        t === 'dark' ||
+        (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
       document.documentElement.classList.toggle('dark', isDark);
     } catch {}
   }, []);

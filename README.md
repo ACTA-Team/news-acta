@@ -44,27 +44,27 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 
 ### Local services
 
-| Service | URL |
-|---------|-----|
-| Next.js app | http://localhost:3000 |
-| Supabase Studio | http://127.0.0.1:54353 |
+| Service          | URL                    |
+| ---------------- | ---------------------- |
+| Next.js app      | http://localhost:3000  |
+| Supabase Studio  | http://127.0.0.1:54353 |
 | Inbucket (email) | http://127.0.0.1:54354 |
-| Supabase API | http://127.0.0.1:54351 |
+| Supabase API     | http://127.0.0.1:54351 |
 
 Inbucket captures all emails locally (magic links, confirmations) so auth flows work without a real email provider.
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run setup` | Start local Supabase + generate `.env.local` |
-| `npm run dev` | Start the Next.js dev server |
-| `npm run build` | Production build |
-| `npm run start` | Run the production build |
-| `npm run lint` | Lint the codebase |
-| `npm run format` | Format with Prettier |
-| `npm run db:start` | Start Supabase containers |
-| `npm run db:stop` | Stop Supabase containers |
-| `npm run db:reset` | Reset database (re-run migrations + seed) |
-| `npm run db:status` | Show Supabase local status and credentials |
-| `npm run db:push` | Push migrations to a remote Supabase project |
+| Script              | Description                                  |
+| ------------------- | -------------------------------------------- |
+| `npm run setup`     | Start local Supabase + generate `.env.local` |
+| `npm run dev`       | Start the Next.js dev server                 |
+| `npm run build`     | Production build                             |
+| `npm run start`     | Run the production build                     |
+| `npm run lint`      | Lint the codebase                            |
+| `npm run format`    | Format with Prettier                         |
+| `npm run db:start`  | Start Supabase containers                    |
+| `npm run db:stop`   | Stop Supabase containers                     |
+| `npm run db:reset`  | Reset database (re-run migrations + seed)    |
+| `npm run db:status` | Show Supabase local status and credentials   |
+| `npm run db:push`   | Push migrations to a remote Supabase project |

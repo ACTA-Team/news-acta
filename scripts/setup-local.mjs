@@ -28,9 +28,7 @@ function fatal(msg) {
 
 const docker = run('docker info');
 if (docker.status !== 0) {
-  fatal(
-    'Docker is not running. Please start Docker Desktop and try again.'
-  );
+  fatal('Docker is not running. Please start Docker Desktop and try again.');
 }
 
 const sbVersion = run('npx supabase --version');
@@ -75,9 +73,7 @@ const studioUrl = extract('Studio') || extract('Studio URL');
 const mailUrl = extract('Mailpit') || extract('Inbucket URL');
 
 if (!apiUrl || !anonKey || !serviceRoleKey) {
-  fatal(
-    `Could not parse Supabase credentials from status output:\n${output}`
-  );
+  fatal(`Could not parse Supabase credentials from status output:\n${output}`);
 }
 
 // ── Write .env.local ───────────────────────────────────────────────────────
