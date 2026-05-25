@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
-import Script from 'next/script';
 import './globals.css';
 
+import { ThemeInit } from '@/components/ThemeInit';
 import { siteConfig } from '@/config/site';
-
-const THEME_INIT = `(function(){try{var t=localStorage.getItem("theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d)}catch(e){}})();`;
 
 const fontSans = Plus_Jakarta_Sans({
   variable: '--font-app-sans',
@@ -59,9 +57,7 @@ export default function RootLayout({
         className="flex min-h-dvh flex-col bg-background text-foreground"
         suppressHydrationWarning
       >
-        <Script id="theme-init" strategy="beforeInteractive">
-          {THEME_INIT}
-        </Script>
+        <ThemeInit />
         {children}
       </body>
     </html>
