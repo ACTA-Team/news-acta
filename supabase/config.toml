@@ -118,6 +118,11 @@ enabled = true
 policy = "oneshot"
 inspector_port = 8084
 
+[functions.collect-ecosystem-metrics]
+verify_jwt = true
+schedule = "0 0 * * *"
+
+
 [experimental]
 orioledb_version = ""
 s3_host = ""

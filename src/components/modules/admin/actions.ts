@@ -159,3 +159,153 @@ export async function deleteAdminNewsArticleAction(formData: FormData): Promise<
   revalidatePath('/news');
   redirect('/admin/news');
 }
+
+export async function saveAdminMonthlyReviewAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const supabase = await createClient();
+  const id = String(formData.get('id') ?? '').trim();
+  const period = String(formData.get('period') ?? '').trim();
+  const title = String(formData.get('title') ?? '').trim();
+  const summary = String(formData.get('summary') ?? '').trim();
+  const coverImageUrl = String(formData.get('coverImageUrl') ?? '').trim();
+  const publishedAtRaw = String(formData.get('publishedAt') ?? '').trim();
+  
+  const highlightsJson = String(formData.get('highlights') ?? '[]');
+  const metricsJson = String(formData.get('metrics') ?? '[]');
+  const featuredArticlesRaw = String(formData.get('featuredArticles') ?? '');
+
+  if (!period || !title || !summary) {
+    throw new Error('Required fields are missing.');
+  }
+
+  const payload = {
+    period,
+    title,
+    summary,
+    cover_image_url: coverImageUrl || null,
+    highlights: JSON.parse(highlightsJson),
+    metrics: JSON.parse(metricsJson),
+    published_at: publishedAtRaw ? new Date(publishedAtRaw).toISOString() : new Date().toISOString(),
+  };
+
+  let reviewId = id;
+
+  if (reviewId) {
+    const { error } = await supabase.from('monthly_reviews').update(payload).eq('id', reviewId);
+    if (error) throw error;
+  } else {
+    const { data, error } = await supabase
+      .from('monthly_reviews')
+      .insert(payload)
+      .select('id')
+      .single();
+    if (error) throw error;
+    reviewId = data.id;
+  }
+
+  // Clear existing featured articles
+  const { error: deleteFeaturedError } = await supabase
+    .from('monthly_review_articles')
+    .delete()
+    .eq('review_id', reviewId);
+
+  if (deleteFeaturedError) throw deleteFeaturedError;
+
+  // Insert new featured articles
+  const articleIds = featuredArticlesRaw
+    .split(',')
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0);
+
+  if (articleIds.length > 0) {
+    const rows = articleIds.map((articleId, index) => ({
+      review_id: reviewId,
+      article_id: articleId,
+      position: index,
+    }));
+    const { error: insertFeaturedError } = await supabase.from('monthly_review_articles').insert(rows);
+    if (insertFeaturedError) throw insertFeaturedError;
+  }
+
+  revalidatePath('/admin');
+  revalidatePath('/admin/monthly-reviews');
+  revalidatePath('/monthly-review');
+  revalidatePath(`/monthly-review/${period}`);
+  revalidatePath('/');
+  redirect('/admin/monthly-reviews');
+}
+
+export async function deleteAdminMonthlyReviewAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const supabase = await createClient();
+  const id = String(formData.get('id') ?? '').trim();
+  const period = String(formData.get('period') ?? '').trim();
+  if (!id) throw new Error('Invalid ID');
+
+  const { error } = await supabase.from('monthly_reviews').delete().eq('id', id);
+  if (error) throw error;
+
+  revalidatePath('/admin');
+  revalidatePath('/admin/monthly-reviews');
+  revalidatePath('/monthly-review');
+  if (period) {
+    revalidatePath(`/monthly-review/${period}`);
+  }
+  revalidatePath('/');
+  redirect('/admin/monthly-reviews');
+}
+
+export async function fetchMetricsForPeriodAction(period: string, network: string) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  // 1. Try to fetch from stored snapshots
+  const { data: snapshot, error: snapshotError } = await supabase
+    .from('ecosystem_snapshots')
+    .select('*')
+    .eq('period', period)
+    .eq('network', network)
+    .maybeSingle();
+
+  if (snapshot && !snapshotError) {
+    return {
+      success: true,
+      source: 'database',
+      horizon: snapshot.horizon_metrics,
+      soroban: snapshot.soroban_metrics,
+      collectedAt: snapshot.collected_at,
+    };
+  }
+
+  // 2. Fetch live metrics from APIs
+  try {
+    const horizonUrl = network === 'mainnet'
+      ? 'https://horizon.stellar.org'
+      : 'https://horizon-testnet.stellar.org';
+    const sorobanUrl = network === 'mainnet'
+      ? 'https://soroban-rpc.stellar.org' // Or custom if any
+      : 'https://soroban-testnet.stellar.org';
+
+    const [horizon, soroban] = await Promise.all([
+      import('@/lib/stellar/horizon').then((m) => m.fetchAllHorizonMetrics(horizonUrl)),
+      import('@/lib/stellar/soroban').then((m) => m.fetchAllSorobanMetrics(sorobanUrl)),
+    ]);
+
+    return {
+      success: true,
+      source: 'live_api',
+      horizon,
+      soroban,
+      collectedAt: new Date().toISOString(),
+    };
+  } catch (err: any) {
+    console.error('Error in fetchMetricsForPeriodAction:', err);
+    return {
+      success: false,
+      error: err.message || 'Failed to fetch metrics from Stellar network.',
+    };
+  }
+}
+
+

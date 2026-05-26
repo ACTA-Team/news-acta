@@ -193,6 +193,27 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['admin_users']['Insert']>;
         Relationships: [];
       };
+
+      ecosystem_snapshots: {
+        Row: {
+          id: string;
+          period: string;
+          network: string;
+          horizon_metrics: Json;
+          soroban_metrics: Json;
+          collected_at: string;
+        };
+        Insert: {
+          id?: string;
+          period: string;
+          network: string;
+          horizon_metrics?: Json;
+          soroban_metrics?: Json;
+          collected_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['ecosystem_snapshots']['Insert']>;
+        Relationships: [];
+      };
     };
 
     Views: { [_ in never]: never };
