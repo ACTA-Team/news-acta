@@ -1,0 +1,1 @@
+export { submitVersionChain } from './client';

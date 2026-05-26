@@ -17,8 +17,14 @@ export { NewsList } from './ui/NewsList';
 export { NewsCard } from './ui/NewsCard';
 export { NewsDetail } from './ui/NewsDetail';
 export { NewsFilters } from './ui/NewsFilters';
+export { VersionTimeline } from './ui/VersionTimeline';
+export { VersionDiffBadge } from './ui/VersionDiffBadge';
+export { VersionComparison } from './ui/VersionComparison';
+export { VersionHistorySidebar } from './ui/VersionHistorySidebar';
+export { VersionInteractiveSelector } from './ui/VersionInteractiveSelector';
 export { NewsPageContent } from './pages/NewsPage';
 export { NewsDetailPageContent, generateNewsDetailMetadata } from './pages/NewsDetailPage';
+export { NewsHistoryPageContent, generateNewsHistoryMetadata } from './pages/NewsHistoryPage';
 
 // Hooks
 export { useNewsList } from './hooks/useNewsList';
@@ -26,6 +32,7 @@ export { useNewsDetail } from './hooks/useNewsDetail';
 
 // Services (for Server Components that need SSR)
 export { fetchNewsList, fetchNewsBySlug } from './services/news.service';
+export { fetchArticleVersions, fetchArticleVersionByNumber } from './services/versions.service';
 
 // Constants
 export { NEWS_CATEGORIES, NEWS_DEFAULT_PAGE_SIZE, NEWS_ROUTES, NEWS_QUERY_KEYS } from './constants';

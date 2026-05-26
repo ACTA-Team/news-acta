@@ -6,6 +6,19 @@ export { AdminDashboardPageContent } from './pages/AdminDashboardPage';
 export { AdminNewsPageContent } from './pages/AdminNewsPage';
 export { AdminNewsEditorPageContent } from './pages/AdminNewsEditorPage';
 
+// Actions
+export {
+  saveAdminNewsArticleAction,
+  deleteAdminNewsArticleAction,
+  restoreArticleVersionAction,
+} from './actions';
+
+// Services
+export {
+  fetchAdminArticleVersions,
+  fetchAdminArticleVersionByNumber,
+} from './services/versions.service';
+
 export const adminLoginMetadata = buildMetadata({
   title: 'Admin Login',
   description: 'Secure email-only access for authorized ACTA editors.',

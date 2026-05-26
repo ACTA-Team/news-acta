@@ -1,0 +1,1 @@
+export { computeArticleDiff } from './articleDiff';
