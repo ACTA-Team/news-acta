@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/server';
 import { fetchAdminNewsById, fetchAdminNewsFormOptions } from '../services/news.service';
+import { StellarReferenceField } from '../ui/StellarReferenceField';
 
 interface AdminNewsEditorPageContentProps {
   articleId?: string;
@@ -37,7 +38,12 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
       </Field>
 
       <Field label="Content (HTML or plain text)">
-        <Textarea name="content" required className="min-h-40" defaultValue={article?.content} />
+        <StellarReferenceField
+          name="content"
+          required
+          className="min-h-40"
+          defaultValue={article?.content}
+        />
       </Field>
 
       <div className="grid gap-3 md:grid-cols-2">

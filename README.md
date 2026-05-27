@@ -62,9 +62,27 @@ Inbucket captures all emails locally (magic links, confirmations) so auth flows 
 | `npm run build`     | Production build                             |
 | `npm run start`     | Run the production build                     |
 | `npm run lint`      | Lint the codebase                            |
+| `npm run test`      | Run unit tests (Vitest)                      |
 | `npm run format`    | Format with Prettier                         |
 | `npm run db:start`  | Start Supabase containers                    |
 | `npm run db:stop`   | Stop Supabase containers                     |
 | `npm run db:reset`  | Reset database (re-run migrations + seed)    |
 | `npm run db:status` | Show Supabase local status and credentials   |
 | `npm run db:push`   | Push migrations to a remote Supabase project |
+
+## Stellar rich embeds
+
+Articles can reference Stellar entities — transaction hashes, contract ids (`C…`),
+account addresses (`G…`) and assets (`CODE:ISSUER`) — and they render as inline,
+theme-aware embed cards. Admins can also use the **Insert Stellar Reference** button
+in the article editor to paste an id, preview the embed, and insert a
+`[[stellar:…]]` tag.
+
+Entities are resolved server-side against Horizon / Soroban RPC and cached in the
+`stellar_embeds_cache` table (transactions never expire; contracts 24h, accounts 1h,
+assets 6h) with stale-while-revalidate. Failed resolutions fall back to a plain
+explorer link and never block article rendering.
+
+Set the network with `NEXT_PUBLIC_STELLAR_NETWORK` (`testnet` default, or `mainnet`).
+The new cache table ships in `supabase/migrations/0003_stellar_embeds_cache.sql` — run
+`npm run db:reset` (local) or `npm run db:push` (remote) to apply it.

@@ -17,6 +17,7 @@ export { NewsList } from './ui/NewsList';
 export { NewsCard } from './ui/NewsCard';
 export { NewsDetail } from './ui/NewsDetail';
 export { NewsFilters } from './ui/NewsFilters';
+export { ArticleContent } from './ui/embeds/ArticleContent';
 export { NewsPageContent } from './pages/NewsPage';
 export { NewsDetailPageContent, generateNewsDetailMetadata } from './pages/NewsDetailPage';
 

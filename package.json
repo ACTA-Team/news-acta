@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "prettier --write .",
     "prepare": "husky",
     "setup": "node scripts/setup-local.mjs",
@@ -17,6 +19,7 @@
     "db:status": "npx supabase status"
   },
   "dependencies": {
+    "@stellar/stellar-sdk": "^15.1.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
     "class-variance-authority": "^0.7.1",
@@ -42,6 +45,7 @@
     "husky": "^9.1.7",
     "prettier": "^3.8.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.7"
   }
 }

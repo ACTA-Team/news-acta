@@ -193,6 +193,27 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['admin_users']['Insert']>;
         Relationships: [];
       };
+
+      stellar_embeds_cache: {
+        Row: {
+          entity_id: string;
+          entity_type: string;
+          network: string;
+          resolved_data: Json;
+          resolved_at: string;
+          expires_at: string | null;
+        };
+        Insert: {
+          entity_id: string;
+          entity_type: string;
+          network: string;
+          resolved_data: Json;
+          resolved_at?: string;
+          expires_at?: string | null;
+        };
+        Update: Partial<Database['public']['Tables']['stellar_embeds_cache']['Insert']>;
+        Relationships: [];
+      };
     };
 
     Views: { [_ in never]: never };
