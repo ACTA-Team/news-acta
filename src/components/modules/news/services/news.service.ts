@@ -17,6 +17,7 @@ import {
 
 type ArticleRow = Database['public']['Tables']['news_articles']['Row'];
 type AuthorRow = Database['public']['Tables']['authors']['Row'];
+type ArticleTagRow = Database['public']['Tables']['news_article_tags']['Row'];
 
 /**
  * Row shape returned by the Supabase query below, with the author and
@@ -24,7 +25,7 @@ type AuthorRow = Database['public']['Tables']['authors']['Row'];
  */
 type ArticleRowWithRelations = ArticleRow & {
   author: AuthorRow | null;
-  tags: { tag_slug: string }[];
+  tags: ArticleTagRow[];
 };
 
 const ARTICLE_SELECT = `
@@ -55,7 +56,7 @@ function mapArticle(row: ArticleRowWithRelations): NewsArticle {
     coverImageUrl: row.cover_image_url ?? undefined,
     category: row.category,
     status: row.status,
-    tags: row.tags?.map((t) => t.tag_slug) ?? [],
+    tags: row.tags?.map((tag: ArticleTagRow) => tag.tag_slug) ?? [],
     author: {
       id: row.author?.id ?? row.author_id,
       name: row.author?.name ?? 'Unknown',
