@@ -6,9 +6,7 @@ export function getStellarServer() {
 }
 
 export function getNetworkPassphrase() {
-  return STELLAR_NETWORK === 'mainnet'
-    ? Networks.PUBLIC
-    : Networks.TESTNET;
+  return STELLAR_NETWORK === 'mainnet' ? Networks.PUBLIC : Networks.TESTNET;
 }
 
 export function getBlogKeypair() {

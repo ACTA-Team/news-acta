@@ -1,6 +1,11 @@
 import { createHash } from 'crypto';
 
-export function computeArticleHash({ title, summary, content, published_at }: {
+export function computeArticleHash({
+  title,
+  summary,
+  content,
+  published_at,
+}: {
   title: string;
   summary: string;
   content: string;

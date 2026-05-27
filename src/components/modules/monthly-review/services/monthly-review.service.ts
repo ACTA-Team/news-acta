@@ -64,8 +64,9 @@ function mapDetail(row: ReviewRowWithArticles): MonthlyReview {
     .sort((left: ReviewFeaturedRow, right: ReviewFeaturedRow) => left.position - right.position)
     .map((feature: ReviewFeaturedRow) => feature.article)
     .filter(
-      (article: ReviewFeaturedRow['article']): article is NonNullable<ReviewFeaturedRow['article']> =>
-        article !== null
+      (
+        article: ReviewFeaturedRow['article']
+      ): article is NonNullable<ReviewFeaturedRow['article']> => article !== null
     )
     .map((article) => ({
       id: article.id,
