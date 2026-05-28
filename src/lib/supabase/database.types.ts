@@ -180,6 +180,45 @@ export interface Database {
           },
         ];
       };
+
+      media_library: {
+        Row: {
+          id: string;
+          bucket: string;
+          path: string;
+          original_name: string;
+          mime_type: string;
+          size_bytes: number;
+          width: number | null;
+          height: number | null;
+          alt_text: string | null;
+          variants: Json;
+          content_hash: string | null;
+          stellar_tx_hash: string | null;
+          uploaded_by: string;
+          usage_count: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          bucket: string;
+          path: string;
+          original_name: string;
+          mime_type: string;
+          size_bytes: number;
+          width?: number | null;
+          height?: number | null;
+          alt_text?: string | null;
+          variants?: Json;
+          content_hash?: string | null;
+          stellar_tx_hash?: string | null;
+          uploaded_by: string;
+          usage_count?: number;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['media_library']['Insert']>;
+        Relationships: [];
+      };
     };
 
     Views: { [_ in never]: never };
