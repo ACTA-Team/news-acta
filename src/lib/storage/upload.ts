@@ -155,7 +155,8 @@ export async function uploadMedia(
 
     if (variantError) {
       // Non-fatal: log and continue
-      console.error(`Failed to upload variant ${variant.key}:`, variantError.message);
+      const safeKey = variant.key.replace(/[\r\n]/g, '_');
+      console.error(`Failed to upload variant ${safeKey}:`, variantError.message);
     } else {
       variantPaths[variant.key] = variantPath;
     }

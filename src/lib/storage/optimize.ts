@@ -9,8 +9,8 @@
  */
 
 import sharp from 'sharp';
-import type { ProcessedVariant, VariantSpec } from '@/@types/media';
-import { VARIANT_SPECS } from './constants';
+import type { AllowedMimeType, ProcessedVariant, VariantSpec } from '@/@types/media';
+import { ALLOWED_MIME_TYPES, VARIANT_SPECS } from './constants';
 
 /**
  * Process a single image buffer into all named variants.
@@ -23,6 +23,10 @@ export async function generateVariants(
   input: Buffer,
   mimeType: string
 ): Promise<ProcessedVariant[]> {
+  if (!ALLOWED_MIME_TYPES.includes(mimeType as AllowedMimeType)) {
+    throw new Error(`Unsupported MIME type: ${mimeType}`);
+  }
+
   // SVG: return a single "original" variant — Sharp cannot rasterize SVGs.
   if (mimeType === 'image/svg+xml') {
     return [
@@ -53,6 +57,10 @@ export async function getImageDimensions(
   input: Buffer,
   mimeType: string
 ): Promise<{ width: number; height: number }> {
+  if (!ALLOWED_MIME_TYPES.includes(mimeType as AllowedMimeType)) {
+    throw new Error(`Unsupported MIME type: ${mimeType}`);
+  }
+
   if (mimeType === 'image/svg+xml') {
     return { width: 0, height: 0 };
   }

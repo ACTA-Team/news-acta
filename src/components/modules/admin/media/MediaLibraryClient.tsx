@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import type { MediaItem, MediaListFilters, MediaListResponse } from '@/@types/media';
+import type { MediaBucket, MediaItem, MediaListFilters, MediaListResponse } from '@/@types/media';
 import { MediaGrid } from './MediaGrid';
 import { MediaFilters } from './MediaFilters';
 import { MediaDetailModal } from './MediaDetailModal';
@@ -18,6 +18,7 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [detailItem, setDetailItem] = useState<MediaItem | null>(null);
   const [showUpload, setShowUpload] = useState(false);
+  const [uploadBucket, setUploadBucket] = useState<MediaBucket>('article-covers');
   const [bulkAltText, setBulkAltText] = useState('');
   const [bulkActionError, setBulkActionError] = useState<string | null>(null);
   const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
@@ -73,7 +74,7 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
     setSelectedIds(new Set());
   }
 
-  function handleUploaded(item: MediaItem) {
+  function handleUploaded(item: MediaItem, _publicUrl: string) {
     setData((prev) => ({
       ...prev,
       items: [item, ...prev.items],
@@ -179,10 +180,24 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
 
       {/* Upload zone */}
       {showUpload && (
-        <UploadZone
-          bucket="article-covers"
-          onUploaded={handleUploaded}
-        />
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <label className="text-xs font-medium text-zinc-400">Upload to:</label>
+            <select
+              value={uploadBucket}
+              onChange={(e) => setUploadBucket(e.target.value as MediaBucket)}
+              className="h-8 rounded-md border border-zinc-700 bg-zinc-800 px-2 text-sm text-zinc-100 focus:border-zinc-500 focus:outline-none"
+            >
+              <option value="article-covers">Article Covers</option>
+              <option value="article-content">Article Content</option>
+              <option value="author-avatars">Author Avatars</option>
+            </select>
+          </div>
+          <UploadZone
+            bucket={uploadBucket}
+            onUploaded={handleUploaded}
+          />
+        </div>
       )}
 
       {/* Filters */}

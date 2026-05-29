@@ -130,7 +130,7 @@ export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: Me
             <div className="flex items-center gap-2 rounded-lg border border-blue-800 bg-blue-950/30 px-3 py-2">
               <span className="text-blue-400 text-sm">✓ Anchored on Stellar</span>
               <a
-                href={`https://stellar.expert/explorer/testnet/tx/${item.stellarTxHash}`}
+                href={`https://stellar.expert/explorer/${process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet' || process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'public' ? 'public' : 'testnet'}/tx/${item.stellarTxHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-auto text-xs text-blue-500 underline hover:text-blue-300"

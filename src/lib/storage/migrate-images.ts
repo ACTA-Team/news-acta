@@ -24,6 +24,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 import { createHash } from 'crypto';
+import { basename } from 'path';
 import type { Database } from '@/lib/supabase/database.types';
 import type { MediaBucket } from '@/@types/media';
 import { generateVariants, getImageDimensions } from './optimize';
@@ -66,6 +67,28 @@ function isExternalUrl(url: string): boolean {
   return url.startsWith('http') && !url.includes(SUPABASE_URL);
 }
 
+/**
+ * Block private/loopback/metadata IP ranges to prevent SSRF.
+ */
+function isSafeUrl(url: string): boolean {
+  try {
+    const { hostname, protocol } = new URL(url);
+    if (!['http:', 'https:'].includes(protocol)) return false;
+    if (
+      hostname === 'localhost' ||
+      /^127\./.test(hostname) ||
+      /^10\./.test(hostname) ||
+      /^172\.(1[6-9]|2\d|3[01])\./.test(hostname) ||
+      /^192\.168\./.test(hostname) ||
+      /^169\.254\./.test(hostname) ||
+      hostname === '0.0.0.0'
+    ) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function extractImageUrls(content: string): string[] {
   const urls: string[] = [];
   // Match src="..." in img tags
@@ -83,6 +106,10 @@ function extractImageUrls(content: string): string[] {
 }
 
 async function downloadImage(url: string): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
+  if (!isSafeUrl(url)) {
+    throw new Error(`Blocked URL (private/internal address not allowed): ${url}`);
+  }
+
   const response = await fetch(url, {
     headers: { 'User-Agent': 'ACTA-News-Migration/1.0' },
     signal: AbortSignal.timeout(30_000),
@@ -98,9 +125,10 @@ async function downloadImage(url: string): Promise<{ buffer: Buffer; mimeType: s
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Extract filename from URL
-  const urlPath = new URL(url).pathname;
-  const filename = urlPath.split('/').pop() ?? `image-${randomUUID()}.jpg`;
+  // Extract and sanitize filename from URL — strip directory components and
+  // allow only safe characters to prevent path traversal / command injection.
+  const rawName = basename(new URL(url).pathname);
+  const filename = rawName.replace(/[^a-zA-Z0-9._-]/g, '_') || `image-${randomUUID()}.jpg`;
 
   return { buffer, mimeType, filename };
 }
@@ -116,11 +144,12 @@ async function migrateUrl(
 ): Promise<string> {
   const { buffer, mimeType, filename } = await downloadImage(url);
 
-  // Generate path
+  // Generate path — use only the sanitized extension from the filename
   const now = new Date();
   const year = now.getUTCFullYear();
   const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-  const ext = filename.split('.').pop() ?? 'jpg';
+  const rawExt = filename.split('.').pop() ?? 'jpg';
+  const ext = /^[a-zA-Z0-9]{1,5}$/.test(rawExt) ? rawExt : 'jpg';
   const uuid = randomUUID();
   const path = `${year}/${month}/${uuid}.${ext}`;
 
@@ -211,10 +240,12 @@ async function main() {
 
         result.newUrl = newUrl;
         result.status = 'success';
-        console.log(`  ✓ ${article.slug} cover → ${newUrl}`);
+        const safeSlug = article.slug.replace(/[\r\n]/g, '_');
+        console.log(`  ✓ ${safeSlug} cover → [new storage URL]`);
       } catch (err) {
         result.error = err instanceof Error ? err.message : String(err);
-        console.error(`  ✗ ${article.slug} cover: ${result.error}`);
+        const safeSlug = article.slug.replace(/[\r\n]/g, '_');
+        console.error(`  ✗ ${safeSlug} cover: ${result.error}`);
       }
 
       results.push(result);
@@ -248,10 +279,12 @@ async function main() {
 
         result.newUrl = newUrl;
         result.status = 'success';
-        console.log(`  ✓ Replaced in ${article.slug}`);
+        const safeSlug2 = article.slug.replace(/[\r\n]/g, '_');
+        console.log(`  ✓ Replaced in ${safeSlug2}`);
       } catch (err) {
         result.error = err instanceof Error ? err.message : String(err);
-        console.error(`  ✗ ${article.slug} content image: ${result.error}`);
+        const safeSlug2 = article.slug.replace(/[\r\n]/g, '_');
+        console.error(`  ✗ ${safeSlug2} content image: ${result.error}`);
       }
 
       results.push(result);
@@ -276,7 +309,8 @@ async function main() {
   if (failed.length > 0) {
     console.log('\nFailed URLs:');
     for (const r of failed) {
-      console.log(`  [${r.articleSlug}] ${r.originalUrl}`);
+      const safeSlug = r.articleSlug.replace(/[\r\n]/g, '_');
+      console.log(`  [${safeSlug}] [url redacted]`);
       console.log(`    Error: ${r.error}`);
     }
   }

@@ -116,9 +116,6 @@ export async function fetchMediaArticleRefs(
   supabase: TypedSupabaseClient,
   mediaItem: MediaItem
 ): Promise<MediaArticleRef[]> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  const publicUrl = `${supabaseUrl}/storage/v1/object/public/${mediaItem.bucket}/${mediaItem.path}`;
-
   const { data, error } = await supabase
     .from('news_articles')
     .select('id, slug, title')
