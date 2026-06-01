@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
   },
   // Sharp is a native Node.js module — keep it server-side only.
   serverExternalPackages: ['sharp'],
+        hostname: '**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

@@ -1,5 +1,9 @@
 import type { Tag } from '@/@types/tag';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrestError';
 
 type TagRow = Database['public']['Tables']['tags']['Row'];
 
@@ -18,7 +22,13 @@ export async function fetchTags(supabase: TypedSupabaseClient): Promise<Tag[]> {
     .select('*')
     .order('label', { ascending: true });
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return [];
+    }
+    throw error;
+  }
   return (data ?? []).map((row) => mapTag(row));
 }
 
@@ -28,7 +38,13 @@ export async function fetchTagBySlug(
 ): Promise<Tag | null> {
   const { data, error } = await supabase.from('tags').select('*').eq('slug', slug).maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return null;
+    }
+    throw error;
+  }
   if (!data) return null;
 
   return mapTag(data);
