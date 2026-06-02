@@ -1,5 +1,9 @@
 import type { Author } from '@/@types/author';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrestError';
 
 type AuthorRow = Database['public']['Tables']['authors']['Row'];
 
@@ -32,7 +36,13 @@ export async function fetchAuthors(supabase: TypedSupabaseClient): Promise<Autho
     .select('*')
     .order('name', { ascending: true });
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return [];
+    }
+    throw error;
+  }
   return (data ?? []).map(mapAuthor);
 }
 
@@ -42,7 +52,13 @@ export async function fetchAuthorBySlug(
 ): Promise<Author | null> {
   const { data, error } = await supabase.from('authors').select('*').eq('slug', slug).maybeSingle();
 
-  if (error) throw error;
+  if (error) {
+    if (isMissingSchemaCacheError(error)) {
+      warnMissingMigrationsOnce();
+      return null;
+    }
+    throw error;
+  }
   if (!data) return null;
 
   return mapAuthor(data);

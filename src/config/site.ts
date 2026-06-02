@@ -16,17 +16,20 @@ export const siteConfig = {
   defaultOgImage: '/og/default.png',
 
   social: {
+    website: {
+      url: 'https://acta.build/',
+    },
     x: {
-      handle: '@acta_build',
-      url: 'https://x.com/acta_build',
+      handle: '@ActaXyz',
+      url: 'https://x.com/ActaXyz',
     },
     instagram: {
-      handle: '@acta.build',
-      url: 'https://instagram.com/acta.build',
+      handle: '@acta.xyz',
+      url: 'https://www.instagram.com/acta.xyz',
     },
     github: {
-      handle: 'acta-build',
-      url: 'https://github.com/acta-build',
+      handle: 'ACTA-Team',
+      url: 'https://github.com/ACTA-Team',
     },
   },
 

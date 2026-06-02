@@ -9,12 +9,16 @@
  * `services/` internally without breaking consumers.
  */
 
+import { buildMetadata } from '@/lib/seo';
+
 // UI
 export { NewsHeader } from './ui/NewsHeader';
 export { NewsList } from './ui/NewsList';
 export { NewsCard } from './ui/NewsCard';
 export { NewsDetail } from './ui/NewsDetail';
 export { NewsFilters } from './ui/NewsFilters';
+export { NewsPageContent } from './pages/NewsPage';
+export { NewsDetailPageContent, generateNewsDetailMetadata } from './pages/NewsDetailPage';
 
 // Hooks
 export { useNewsList } from './hooks/useNewsList';
@@ -33,3 +37,10 @@ export {
   estimateReadingTime,
   sortArticlesByDate,
 } from './utils';
+
+export const newsPageMetadata = buildMetadata({
+  title: 'News',
+  description:
+    'Announcements, product updates, engineering deep-dives and community highlights from the ACTA ecosystem.',
+  path: '/news',
+});
