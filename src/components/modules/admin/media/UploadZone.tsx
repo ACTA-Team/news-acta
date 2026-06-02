@@ -22,9 +22,15 @@ export function UploadZone({ bucket, anchorOnStellar = false, onUploaded, onErro
   const [state, setState] = useState<UploadState>({ status: 'idle', progress: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const uploadFile = useCallback(
     async (file: File) => {
+      // Clear any pending reset timer from a previous upload
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+        resetTimerRef.current = null;
+      }
       // Client-side validation
       const limitBytes = BUCKET_SIZE_LIMITS[bucket];
       if (file.size > limitBytes) {
@@ -67,8 +73,11 @@ export function UploadZone({ bucket, anchorOnStellar = false, onUploaded, onErro
         setState({ status: 'success', progress: 100, fileName: file.name });
         onUploaded(result.media, result.publicUrl);
 
-        // Reset after a short delay
-        setTimeout(() => setState({ status: 'idle', progress: 0 }), 2000);
+        // Reset after a short delay — store timer so it can be cancelled
+        resetTimerRef.current = setTimeout(() => {
+          setState({ status: 'idle', progress: 0 });
+          resetTimerRef.current = null;
+        }, 2000);
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Upload failed';
         setState({ status: 'error', progress: 0, error: msg });

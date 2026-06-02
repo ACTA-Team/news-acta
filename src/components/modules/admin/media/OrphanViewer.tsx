@@ -26,6 +26,8 @@ export function OrphanViewer({ initialItems }: OrphanViewerProps) {
       if (!res.ok) throw new Error('Scan failed');
       const data = await res.json();
       setItems(data.items ?? []);
+      setSelectedIds(new Set());
+      setConfirmDelete(false);
       setScanResult(`Scan complete. Found ${data.orphanCount} orphaned file${data.orphanCount !== 1 ? 's' : ''}.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Scan failed');

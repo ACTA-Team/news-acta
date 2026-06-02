@@ -31,6 +31,7 @@ export function MediaFilters({ filters, onChange }: MediaFiltersProps) {
       <input
         type="search"
         placeholder="Search by filename…"
+        aria-label="Search by filename"
         value={filters.search ?? ''}
         onChange={(e) => update({ search: e.target.value || undefined })}
         className="h-9 rounded-md border border-zinc-700 bg-zinc-800 px-3 text-sm text-zinc-100 placeholder-zinc-500 focus:border-zinc-500 focus:outline-none"

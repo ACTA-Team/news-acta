@@ -54,8 +54,8 @@ create policy "authenticated can write media"
   on public.media_library
   for all
   to authenticated
-  using (true)
-  with check (true);
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 
 -- ---------------------------------------------------------------------------
 -- Storage buckets
@@ -113,48 +113,48 @@ create policy "author-avatars public read"
   on storage.objects for select
   using (bucket_id = 'author-avatars');
 
--- Authenticated write for all three buckets
+-- article-covers authenticated write
 create policy "article-covers authenticated write"
   on storage.objects for insert
   to authenticated
-  with check (bucket_id = 'article-covers');
+  with check (bucket_id = 'article-covers' and (select public.is_admin()));
 
 create policy "article-covers authenticated update"
   on storage.objects for update
   to authenticated
-  using (bucket_id = 'article-covers');
+  using (bucket_id = 'article-covers' and (select public.is_admin()));
 
 create policy "article-covers authenticated delete"
   on storage.objects for delete
   to authenticated
-  using (bucket_id = 'article-covers');
+  using (bucket_id = 'article-covers' and (select public.is_admin()));
 
 create policy "article-content authenticated write"
   on storage.objects for insert
   to authenticated
-  with check (bucket_id = 'article-content');
+  with check (bucket_id = 'article-content' and (select public.is_admin()));
 
 create policy "article-content authenticated update"
   on storage.objects for update
   to authenticated
-  using (bucket_id = 'article-content');
+  using (bucket_id = 'article-content' and (select public.is_admin()));
 
 create policy "article-content authenticated delete"
   on storage.objects for delete
   to authenticated
-  using (bucket_id = 'article-content');
+  using (bucket_id = 'article-content' and (select public.is_admin()));
 
 create policy "author-avatars authenticated write"
   on storage.objects for insert
   to authenticated
-  with check (bucket_id = 'author-avatars');
+  with check (bucket_id = 'author-avatars' and (select public.is_admin()));
 
 create policy "author-avatars authenticated update"
   on storage.objects for update
   to authenticated
-  using (bucket_id = 'author-avatars');
+  using (bucket_id = 'author-avatars' and (select public.is_admin()));
 
 create policy "author-avatars authenticated delete"
   on storage.objects for delete
   to authenticated
-  using (bucket_id = 'author-avatars');
+  using (bucket_id = 'author-avatars' and (select public.is_admin()));

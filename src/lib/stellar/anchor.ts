@@ -103,16 +103,21 @@ export async function verifyAnchor(
     const server = new StellarSdk.Horizon.Server(horizonUrl);
 
     const tx = await server.transactions().transaction(txHash).call();
+    if (!tx.successful) return { verified: false };
 
-    // Check that the transaction exists and is successful
-    if (!tx.successful) {
-      return { verified: false };
+    // Fetch operations and find the matching manage_data entry
+    const ops = await server.operations().forTransaction(txHash).call();
+    for (const op of ops.records) {
+      if (op.type !== 'manage_data') continue;
+      const manageDataOp = op as { type: string; value: string };
+      // value is base64-encoded
+      const decoded = Buffer.from(manageDataOp.value, 'base64').toString('utf8');
+      if (decoded === expectedHash.slice(0, 64)) {
+        return { verified: true, ledger: (tx.ledger as unknown) as number };
+      }
     }
 
-    return {
-      verified: true,
-      ledger: (tx.ledger as unknown) as number,
-    };
+    return { verified: false };
   } catch {
     return { verified: false };
   }

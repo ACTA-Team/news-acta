@@ -5,7 +5,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const { createClient } = await import('@/lib/supabase/server');
+  const { redirect } = await import('next/navigation');
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) redirect('/');
+
+  const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
+  if (!isAdmin) redirect('/');
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50">
       <nav className="border-b border-zinc-800 bg-zinc-900 px-6 py-3">

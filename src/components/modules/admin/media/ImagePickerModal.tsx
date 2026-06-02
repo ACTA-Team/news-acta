@@ -70,8 +70,9 @@ export function ImagePickerModal({
     onClose();
   }
 
-  function handleUploaded(item: MediaItem, publicUrl: string) {
-    onSelect(item, publicUrl);
+  function handleUploaded(item: MediaItem) {
+    const url = getVariantUrl(item, preferVariant);
+    onSelect(item, url);
     onClose();
   }
 

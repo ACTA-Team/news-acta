@@ -26,16 +26,24 @@ export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: Me
   const [saveError, setSaveError] = useState<string | null>(null);
   const [articles, setArticles] = useState<MediaArticleRef[]>([]);
   const [loadingArticles, setLoadingArticles] = useState(true);
+  const [articlesError, setArticlesError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   // Fetch article references
   useEffect(() => {
     setLoadingArticles(true);
+    setArticlesError(null);
     fetch(`/api/media/${item.id}/articles`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        if (!r.ok) throw new Error('Failed to load article references');
+        return r.json();
+      })
       .then((data) => setArticles(data.items ?? []))
-      .catch(() => setArticles([]))
+      .catch((err) => {
+        setArticles([]);
+        setArticlesError(err instanceof Error ? err.message : 'Failed to load article references');
+      })
       .finally(() => setLoadingArticles(false));
   }, [item.id]);
 
@@ -231,6 +239,8 @@ export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: Me
             </h3>
             {loadingArticles ? (
               <p className="text-xs text-zinc-600">Loading…</p>
+            ) : articlesError ? (
+              <p className="text-xs text-red-400">{articlesError}</p>
             ) : articles.length === 0 ? (
               <p className="text-xs text-zinc-600">Not used in any articles</p>
             ) : (

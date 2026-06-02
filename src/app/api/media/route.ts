@@ -10,6 +10,13 @@ import { createPublicClient } from '@/lib/supabase/public';
 import { fetchMediaList } from '@/lib/storage/media.service';
 import type { MediaBucket, MediaListFilters } from '@/@types/media';
 
+function clampInt(value: string | null, min: number, max: number, fallback: number): number {
+  const n = parseInt(value ?? '', 10);
+  if (!isFinite(n) || n < min) return fallback;
+  if (n > max) return max;
+  return n;
+}
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = request.nextUrl;
@@ -20,8 +27,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       usage: (searchParams.get('usage') as 'used' | 'unused') || undefined,
       dateFrom: searchParams.get('dateFrom') || undefined,
       dateTo: searchParams.get('dateTo') || undefined,
-      page: searchParams.get('page') ? Number(searchParams.get('page')) : 1,
-      pageSize: searchParams.get('pageSize') ? Number(searchParams.get('pageSize')) : 24,
+      page: clampInt(searchParams.get('page'), 1, 10_000, 1),
+      pageSize: clampInt(searchParams.get('pageSize'), 1, 100, 24),
     };
 
     const supabase = createPublicClient();

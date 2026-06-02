@@ -27,17 +27,9 @@ export async function generateVariants(
     throw new Error(`Unsupported MIME type: ${mimeType}`);
   }
 
-  // SVG: return a single "original" variant — Sharp cannot rasterize SVGs.
+  // SVG: return empty variants — Sharp cannot rasterize SVGs; original is uploaded as-is.
   if (mimeType === 'image/svg+xml') {
-    return [
-      {
-        key: 'thumb',
-        buffer: input,
-        width: 0,
-        height: 0,
-        sizeBytes: input.byteLength,
-      },
-    ];
+    return [];
   }
 
   const results: ProcessedVariant[] = [];

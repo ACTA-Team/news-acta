@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MediaBucket, MediaItem, MediaListFilters, MediaListResponse } from '@/@types/media';
 import { MediaGrid } from './MediaGrid';
 import { MediaFilters } from './MediaFilters';
@@ -22,10 +22,14 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
   const [bulkAltText, setBulkAltText] = useState('');
   const [bulkActionError, setBulkActionError] = useState<string | null>(null);
   const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+  const didInitRef = useRef(false);
 
-  // Fetch media list whenever filters change
+  // Fetch media list whenever filters change — skip the very first render
   useEffect(() => {
-    if (filters === initialData) return; // Skip initial render
+    if (!didInitRef.current) {
+      didInitRef.current = true;
+      return;
+    }
     fetchMedia(filters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
@@ -136,6 +140,8 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
     if (!bulkAltText.trim()) return;
     setBulkActionError(null);
     const ids = Array.from(selectedIds);
+    const failedIds: string[] = [];
+    const errors: string[] = [];
 
     for (const id of ids) {
       try {
@@ -146,14 +152,24 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
         });
         if (res.ok) {
           handleAltTextSaved(id, bulkAltText);
+        } else {
+          const data = await res.json();
+          failedIds.push(id);
+          errors.push(data.error ?? `Failed for ${id}`);
         }
       } catch {
-        // Continue with remaining items
+        failedIds.push(id);
+        errors.push(`Network error for ${id}`);
       }
     }
 
-    setBulkAltText('');
-    setSelectedIds(new Set());
+    if (failedIds.length > 0) {
+      setBulkActionError(errors.join('; '));
+      setSelectedIds(new Set(failedIds));
+    } else {
+      setBulkAltText('');
+      setSelectedIds(new Set());
+    }
   }
 
   const totalPages = Math.ceil(data.total / (filters.pageSize ?? 24));

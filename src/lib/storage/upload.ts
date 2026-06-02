@@ -142,6 +142,7 @@ export async function uploadMedia(
 
   // 5b. Upload each variant
   const variantPaths: MediaVariants = {};
+  const uploadedPaths: string[] = [originalPath];
 
   for (const variant of variants) {
     const variantPath = originalPath.replace(/\.[^.]+$/, `-${variant.key}.webp`);
@@ -154,11 +155,11 @@ export async function uploadMedia(
       });
 
     if (variantError) {
-      // Non-fatal: log and continue
       const safeKey = variant.key.replace(/[\r\n]/g, '_');
       console.error(`Failed to upload variant ${safeKey}:`, variantError.message);
     } else {
       variantPaths[variant.key] = variantPath;
+      uploadedPaths.push(variantPath);
     }
   }
 
@@ -181,6 +182,8 @@ export async function uploadMedia(
     .single();
 
   if (insertError || !record) {
+    // Rollback: remove uploaded objects to avoid orphans
+    await supabase.storage.from(bucket).remove(uploadedPaths).catch(() => undefined);
     throw new Error(`Failed to record media metadata: ${insertError?.message}`);
   }
 

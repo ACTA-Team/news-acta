@@ -188,10 +188,13 @@ export async function recalculateUsageCounts(supabase: TypedSupabaseClient): Pro
   // Update each media item's usage count
   for (const item of mediaItems ?? []) {
     const count = countOccurrences(allText, item.path);
-    await supabase
+    const { error: updateError } = await supabase
       .from('media_library')
       .update({ usage_count: count })
       .eq('id', item.id);
+    if (updateError) {
+      throw new Error(`Failed to update usage_count for ${item.id}: ${updateError.message}`);
+    }
   }
 }
 

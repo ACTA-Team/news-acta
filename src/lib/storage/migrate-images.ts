@@ -179,19 +179,25 @@ async function migrateUrl(
     if (!error) variantPaths[variant.key] = variantPath;
   }
 
-  // Insert media_library record
-  await supabase.from('media_library').insert({
+  const { error: insertError } = await supabase.from('media_library').insert({
     bucket,
     path,
     original_name: filename,
     mime_type: mimeType,
     size_bytes: buffer.byteLength,
-    width: width || null,
-    height: height || null,
+    width: width ?? null,
+    height: height ?? null,
     variants: variantPaths,
     content_hash: contentHash,
     uploaded_by: uploadedBy,
   });
+
+  if (insertError) {
+    // Rollback uploaded objects
+    const allPaths = [path, ...Object.values(variantPaths)];
+    await supabase.storage.from(bucket).remove(allPaths).catch(() => undefined);
+    throw new Error(`media_library insert failed: ${insertError.message}`);
+  }
 
   // Return new public URL
   return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
