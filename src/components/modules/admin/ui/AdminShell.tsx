@@ -14,6 +14,8 @@ const links = [
   { href: '/admin', label: 'Dashboard' },
   { href: '/admin/news', label: 'News' },
   { href: '/admin/news/new', label: 'New article' },
+  { href: '/admin/monthly-reviews', label: 'Monthly Reviews' },
+  { href: '/admin/monthly-reviews/new', label: 'New Review' },
 ] as const;
 
 export function AdminShell({ email, title, subtitle, children }: AdminShellProps) {
