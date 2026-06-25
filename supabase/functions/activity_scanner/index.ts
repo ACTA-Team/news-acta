@@ -1,5 +1,5 @@
 import { createAdminClient } from '../../../src/lib/supabase/admin';
-import { fetchOperationsSince, classifyOperation } from '../../../src/lib/stellar';
+import { fetchOperationsSince, classifyOperation } from '../../../src/lib/stellar/scanner';
 
 const HORIZON_URL = process.env.STELLAR_HORIZON_URL || 'https://horizon.stellar.org';
 
