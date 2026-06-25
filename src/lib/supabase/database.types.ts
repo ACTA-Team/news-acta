@@ -3,6 +3,81 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
   public: {
     Tables: {
+      monitored_accounts: {
+        Row: {
+          id: string;
+          stellar_address: string;
+          label: string;
+          account_type: string;
+          monitor_events: string[];
+          active: boolean;
+          last_cursor: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          stellar_address: string;
+          label: string;
+          account_type: string;
+          monitor_events?: string[];
+          active?: boolean;
+          last_cursor?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          stellar_address?: string;
+          label?: string;
+          account_type?: string;
+          monitor_events?: string[];
+          active?: boolean;
+          last_cursor?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      activity_events: {
+        Row: {
+          id: string;
+          account_id: string;
+          source_account: string;
+          event_type: string;
+          significance: string;
+          raw_data: Json;
+          summary: string | null;
+          processed: boolean;
+          draft_article_id: string | null;
+          detected_at: string;
+          tx_hash: string | null;
+        };
+        Insert: {
+          id?: string;
+          account_id: string;
+          source_account: string;
+          event_type: string;
+          significance: string;
+          raw_data?: Json;
+          summary?: string | null;
+          processed?: boolean;
+          draft_article_id?: string | null;
+          detected_at?: string;
+          tx_hash?: string | null;
+        };
+        Update: {
+          id?: string;
+          account_id?: string;
+          source_account?: string;
+          event_type?: string;
+          significance?: string;
+          raw_data?: Json;
+          summary?: string | null;
+          processed?: boolean;
+          draft_article_id?: string | null;
+          detected_at?: string;
+          tx_hash?: string | null;
+        };
+        Relationships: [];
+      };
       admin_users: {
         Row: {
           email: string;
