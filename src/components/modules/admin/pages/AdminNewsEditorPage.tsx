@@ -5,6 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/server';
 import { fetchAdminNewsById, fetchAdminNewsFormOptions } from '../services/news.service';
+import { StellarReferenceField } from '../ui/StellarReferenceField';
+import { fetchAdminArticleVersions } from '../services/versions.service';
+import { VersionHistorySidebar } from '@/components/modules/news/ui/VersionHistorySidebar';
 
 interface AdminNewsEditorPageContentProps {
   articleId?: string;
@@ -19,100 +22,123 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
     notFound();
   }
 
+  const versions = articleId ? await fetchAdminArticleVersions(supabase, articleId) : [];
+  const currentVersionNumber = versions.length > 0 ? versions[0].versionNumber : 1;
+
   return (
-    <form action={saveAdminNewsArticleAction} className="space-y-4 rounded-2xl border bg-card p-5">
-      {articleId ? <input type="hidden" name="id" value={articleId} /> : null}
+    <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
+      {/* ── Editor form ── */}
+      <form
+        action={saveAdminNewsArticleAction}
+        className="space-y-4 rounded-2xl border bg-card p-5"
+      >
+        {articleId ? <input type="hidden" name="id" value={articleId} /> : null}
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Title">
-          <Input name="title" required defaultValue={article?.title} />
-        </Field>
-        <Field label="Slug">
-          <Input name="slug" required defaultValue={article?.slug} />
-        </Field>
-      </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <Field label="Title">
+            <Input name="title" required defaultValue={article?.title} />
+          </Field>
+          <Field label="Slug">
+            <Input name="slug" required defaultValue={article?.slug} />
+          </Field>
+        </div>
 
-      <Field label="Summary">
-        <Textarea name="summary" required defaultValue={article?.summary} />
-      </Field>
-
-      <Field label="Content (HTML or plain text)">
-        <Textarea name="content" required className="min-h-40" defaultValue={article?.content} />
-      </Field>
-
-      <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Category">
-          <select
-            name="category"
-            defaultValue={article?.category ?? 'announcement'}
-            className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
-          >
-            <option value="announcement">announcement</option>
-            <option value="product">product</option>
-            <option value="ecosystem">ecosystem</option>
-            <option value="engineering">engineering</option>
-            <option value="community">community</option>
-          </select>
+        <Field label="Summary">
+          <Textarea name="summary" required defaultValue={article?.summary} />
         </Field>
-        <Field label="Status">
-          <select
-            name="status"
-            defaultValue={article?.status ?? 'draft'}
-            className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
-          >
-            <option value="draft">draft</option>
-            <option value="published">published</option>
-            <option value="archived">archived</option>
-          </select>
-        </Field>
-      </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Author">
-          <select
-            name="authorId"
-            defaultValue={article?.authorId ?? options.authors[0]?.id}
-            className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
-          >
-            {options.authors.map((author) => (
-              <option key={author.id} value={author.id}>
-                {author.name} ({author.slug})
-              </option>
-            ))}
-          </select>
-        </Field>
-        <Field label="Reading time (minutes)">
-          <Input
-            type="number"
-            min={1}
-            name="readingTimeMinutes"
+        <Field label="Content (HTML or plain text)">
+          <StellarReferenceField
+            name="content"
             required
-            defaultValue={article?.readingTimeMinutes ?? 2}
+            className="min-h-40"
+            defaultValue={article?.content}
           />
         </Field>
-      </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Cover image URL">
-          <Input name="coverImageUrl" defaultValue={article?.coverImageUrl} />
-        </Field>
-        <Field label="Published at">
-          <Input type="datetime-local" name="publishedAt" defaultValue={article?.publishedAt} />
-        </Field>
-      </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <Field label="Category">
+            <select
+              name="category"
+              defaultValue={article?.category ?? 'announcement'}
+              className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
+            >
+              <option value="announcement">announcement</option>
+              <option value="product">product</option>
+              <option value="ecosystem">ecosystem</option>
+              <option value="engineering">engineering</option>
+              <option value="community">community</option>
+            </select>
+          </Field>
+          <Field label="Status">
+            <select
+              name="status"
+              defaultValue={article?.status ?? 'draft'}
+              className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
+            >
+              <option value="draft">draft</option>
+              <option value="published">published</option>
+              <option value="archived">archived</option>
+            </select>
+          </Field>
+        </div>
 
-      <Field label="Tags (comma-separated slugs)">
-        <Input
-          name="tags"
-          placeholder={options.tags.map((t) => t.slug).join(', ')}
-          defaultValue={article?.tags.join(', ')}
+        <div className="grid gap-3 md:grid-cols-2">
+          <Field label="Author">
+            <select
+              name="authorId"
+              defaultValue={article?.authorId ?? options.authors[0]?.id}
+              className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
+            >
+              {options.authors.map((author) => (
+                <option key={author.id} value={author.id}>
+                  {author.name} ({author.slug})
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Reading time (minutes)">
+            <Input
+              type="number"
+              min={1}
+              name="readingTimeMinutes"
+              required
+              defaultValue={article?.readingTimeMinutes ?? 2}
+            />
+          </Field>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-2">
+          <Field label="Cover image URL">
+            <Input name="coverImageUrl" defaultValue={article?.coverImageUrl} />
+          </Field>
+          <Field label="Published at">
+            <Input type="datetime-local" name="publishedAt" defaultValue={article?.publishedAt} />
+          </Field>
+        </div>
+
+        <Field label="Tags (comma-separated slugs)">
+          <Input
+            name="tags"
+            placeholder={options.tags.map((t) => t.slug).join(', ')}
+            defaultValue={article?.tags.join(', ')}
+          />
+        </Field>
+
+        <div className="flex justify-end">
+          <Button type="submit">{articleId ? 'Save changes' : 'Create article'}</Button>
+        </div>
+      </form>
+
+      {/* ── Version history sidebar ── */}
+      {articleId && (
+        <VersionHistorySidebar
+          articleId={articleId}
+          versions={versions}
+          currentVersionNumber={currentVersionNumber}
         />
-      </Field>
-
-      <div className="flex justify-end">
-        <Button type="submit">{articleId ? 'Save changes' : 'Create article'}</Button>
-      </div>
-    </form>
+      )}
+    </div>
   );
 }
 

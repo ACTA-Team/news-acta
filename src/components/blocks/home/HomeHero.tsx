@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -105,7 +106,7 @@ export function HomeHero({ className }: HomeHeroProps) {
           )}
         >
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-lg border border-border/60 bg-card/50 p-2 shadow-xl ring-1 ring-border/40 dark:bg-background/30">
-            <img
+            <Image
               alt="ACTA dashboard preview"
               className="z-2 h-auto w-full rounded-md border border-border/40 object-contain"
               height={1080}

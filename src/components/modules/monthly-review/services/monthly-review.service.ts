@@ -17,12 +17,13 @@ import {
 
 type ReviewRow = Database['public']['Tables']['monthly_reviews']['Row'];
 type ArticleRow = Database['public']['Tables']['news_articles']['Row'];
+type ReviewFeaturedRow = {
+  position: number;
+  article: Pick<ArticleRow, 'id' | 'slug' | 'title' | 'summary'> | null;
+};
 
 type ReviewRowWithArticles = ReviewRow & {
-  featured: {
-    position: number;
-    article: Pick<ArticleRow, 'id' | 'slug' | 'title' | 'summary'> | null;
-  }[];
+  featured: ReviewFeaturedRow[];
 };
 
 const REVIEW_LIST_SELECT = `
@@ -60,14 +61,18 @@ function mapListItem(
 
 function mapDetail(row: ReviewRowWithArticles): MonthlyReview {
   const featured = (row.featured ?? [])
-    .sort((a, b) => a.position - b.position)
-    .map((f) => f.article)
-    .filter((a): a is NonNullable<typeof a> => a !== null)
-    .map((a) => ({
-      id: a.id,
-      slug: a.slug,
-      title: a.title,
-      summary: a.summary,
+    .sort((left: ReviewFeaturedRow, right: ReviewFeaturedRow) => left.position - right.position)
+    .map((feature: ReviewFeaturedRow) => feature.article)
+    .filter(
+      (
+        article: ReviewFeaturedRow['article']
+      ): article is NonNullable<ReviewFeaturedRow['article']> => article !== null
+    )
+    .map((article) => ({
+      id: article.id,
+      slug: article.slug,
+      title: article.title,
+      summary: article.summary,
     }));
 
   return {

@@ -4,7 +4,7 @@ import { NEWS_ROUTES } from '@/components/modules/news';
 import { formatPeriodLabel } from '@/components/modules/monthly-review/utils';
 import { MonthlyReviewMetrics } from './MonthlyReviewMetrics';
 
-export function MonthlyReviewDetail({ review }: MonthlyReviewDetailProps) {
+export function MonthlyReviewDetail({ review, previousMetrics }: MonthlyReviewDetailProps) {
   return (
     <article className="mx-auto flex max-w-4xl flex-col gap-10 py-10">
       <header className="flex flex-col gap-3">
@@ -17,7 +17,11 @@ export function MonthlyReviewDetail({ review }: MonthlyReviewDetailProps) {
         <p className="max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">{review.summary}</p>
       </header>
 
-      <MonthlyReviewMetrics metrics={review.metrics} />
+      <MonthlyReviewMetrics
+        metrics={review.metrics}
+        previousMetrics={previousMetrics}
+        period={review.period}
+      />
 
       <section className="flex flex-col gap-4">
         <h2 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">Highlights</h2>

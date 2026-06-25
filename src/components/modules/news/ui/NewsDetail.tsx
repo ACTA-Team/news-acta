@@ -1,5 +1,7 @@
+import Image from 'next/image';
 import type { NewsDetailProps } from '@/@types/news';
 import { formatPublishedDate, getCategoryLabel } from '@/components/modules/news/utils';
+import { ArticleContent } from '@/components/modules/news/ui/embeds/ArticleContent';
 
 /**
  * News article detail view. Server Component.
@@ -33,11 +35,22 @@ export function NewsDetail({ article }: NewsDetailProps) {
         </div>
       </div>
 
-      <div
-        className="prose prose-zinc max-w-none dark:prose-invert"
-        // Content comes from the backend. Sanitize before rendering real HTML.
-        dangerouslySetInnerHTML={{ __html: article.content }}
-      />
+      {article.coverImageUrl && (
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <Image
+            src={article.coverImageUrl}
+            alt={article.title}
+            fill
+            priority
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 768px"
+          />
+        </div>
+      )}
+
+      {/* Parses Stellar entities and renders inline embeds; falls back to raw
+          content if resolution fails. Async Server Component. */}
+      <ArticleContent content={article.content} />
     </article>
   );
 }

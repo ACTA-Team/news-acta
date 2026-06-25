@@ -1,15 +1,39 @@
-import type { MonthlyReviewMetric } from '@/@types/monthly-review';
+import type { MonthlyReviewMetric, MonthlyReviewMetricsSchema } from '@/@types/monthly-review';
+import MonthlyReviewDashboard from './MonthlyReviewDashboard';
 
 interface MonthlyReviewMetricsProps {
-  metrics: MonthlyReviewMetric[];
+  metrics: MonthlyReviewMetric[] | MonthlyReviewMetricsSchema;
+  previousMetrics?: MonthlyReviewMetric[] | MonthlyReviewMetricsSchema;
+  period: string;
 }
 
-export function MonthlyReviewMetrics({ metrics }: MonthlyReviewMetricsProps) {
-  if (metrics.length === 0) return null;
+export function MonthlyReviewMetrics({
+  metrics,
+  previousMetrics,
+  period,
+}: MonthlyReviewMetricsProps) {
+  const isOnChainSchema = !Array.isArray(metrics) && metrics?.onChain !== undefined;
+
+  if (isOnChainSchema) {
+    const structMetrics = metrics as MonthlyReviewMetricsSchema;
+    const structPrevMetrics = previousMetrics as MonthlyReviewMetricsSchema | undefined;
+    return (
+      <MonthlyReviewDashboard
+        metrics={structMetrics}
+        previousMetrics={structPrevMetrics}
+        period={period}
+      />
+    );
+  }
+
+  const items = Array.isArray(metrics)
+    ? metrics
+    : ((metrics as MonthlyReviewMetricsSchema)?.editorial ?? []);
+  if (items.length === 0) return null;
 
   return (
     <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {metrics.map((metric) => (
+      {items.map((metric) => (
         <div
           key={metric.label}
           className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800"

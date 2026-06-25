@@ -67,3 +67,60 @@ export interface NewsFiltersProps {
   value: NewsListFilters;
   onChange: (next: NewsListFilters) => void;
 }
+
+// ---------------------------------------------------------------------------
+// Article Version History types
+// ---------------------------------------------------------------------------
+
+/**
+ * Structured diff metadata stored as JSONB on each version row.
+ * Computed by the application layer after every save.
+ */
+export interface ArticleVersionDiffSummary {
+  /** Field names that changed in this version, e.g. ['title', 'content'] */
+  fieldsChanged: string[];
+  /** Net characters added to the content field */
+  contentAdded: number;
+  /** Net characters removed from the content field */
+  contentRemoved: number;
+  /** Number of paragraph-level blocks that changed */
+  sectionsModified: number;
+}
+
+/** Full version row as returned from the database. */
+export interface ArticleVersion {
+  id: string;
+  articleId: string;
+  versionNumber: number;
+  title: string;
+  summary: string;
+  content: string;
+  category: NewsCategory;
+  diffSummary: ArticleVersionDiffSummary | null;
+  editedBy: string | null;
+  contentHash: string;
+  previousHash: string | null;
+  stellarTxHash: string | null;
+  createdAt: string;
+}
+
+/** Lightweight projection used in timeline / sidebar lists. */
+export interface ArticleVersionListItem {
+  id: string;
+  articleId: string;
+  versionNumber: number;
+  title: string;
+  category: NewsCategory;
+  diffSummary: ArticleVersionDiffSummary | null;
+  editedBy: string | null;
+  contentHash: string;
+  previousHash: string | null;
+  stellarTxHash: string | null;
+  createdAt: string;
+}
+
+/** Props for the side-by-side comparison component. */
+export interface ArticleComparisonView {
+  versionA: ArticleVersion;
+  versionB: ArticleVersion;
+}

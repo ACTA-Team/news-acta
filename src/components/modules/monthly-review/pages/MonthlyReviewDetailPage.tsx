@@ -7,7 +7,7 @@ import { Container } from '@/layouts';
 
 import { MONTHLY_REVIEW_PERIOD_REGEX, MONTHLY_REVIEW_ROUTES } from '../constants';
 import { fetchMonthlyReviewByPeriod } from '../services/monthly-review.service';
-import { formatPeriodLabel } from '../utils';
+import { formatPeriodLabel, getPreviousPeriod } from '../utils';
 import { MonthlyReviewDetail } from '../ui/MonthlyReviewDetail';
 
 interface MonthlyReviewDetailPageProps {
@@ -50,9 +50,13 @@ export async function MonthlyReviewDetailPageContent({ params }: MonthlyReviewDe
   const review = await fetchMonthlyReviewByPeriod(supabase, period);
   if (!review) notFound();
 
+  // Load previous period review if available to show Month-over-Month comparison deltas
+  const prevPeriod = getPreviousPeriod(period);
+  const previousReview = await fetchMonthlyReviewByPeriod(supabase, prevPeriod).catch(() => null);
+
   return (
     <Container>
-      <MonthlyReviewDetail review={review} />
+      <MonthlyReviewDetail review={review} previousMetrics={previousReview?.metrics} />
     </Container>
   );
 }

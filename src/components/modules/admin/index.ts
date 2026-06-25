@@ -5,6 +5,21 @@ export { AdminLoginPageContent } from './pages/AdminLoginPage';
 export { AdminDashboardPageContent } from './pages/AdminDashboardPage';
 export { AdminNewsPageContent } from './pages/AdminNewsPage';
 export { AdminNewsEditorPageContent } from './pages/AdminNewsEditorPage';
+export { AdminMonthlyReviewsPageContent } from './pages/AdminMonthlyReviewsPage';
+export { AdminMonthlyReviewEditorPageContent } from './pages/AdminMonthlyReviewEditorPage';
+
+// Actions
+export {
+  saveAdminNewsArticleAction,
+  deleteAdminNewsArticleAction,
+  restoreArticleVersionAction,
+} from './actions';
+
+// Services
+export {
+  fetchAdminArticleVersions,
+  fetchAdminArticleVersionByNumber,
+} from './services/versions.service';
 
 export const adminLoginMetadata = buildMetadata({
   title: 'Admin Login',

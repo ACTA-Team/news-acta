@@ -18,6 +18,33 @@ export interface MonthlyReviewHighlight {
   href?: string;
 }
 
+export interface HorizonMetrics {
+  txCount: number;
+  avgTxVolume?: number;
+  activeAccounts: number;
+  avgFee: string;
+  operationsByType: Record<string, number>;
+  dailyTrend?: { date: string; txCount: number }[];
+}
+
+export interface SorobanMetrics {
+  contractsDeployed: number;
+  invocationCount: number;
+  avgGasUsage: number;
+  topContracts: { contractId: string; invocations: number }[];
+}
+
+export interface MonthlyReviewOnChainMetrics {
+  horizon: HorizonMetrics;
+  soroban: SorobanMetrics;
+  collectedAt: string;
+}
+
+export interface MonthlyReviewMetricsSchema {
+  onChain?: MonthlyReviewOnChainMetrics;
+  editorial: MonthlyReviewMetric[];
+}
+
 export interface MonthlyReview {
   id: string;
   /** YYYY-MM — e.g. "2026-03" */
@@ -26,7 +53,7 @@ export interface MonthlyReview {
   summary: string;
   coverImageUrl?: string;
   highlights: MonthlyReviewHighlight[];
-  metrics: MonthlyReviewMetric[];
+  metrics: MonthlyReviewMetric[] | MonthlyReviewMetricsSchema;
   featuredArticles: Pick<NewsArticle, 'id' | 'slug' | 'title' | 'summary'>[];
   publishedAt: string;
 }
@@ -45,4 +72,5 @@ export interface MonthlyReviewCardProps {
 
 export interface MonthlyReviewDetailProps {
   review: MonthlyReview;
+  previousMetrics?: MonthlyReviewMetric[] | MonthlyReviewMetricsSchema;
 }
