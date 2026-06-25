@@ -4,10 +4,11 @@ import type { TypedSupabaseClient } from '@/lib/supabase/client';
 type ArticleRow = Database['public']['Tables']['news_articles']['Row'];
 type AuthorRow = Database['public']['Tables']['authors']['Row'];
 type TagRow = Database['public']['Tables']['tags']['Row'];
+type ArticleTagRow = Database['public']['Tables']['news_article_tags']['Row'];
 
 type AdminArticleRow = ArticleRow & {
   author: Pick<AuthorRow, 'id' | 'name' | 'slug'> | null;
-  tags: { tag_slug: string }[];
+  tags: ArticleTagRow[];
 };
 
 const ADMIN_ARTICLE_SELECT = `
@@ -113,7 +114,7 @@ export async function fetchAdminNewsById(
     authorId: row.author_id,
     readingTimeMinutes: row.reading_time_minutes,
     publishedAt: row.published_at ? row.published_at.slice(0, 16) : '',
-    tags: row.tags.map((t) => t.tag_slug),
+    tags: row.tags.map((tag: ArticleTagRow) => tag.tag_slug),
   };
 }
 
