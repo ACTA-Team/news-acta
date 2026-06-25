@@ -9,6 +9,19 @@ export { AdminMonthlyReviewsPageContent } from './pages/AdminMonthlyReviewsPage'
 export { AdminMonthlyReviewEditorPageContent } from './pages/AdminMonthlyReviewEditorPage';
 
 
+// Actions
+export {
+  saveAdminNewsArticleAction,
+  deleteAdminNewsArticleAction,
+  restoreArticleVersionAction,
+} from './actions';
+
+// Services
+export {
+  fetchAdminArticleVersions,
+  fetchAdminArticleVersionByNumber,
+} from './services/versions.service';
+
 export const adminLoginMetadata = buildMetadata({
   title: 'Admin Login',
   description: 'Secure email-only access for authorized ACTA editors.',

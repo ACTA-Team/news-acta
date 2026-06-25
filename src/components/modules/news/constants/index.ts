@@ -26,4 +26,5 @@ export const NEWS_QUERY_KEYS = {
 export const NEWS_ROUTES = {
   index: '/news',
   detail: (slug: string) => `/news/${slug}`,
+  history: (slug: string) => `/news/${slug}/history`,
 } as const;

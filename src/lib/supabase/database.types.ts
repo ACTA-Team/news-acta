@@ -1,3 +1,12 @@
+/**
+ * Supabase schema types.
+ *
+ * Mirrors `supabase/migrations/` 1:1.
+ * When the schema changes, regenerate with:
+ *   npx supabase gen types typescript --project-id <id> --schema public
+ * …and overwrite this file.
+ */
+
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface Database {
@@ -383,9 +392,64 @@ export interface Database {
         Update: Partial<Database['public']['Tables']['stellar_embeds_cache']['Insert']>;
         Relationships: [];
       };
+
+      article_versions: {
+        Row: {
+          id: string;
+          article_id: string;
+          version_number: number;
+          title: string;
+          summary: string;
+          content: string;
+          category: Database['public']['Enums']['news_category'];
+          diff_summary: Json | null;
+          edited_by: string | null;
+          content_hash: string;
+          previous_hash: string | null;
+          stellar_tx_hash: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          article_id: string;
+          version_number: number;
+          title: string;
+          summary: string;
+          content: string;
+          category: Database['public']['Enums']['news_category'];
+          diff_summary?: Json | null;
+          edited_by?: string | null;
+          content_hash: string;
+          previous_hash?: string | null;
+          stellar_tx_hash?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['article_versions']['Insert']>;
+        Relationships: [
+          {
+            foreignKeyName: 'article_versions_article_id_fkey';
+            columns: ['article_id'];
+            referencedRelation: 'news_articles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      is_admin: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      next_article_version_number: {
+        Args: { p_article_id: string };
+        Returns: number;
+      };
+      latest_article_content_hash: {
+        Args: { p_article_id: string };
+        Returns: string | null;
+      };
+    };
     Enums: {
       news_status: 'draft' | 'published' | 'archived';
       news_category: 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
