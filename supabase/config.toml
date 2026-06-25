@@ -120,7 +120,9 @@ inspector_port = 8084
 
 [functions.collect-ecosystem-metrics]
 verify_jwt = true
-schedule = "0 0 * * *"
+# NOTE: scheduling is not a valid [functions.*] key in the Supabase CLI.
+# Schedule this function daily via pg_cron (see supabase/migrations) or the
+# Dashboard → Edge Functions → Schedules, e.g. cron "0 0 * * *".
 
 
 [experimental]
