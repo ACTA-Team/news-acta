@@ -173,20 +173,17 @@ export interface Database {
       };
       monthly_review_articles: {
         Row: {
-          id: string;
-          monthly_review_id: string;
+          review_id: string;
           article_id: string;
           position: number;
         };
         Insert: {
-          id?: string;
-          monthly_review_id: string;
+          review_id: string;
           article_id: string;
-          position: number;
+          position?: number;
         };
         Update: {
-          id?: string;
-          monthly_review_id?: string;
+          review_id?: string;
           article_id?: string;
           position?: number;
         };
