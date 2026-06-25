@@ -2,7 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import type { MediaBucket, MediaItem, MediaListFilters, MediaListResponse, MediaVariantKey } from '@/@types/media';
+import type {
+  MediaBucket,
+  MediaItem,
+  MediaListFilters,
+  MediaListResponse,
+  MediaVariantKey,
+} from '@/@types/media';
 import { getThumbnailUrl, getVariantUrl, formatFileSize } from './utils';
 import { UploadZone } from './UploadZone';
 
@@ -177,7 +183,9 @@ export function ImagePickerModal({
                   <div className="flex items-center justify-center gap-2">
                     <button
                       type="button"
-                      onClick={() => setFilters((f) => ({ ...f, page: Math.max(1, currentPage - 1) }))}
+                      onClick={() =>
+                        setFilters((f) => ({ ...f, page: Math.max(1, currentPage - 1) }))
+                      }
                       disabled={currentPage <= 1}
                       className="rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-400 hover:border-zinc-500 disabled:opacity-40"
                     >
@@ -188,7 +196,9 @@ export function ImagePickerModal({
                     </span>
                     <button
                       type="button"
-                      onClick={() => setFilters((f) => ({ ...f, page: Math.min(totalPages, currentPage + 1) }))}
+                      onClick={() =>
+                        setFilters((f) => ({ ...f, page: Math.min(totalPages, currentPage + 1) }))
+                      }
                       disabled={currentPage >= totalPages}
                       className="rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-400 hover:border-zinc-500 disabled:opacity-40"
                     >
@@ -203,10 +213,7 @@ export function ImagePickerModal({
 
         {tab === 'upload' && (
           <div className="p-5">
-            <UploadZone
-              bucket={defaultBucket}
-              onUploaded={handleUploaded}
-            />
+            <UploadZone bucket={defaultBucket} onUploaded={handleUploaded} />
           </div>
         )}
       </div>

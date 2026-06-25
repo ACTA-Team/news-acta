@@ -23,4 +23,9 @@ export {
   recalculateUsageCounts,
   fetchOrphanedMedia,
 } from './media.service';
-export { BUCKET_SIZE_LIMITS, ALLOWED_MIME_TYPES, VARIANT_SPECS, MEDIA_DEFAULT_PAGE_SIZE } from './constants';
+export {
+  BUCKET_SIZE_LIMITS,
+  ALLOWED_MIME_TYPES,
+  VARIANT_SPECS,
+  MEDIA_DEFAULT_PAGE_SIZE,
+} from './constants';

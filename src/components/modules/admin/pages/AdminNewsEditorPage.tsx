@@ -28,7 +28,10 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
       {/* ── Editor form ── */}
-      <form action={saveAdminNewsArticleAction} className="space-y-4 rounded-2xl border bg-card p-5">
+      <form
+        action={saveAdminNewsArticleAction}
+        className="space-y-4 rounded-2xl border bg-card p-5"
+      >
         {articleId ? <input type="hidden" name="id" value={articleId} /> : null}
 
         <div className="grid gap-3 md:grid-cols-2">

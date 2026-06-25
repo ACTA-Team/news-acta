@@ -24,7 +24,7 @@ function isValidEmail(value: string): boolean {
 
 export async function sendAdminMagicLinkAction(
   _prevState: AdminLoginState,
-  formData: FormData,
+  formData: FormData
 ): Promise<AdminLoginState> {
   const rawEmail = String(formData.get('email') ?? '');
   const email = normalizeEmail(rawEmail);
@@ -154,7 +154,7 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
           content: currentRow.content,
           category: currentRow.category,
         },
-        { title, summary, content, category },
+        { title, summary, content, category }
       );
 
       // Fetch the version row that was just created by the trigger
@@ -177,7 +177,7 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
         void submitVersionChain(
           currentRow.slug,
           versionRow.version_number,
-          versionRow.content_hash,
+          versionRow.content_hash
         ).then(async (txHash) => {
           if (txHash) {
             await supabase
@@ -246,7 +246,7 @@ export async function saveAdminMonthlyReviewAction(formData: FormData): Promise<
   const summary = String(formData.get('summary') ?? '').trim();
   const coverImageUrl = String(formData.get('coverImageUrl') ?? '').trim();
   const publishedAtRaw = String(formData.get('publishedAt') ?? '').trim();
-  
+
   const highlightsJson = String(formData.get('highlights') ?? '[]');
   const metricsJson = String(formData.get('metrics') ?? '[]');
   const featuredArticlesRaw = String(formData.get('featuredArticles') ?? '');
@@ -262,7 +262,9 @@ export async function saveAdminMonthlyReviewAction(formData: FormData): Promise<
     cover_image_url: coverImageUrl || null,
     highlights: JSON.parse(highlightsJson),
     metrics: JSON.parse(metricsJson),
-    published_at: publishedAtRaw ? new Date(publishedAtRaw).toISOString() : new Date().toISOString(),
+    published_at: publishedAtRaw
+      ? new Date(publishedAtRaw).toISOString()
+      : new Date().toISOString(),
   };
 
   let reviewId = id;
@@ -300,7 +302,9 @@ export async function saveAdminMonthlyReviewAction(formData: FormData): Promise<
       article_id: articleId,
       position: index,
     }));
-    const { error: insertFeaturedError } = await supabase.from('monthly_review_articles').insert(rows);
+    const { error: insertFeaturedError } = await supabase
+      .from('monthly_review_articles')
+      .insert(rows);
     if (insertFeaturedError) throw insertFeaturedError;
   }
 
@@ -356,12 +360,12 @@ export async function fetchMetricsForPeriodAction(period: string, network: strin
 
   // 2. Fetch live metrics from APIs
   try {
-    const horizonUrl = network === 'mainnet'
-      ? 'https://horizon.stellar.org'
-      : 'https://horizon-testnet.stellar.org';
-    const sorobanUrl = network === 'mainnet'
-      ? 'https://soroban-rpc.stellar.org' // Or custom if any
-      : 'https://soroban-testnet.stellar.org';
+    const horizonUrl =
+      network === 'mainnet' ? 'https://horizon.stellar.org' : 'https://horizon-testnet.stellar.org';
+    const sorobanUrl =
+      network === 'mainnet'
+        ? 'https://soroban-rpc.stellar.org' // Or custom if any
+        : 'https://soroban-testnet.stellar.org';
 
     const [horizon, soroban] = await Promise.all([
       import('@/lib/stellar/horizon').then((m) => m.fetchAllHorizonMetrics(horizonUrl)),
@@ -375,11 +379,11 @@ export async function fetchMetricsForPeriodAction(period: string, network: strin
       soroban,
       collectedAt: new Date().toISOString(),
     };
-  } catch (err: any) {
+  } catch (err) {
     console.error('Error in fetchMetricsForPeriodAction:', err);
     return {
       success: false,
-      error: err.message || 'Failed to fetch metrics from Stellar network.',
+      error: err instanceof Error ? err.message : 'Failed to fetch metrics from Stellar network.',
     };
   }
 }

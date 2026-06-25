@@ -113,7 +113,7 @@ export async function verifyAnchor(
       // value is base64-encoded
       const decoded = Buffer.from(manageDataOp.value, 'base64').toString('utf8');
       if (decoded === expectedHash.slice(0, 64)) {
-        return { verified: true, ledger: (tx.ledger as unknown) as number };
+        return { verified: true, ledger: tx.ledger as unknown as number };
       }
     }
 

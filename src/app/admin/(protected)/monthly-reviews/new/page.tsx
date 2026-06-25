@@ -15,7 +15,11 @@ export default async function AdminNewMonthlyReviewPage() {
   const options = await fetchAdminReviewFormOptions(supabase);
 
   return (
-    <AdminShell email={admin.email} title="Create Review" subtitle="Create a new monthly ecosystem review.">
+    <AdminShell
+      email={admin.email}
+      title="Create Review"
+      subtitle="Create a new monthly ecosystem review."
+    >
       <AdminMonthlyReviewEditorPageContent review={null} options={options} />
     </AdminShell>
   );

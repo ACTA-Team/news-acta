@@ -209,10 +209,7 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
               <option value="author-avatars">Author Avatars</option>
             </select>
           </div>
-          <UploadZone
-            bucket={uploadBucket}
-            onUploaded={handleUploaded}
-          />
+          <UploadZone bucket={uploadBucket} onUploaded={handleUploaded} />
         </div>
       )}
 
@@ -222,9 +219,7 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
       {/* Bulk actions */}
       {selectedIds.size > 0 && (
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3">
-          <span className="text-sm text-zinc-300">
-            {selectedIds.size} selected
-          </span>
+          <span className="text-sm text-zinc-300">{selectedIds.size} selected</span>
 
           <div className="flex items-center gap-2">
             <input
@@ -274,9 +269,7 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
             </div>
           )}
 
-          {bulkActionError && (
-            <p className="text-xs text-red-400">{bulkActionError}</p>
-          )}
+          {bulkActionError && <p className="text-xs text-red-400">{bulkActionError}</p>}
         </div>
       )}
 
@@ -323,7 +316,9 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
           </span>
           <button
             type="button"
-            onClick={() => setFilters((f) => ({ ...f, page: Math.min(totalPages, currentPage + 1) }))}
+            onClick={() =>
+              setFilters((f) => ({ ...f, page: Math.min(totalPages, currentPage + 1) }))
+            }
             disabled={currentPage >= totalPages}
             className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-400 hover:border-zinc-500 hover:text-zinc-200 disabled:opacity-40 transition-colors"
           >

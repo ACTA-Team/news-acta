@@ -18,7 +18,12 @@ interface UploadState {
   fileName?: string;
 }
 
-export function UploadZone({ bucket, anchorOnStellar = false, onUploaded, onError }: UploadZoneProps) {
+export function UploadZone({
+  bucket,
+  anchorOnStellar = false,
+  onUploaded,
+  onError,
+}: UploadZoneProps) {
   const [state, setState] = useState<UploadState>({ status: 'idle', progress: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -111,7 +116,10 @@ export function UploadZone({ bucket, anchorOnStellar = false, onUploaded, onErro
 
   return (
     <div
-      onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
       className={`relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center transition-colors ${
@@ -146,7 +154,8 @@ export function UploadZone({ bucket, anchorOnStellar = false, onUploaded, onErro
             </button>
           </p>
           <p className="mt-1 text-xs text-zinc-500">
-            JPEG, PNG, WebP, GIF, SVG · Max {(BUCKET_SIZE_LIMITS[bucket] / 1024 / 1024).toFixed(0)} MB
+            JPEG, PNG, WebP, GIF, SVG · Max {(BUCKET_SIZE_LIMITS[bucket] / 1024 / 1024).toFixed(0)}{' '}
+            MB
           </p>
         </>
       )}

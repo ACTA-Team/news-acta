@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { MediaArticleRef, MediaItem, MediaVariantKey } from '@/@types/media';
-import { buildPublicUrl, formatFileSize, formatUploadDate, getBucketLabel, getVariantUrl } from './utils';
+import {
+  buildPublicUrl,
+  formatFileSize,
+  formatUploadDate,
+  getBucketLabel,
+  getVariantUrl,
+} from './utils';
 
 interface MediaDetailModalProps {
   item: MediaItem;
@@ -20,7 +26,12 @@ const VARIANT_LABELS: Record<MediaVariantKey, string> = {
   og: 'OG (1200×630)',
 };
 
-export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: MediaDetailModalProps) {
+export function MediaDetailModal({
+  item,
+  onClose,
+  onAltTextSaved,
+  onDelete,
+}: MediaDetailModalProps) {
   const [altText, setAltText] = useState(item.altText ?? '');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -98,7 +109,10 @@ export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: Me
       className="fixed inset-0 z-50 m-auto max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-zinc-700 bg-zinc-900 p-0 shadow-2xl backdrop:bg-black/60"
     >
       <div className="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
-        <h2 className="text-base font-semibold text-zinc-100 truncate max-w-md" title={item.originalName}>
+        <h2
+          className="text-base font-semibold text-zinc-100 truncate max-w-md"
+          title={item.originalName}
+        >
           {item.originalName}
         </h2>
         <button
@@ -166,7 +180,9 @@ export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: Me
               {item.width && item.height && (
                 <>
                   <dt className="text-zinc-500">Dimensions</dt>
-                  <dd className="text-zinc-200">{item.width} × {item.height}px</dd>
+                  <dd className="text-zinc-200">
+                    {item.width} × {item.height}px
+                  </dd>
                 </>
               )}
 
@@ -188,7 +204,10 @@ export function MediaDetailModal({ item, onClose, onAltTextSaved, onDelete }: Me
 
           {/* Alt text */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="alt-text" className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            <label
+              htmlFor="alt-text"
+              className="text-xs font-semibold uppercase tracking-wider text-zinc-500"
+            >
               Alt Text
             </label>
             <textarea

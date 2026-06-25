@@ -24,7 +24,7 @@ interface VersionableFields {
  */
 export function computeArticleDiff(
   oldVersion: VersionableFields,
-  newVersion: VersionableFields,
+  newVersion: VersionableFields
 ): ArticleVersionDiffSummary {
   const fieldsChanged: string[] = [];
 
@@ -60,7 +60,10 @@ export function computeArticleDiff(
       }
     }
     // Cap at the max number of paragraphs between the two versions
-    sectionsModified = Math.min(sectionsModified, Math.max(oldParagraphs.length, newParagraphs.length));
+    sectionsModified = Math.min(
+      sectionsModified,
+      Math.max(oldParagraphs.length, newParagraphs.length)
+    );
   }
 
   return {

@@ -138,10 +138,7 @@ export async function updateAltText(
   id: string,
   altText: string
 ): Promise<void> {
-  const { error } = await supabase
-    .from('media_library')
-    .update({ alt_text: altText })
-    .eq('id', id);
+  const { error } = await supabase.from('media_library').update({ alt_text: altText }).eq('id', id);
 
   if (error) throw error;
 }
@@ -181,9 +178,7 @@ export async function recalculateUsageCounts(supabase: TypedSupabaseClient): Pro
 
   if (articlesError) throw articlesError;
 
-  const allText = (articles ?? [])
-    .map((a) => `${a.cover_image_url ?? ''} ${a.content}`)
-    .join(' ');
+  const allText = (articles ?? []).map((a) => `${a.cover_image_url ?? ''} ${a.content}`).join(' ');
 
   // Update each media item's usage count
   for (const item of mediaItems ?? []) {
@@ -212,9 +207,7 @@ function countOccurrences(text: string, substring: string): number {
 /**
  * Fetch all orphaned media items (usage_count = 0).
  */
-export async function fetchOrphanedMedia(
-  supabase: TypedSupabaseClient
-): Promise<MediaItem[]> {
+export async function fetchOrphanedMedia(supabase: TypedSupabaseClient): Promise<MediaItem[]> {
   const { data, error } = await supabase
     .from('media_library')
     .select('*')

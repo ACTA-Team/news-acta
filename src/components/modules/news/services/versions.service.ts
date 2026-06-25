@@ -5,9 +5,16 @@
  * Only the service layer is allowed to query Supabase — UI never queries directly.
  */
 
-import type { ArticleVersion, ArticleVersionDiffSummary, ArticleVersionListItem } from '@/@types/news';
+import type {
+  ArticleVersion,
+  ArticleVersionDiffSummary,
+  ArticleVersionListItem,
+} from '@/@types/news';
 import type { Database, Json, TypedSupabaseClient } from '@/lib/supabase';
-import { isMissingSchemaCacheError, warnMissingMigrationsOnce } from '@/lib/supabase/postgrestError';
+import {
+  isMissingSchemaCacheError,
+  warnMissingMigrationsOnce,
+} from '@/lib/supabase/postgrestError';
 
 type VersionRow = Database['public']['Tables']['article_versions']['Row'];
 
@@ -15,9 +22,7 @@ function mapDiffSummary(raw: Json | null): ArticleVersionDiffSummary | null {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
   const r = raw as Record<string, Json>;
   return {
-    fieldsChanged: Array.isArray(r.fieldsChanged)
-      ? (r.fieldsChanged as string[])
-      : [],
+    fieldsChanged: Array.isArray(r.fieldsChanged) ? (r.fieldsChanged as string[]) : [],
     contentAdded: typeof r.contentAdded === 'number' ? r.contentAdded : 0,
     contentRemoved: typeof r.contentRemoved === 'number' ? r.contentRemoved : 0,
     sectionsModified: typeof r.sectionsModified === 'number' ? r.sectionsModified : 0,
@@ -93,7 +98,7 @@ const VERSION_FULL_SELECT = `
  */
 export async function fetchArticleVersions(
   supabase: TypedSupabaseClient,
-  articleId: string,
+  articleId: string
 ): Promise<ArticleVersionListItem[]> {
   const { data, error } = await supabase
     .from('article_versions')
@@ -118,7 +123,7 @@ export async function fetchArticleVersions(
 export async function fetchArticleVersionByNumber(
   supabase: TypedSupabaseClient,
   articleId: string,
-  versionNumber: number,
+  versionNumber: number
 ): Promise<ArticleVersion | null> {
   const { data, error } = await supabase
     .from('article_versions')

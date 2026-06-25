@@ -27,35 +27,32 @@ export function VersionComparison({ versionA, versionB }: VersionComparisonProps
     { key: 'content', label: 'Content' },
   ];
 
-  const renderDiff = useCallback(
-    (oldText: string, newText: string) => {
-      const parts = diffChars(oldText, newText);
-      return parts.map((part, i) => {
-        if (part.added) {
-          return (
-            <ins
-              key={i}
-              className="bg-emerald-100 text-emerald-900 no-underline dark:bg-emerald-900/40 dark:text-emerald-200"
-            >
-              {part.value}
-            </ins>
-          );
-        }
-        if (part.removed) {
-          return (
-            <del
-              key={i}
-              className="bg-red-100 text-red-900 no-underline dark:bg-red-900/40 dark:text-red-200"
-            >
-              {part.value}
-            </del>
-          );
-        }
-        return <span key={i}>{part.value}</span>;
-      });
-    },
-    [],
-  );
+  const renderDiff = useCallback((oldText: string, newText: string) => {
+    const parts = diffChars(oldText, newText);
+    return parts.map((part, i) => {
+      if (part.added) {
+        return (
+          <ins
+            key={i}
+            className="bg-emerald-100 text-emerald-900 no-underline dark:bg-emerald-900/40 dark:text-emerald-200"
+          >
+            {part.value}
+          </ins>
+        );
+      }
+      if (part.removed) {
+        return (
+          <del
+            key={i}
+            className="bg-red-100 text-red-900 no-underline dark:bg-red-900/40 dark:text-red-200"
+          >
+            {part.value}
+          </del>
+        );
+      }
+      return <span key={i}>{part.value}</span>;
+    });
+  }, []);
 
   const oldValue = older[activeField];
   const newValue = newer[activeField];

@@ -34,7 +34,11 @@ export default async function AdminEditMonthlyReviewPage({
   }
 
   return (
-    <AdminShell email={admin.email} title="Edit Review" subtitle={`Editing monthly review for ${review.period}`}>
+    <AdminShell
+      email={admin.email}
+      title="Edit Review"
+      subtitle={`Editing monthly review for ${review.period}`}
+    >
       <AdminMonthlyReviewEditorPageContent review={review} options={options} />
     </AdminShell>
   );

@@ -74,4 +74,3 @@ export interface MonthlyReviewDetailProps {
   review: MonthlyReview;
   previousMetrics?: MonthlyReviewMetric[] | MonthlyReviewMetricsSchema;
 }
-

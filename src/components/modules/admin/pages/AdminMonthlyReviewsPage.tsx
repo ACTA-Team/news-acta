@@ -41,7 +41,9 @@ export async function AdminMonthlyReviewsPageContent() {
                 </td>
                 <td className="px-4 py-3">
                   <div className="font-medium max-w-xs truncate">{item.title}</div>
-                  <div className="text-xs text-muted-foreground max-w-xs truncate">{item.summary}</div>
+                  <div className="text-xs text-muted-foreground max-w-xs truncate">
+                    {item.summary}
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
                   {new Date(item.publishedAt).toLocaleDateString()}
@@ -66,7 +68,7 @@ export async function AdminMonthlyReviewsPageContent() {
         </table>
         {items.length === 0 ? (
           <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-            No monthly reviews found. Click 'Create Review' to get started!
+            No monthly reviews found. Click &apos;Create Review&apos; to get started!
           </p>
         ) : null}
       </div>

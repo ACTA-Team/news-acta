@@ -100,6 +100,7 @@ async function callSorobanRpc(
   method: string,
   params: unknown = {},
   rpcUrl: string = getEcosystemSorobanRpcUrl()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- RPC result shape varies by method
 ): Promise<any> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout

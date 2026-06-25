@@ -44,6 +44,7 @@ export interface AdminReviewEditorData {
   summary: string;
   coverImageUrl: string;
   highlights: { title: string; description: string; href?: string }[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dual schema (editorial[] | { onChain, editorial })
   metrics: any; // Handles dual schema
   publishedAt: string;
   featuredArticleIds: string[];
@@ -101,7 +102,7 @@ export async function fetchAdminReviewById(
     title: row.title,
     summary: row.summary,
     coverImageUrl: row.cover_image_url ?? '',
-    highlights: (row.highlights as any) ?? [],
+    highlights: (row.highlights as AdminReviewEditorData['highlights']) ?? [],
     metrics: row.metrics ?? [],
     publishedAt: row.published_at ? row.published_at.slice(0, 16) : '',
     featuredArticleIds,

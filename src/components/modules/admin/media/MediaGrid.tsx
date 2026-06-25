@@ -105,10 +105,7 @@ function MediaGridItem({ item, selected, onSelect, onOpenDetail }: MediaGridItem
 
       {/* Metadata */}
       <div className="flex flex-col gap-1 p-2">
-        <p
-          className="truncate text-xs font-medium text-zinc-200"
-          title={item.originalName}
-        >
+        <p className="truncate text-xs font-medium text-zinc-200" title={item.originalName}>
           {item.originalName}
         </p>
         <p className="text-xs text-zinc-500">

@@ -7,18 +7,25 @@ export default async function handler() {
   const supabase = createAdminClient();
 
   // fetch active monitored accounts
-  const { data: accounts } = await supabase.from('monitored_accounts').select('*').eq('active', true);
+  const { data: accounts } = await supabase
+    .from('monitored_accounts')
+    .select('*')
+    .eq('active', true);
   if (!accounts) return { processed: 0 };
 
   let processed = 0;
 
   for (const acct of accounts) {
     try {
-      const { operations, nextCursor } = await fetchOperationsSince(HORIZON_URL, acct.stellar_address, acct.last_cursor || undefined);
+      const { operations, nextCursor } = await fetchOperationsSince(
+        HORIZON_URL,
+        acct.stellar_address,
+        acct.last_cursor || undefined
+      );
       for (const op of operations) {
-        const classification = classifyOperation(op as any);
+        const classification = classifyOperation(op);
         // basic dedupe: by tx_hash
-        const txHash = (op as any).transaction_hash || null;
+        const txHash = op.transaction_hash || null;
         const { data: existing } = await supabase
           .from('activity_events')
           .select('id')
@@ -43,7 +50,10 @@ export default async function handler() {
 
       // update cursor if we got one
       if (nextCursor) {
-        await supabase.from('monitored_accounts').update({ last_cursor: nextCursor }).eq('id', acct.id);
+        await supabase
+          .from('monitored_accounts')
+          .update({ last_cursor: nextCursor })
+          .eq('id', acct.id);
       }
     } catch (err) {
       // log and continue

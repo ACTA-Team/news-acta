@@ -40,9 +40,7 @@ export function MediaFilters({ filters, onChange }: MediaFiltersProps) {
       {/* Bucket filter */}
       <select
         value={filters.bucket ?? ''}
-        onChange={(e) =>
-          update({ bucket: (e.target.value as MediaBucket) || undefined })
-        }
+        onChange={(e) => update({ bucket: (e.target.value as MediaBucket) || undefined })}
         className="h-9 rounded-md border border-zinc-700 bg-zinc-800 px-3 text-sm text-zinc-100 focus:border-zinc-500 focus:outline-none"
         aria-label="Filter by bucket"
       >
@@ -56,9 +54,7 @@ export function MediaFilters({ filters, onChange }: MediaFiltersProps) {
       {/* Usage filter */}
       <select
         value={filters.usage ?? ''}
-        onChange={(e) =>
-          update({ usage: (e.target.value as 'used' | 'unused') || undefined })
-        }
+        onChange={(e) => update({ usage: (e.target.value as 'used' | 'unused') || undefined })}
         className="h-9 rounded-md border border-zinc-700 bg-zinc-800 px-3 text-sm text-zinc-100 focus:border-zinc-500 focus:outline-none"
         aria-label="Filter by usage"
       >
@@ -88,7 +84,11 @@ export function MediaFilters({ filters, onChange }: MediaFiltersProps) {
       />
 
       {/* Clear filters */}
-      {(filters.search || filters.bucket || filters.usage || filters.dateFrom || filters.dateTo) && (
+      {(filters.search ||
+        filters.bucket ||
+        filters.usage ||
+        filters.dateFrom ||
+        filters.dateTo) && (
         <button
           type="button"
           onClick={() => onChange({ page: 1 })}

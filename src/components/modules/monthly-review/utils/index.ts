@@ -33,4 +33,3 @@ export function getPreviousPeriod(period: string): string {
 
   return `${year}-${String(month).padStart(2, '0')}`;
 }
-

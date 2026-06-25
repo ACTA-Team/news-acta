@@ -2,11 +2,17 @@
 
 import { useState, startTransition } from 'react';
 import Link from 'next/link';
-import { saveAdminMonthlyReviewAction, fetchMetricsForPeriodAction } from '@/components/modules/admin/actions';
+import {
+  saveAdminMonthlyReviewAction,
+  fetchMetricsForPeriodAction,
+} from '@/components/modules/admin/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import type { AdminReviewEditorData, AdminReviewFormOptions } from '../services/monthly-review.service';
+import type {
+  AdminReviewEditorData,
+  AdminReviewFormOptions,
+} from '../services/monthly-review.service';
 import { RefreshCw, Plus, Trash2, ShieldCheck, Database, Zap } from 'lucide-react';
 
 interface AdminMonthlyReviewEditorPageContentProps {
@@ -23,13 +29,17 @@ export function AdminMonthlyReviewEditorPageContent({
   const [title, setTitle] = useState(review?.title ?? '');
   const [summary, setSummary] = useState(review?.summary ?? '');
   const [coverImageUrl, setCoverImageUrl] = useState(review?.coverImageUrl ?? '');
-  const [publishedAt, setPublishedAt] = useState(review?.publishedAt ?? new Date().toISOString().slice(0, 16));
-  const [featuredArticles, setFeaturedArticles] = useState<string[]>(review?.featuredArticleIds ?? []);
+  const [publishedAt, setPublishedAt] = useState(
+    review?.publishedAt ?? new Date().toISOString().slice(0, 16)
+  );
+  const [featuredArticles, setFeaturedArticles] = useState<string[]>(
+    review?.featuredArticleIds ?? []
+  );
 
   // Highlights state
-  const [highlights, setHighlights] = useState<Array<{ title: string; description: string; href?: string }>>(
-    review?.highlights ?? []
-  );
+  const [highlights, setHighlights] = useState<
+    Array<{ title: string; description: string; href?: string }>
+  >(review?.highlights ?? []);
 
   // Metrics state (Dual onChain + editorial schema)
   const initialMetrics = review?.metrics;
@@ -38,11 +48,13 @@ export function AdminMonthlyReviewEditorPageContent({
     ? initialMetrics
     : (initialMetrics?.editorial ?? []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- loose on-chain metrics payload (horizon/soroban snapshot)
   const [onChainMetrics, setOnChainMetrics] = useState<any>(initialOnChain);
-  const [editorialMetrics, setEditorialMetrics] = useState<Array<{ label: string; value: string; delta?: string; direction?: 'up' | 'down' | 'flat' }>>(
-    initialEditorial
-  );
-  
+  const [editorialMetrics, setEditorialMetrics] =
+    useState<
+      Array<{ label: string; value: string; delta?: string; direction?: 'up' | 'down' | 'flat' }>
+    >(initialEditorial);
+
   const [network, setNetwork] = useState<'testnet' | 'mainnet'>('testnet');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
@@ -67,7 +79,10 @@ export function AdminMonthlyReviewEditorPageContent({
 
   // Handlers for Editorial Metrics
   const addEditorialMetric = () => {
-    setEditorialMetrics([...editorialMetrics, { label: '', value: '', delta: '', direction: 'flat' }]);
+    setEditorialMetrics([
+      ...editorialMetrics,
+      { label: '', value: '', delta: '', direction: 'flat' },
+    ]);
   };
 
   const updateEditorialMetric = (index: number, field: string, value: string) => {
@@ -100,8 +115,10 @@ export function AdminMonthlyReviewEditorPageContent({
       } else {
         setRefreshError(res.error || 'Failed to refresh metrics.');
       }
-    } catch (err: any) {
-      setRefreshError(err.message || 'An unexpected error occurred while fetching metrics.');
+    } catch (err) {
+      setRefreshError(
+        err instanceof Error ? err.message : 'An unexpected error occurred while fetching metrics.'
+      );
     } finally {
       setIsRefreshing(false);
     }
@@ -242,23 +259,33 @@ export function AdminMonthlyReviewEditorPageContent({
 
             <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 text-sm">
               <div className="p-3 border rounded-xl bg-card">
-                <span className="text-xs text-muted-foreground uppercase font-mono block">Transactions</span>
+                <span className="text-xs text-muted-foreground uppercase font-mono block">
+                  Transactions
+                </span>
                 <span className="text-lg font-bold text-foreground">
                   {onChainMetrics.horizon.txCount.toLocaleString()}
                 </span>
               </div>
               <div className="p-3 border rounded-xl bg-card">
-                <span className="text-xs text-muted-foreground uppercase font-mono block">Avg Fee</span>
-                <span className="text-lg font-bold text-foreground">{onChainMetrics.horizon.avgFee}</span>
+                <span className="text-xs text-muted-foreground uppercase font-mono block">
+                  Avg Fee
+                </span>
+                <span className="text-lg font-bold text-foreground">
+                  {onChainMetrics.horizon.avgFee}
+                </span>
               </div>
               <div className="p-3 border rounded-xl bg-card">
-                <span className="text-xs text-muted-foreground uppercase font-mono block">New Accounts</span>
+                <span className="text-xs text-muted-foreground uppercase font-mono block">
+                  New Accounts
+                </span>
                 <span className="text-lg font-bold text-foreground">
                   {onChainMetrics.horizon.activeAccounts}
                 </span>
               </div>
               <div className="p-3 border rounded-xl bg-card">
-                <span className="text-xs text-muted-foreground uppercase font-mono block">Smart Contracts</span>
+                <span className="text-xs text-muted-foreground uppercase font-mono block">
+                  Smart Contracts
+                </span>
                 <span className="text-lg font-bold text-foreground">
                   {onChainMetrics.soroban.invocationCount} calls
                 </span>
@@ -267,7 +294,8 @@ export function AdminMonthlyReviewEditorPageContent({
           </div>
         ) : (
           <p className="text-sm text-muted-foreground py-4 text-center border border-dashed rounded-xl">
-            No on-chain metrics loaded yet. Select a network and click 'Refresh metrics' to pull real-time data!
+            No on-chain metrics loaded yet. Select a network and click &apos;Refresh metrics&apos;
+            to pull real-time data!
           </p>
         )}
 
@@ -275,14 +303,23 @@ export function AdminMonthlyReviewEditorPageContent({
         <div className="space-y-3 pt-3">
           <div className="flex justify-between items-center">
             <h3 className="text-sm font-semibold text-foreground">Editorial metrics (Key KPIs)</h3>
-            <Button type="button" onClick={addEditorialMetric} variant="ghost" size="sm" className="h-7 gap-1">
+            <Button
+              type="button"
+              onClick={addEditorialMetric}
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1"
+            >
               <Plus className="h-3.5 w-3.5" /> Add metric
             </Button>
           </div>
 
           <div className="space-y-2">
             {editorialMetrics.map((metric, index) => (
-              <div key={index} className="flex gap-2 items-center bg-muted/20 p-3 rounded-xl border">
+              <div
+                key={index}
+                className="flex gap-2 items-center bg-muted/20 p-3 rounded-xl border"
+              >
                 <Input
                   placeholder="Label (e.g. New Members)"
                   value={metric.label}
@@ -322,7 +359,9 @@ export function AdminMonthlyReviewEditorPageContent({
               </div>
             ))}
             {editorialMetrics.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center py-2">No editorial metrics added.</p>
+              <p className="text-xs text-muted-foreground text-center py-2">
+                No editorial metrics added.
+              </p>
             ) : null}
           </div>
         </div>
@@ -332,7 +371,13 @@ export function AdminMonthlyReviewEditorPageContent({
       <section className="space-y-4 rounded-2xl border bg-card p-6 shadow-sm">
         <div className="flex justify-between items-center border-b pb-2">
           <h2 className="text-xl font-semibold text-primary">Monthly Highlights</h2>
-          <Button type="button" onClick={addHighlight} variant="outline" size="sm" className="h-8 gap-1">
+          <Button
+            type="button"
+            onClick={addHighlight}
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1"
+          >
             <Plus className="h-3.5 w-3.5" /> Add highlight
           </Button>
         </div>
@@ -394,8 +439,10 @@ export function AdminMonthlyReviewEditorPageContent({
       {/* FEATURED ARTICLES SELECTION */}
       <section className="space-y-4 rounded-2xl border bg-card p-6 shadow-sm">
         <h2 className="text-xl font-semibold border-b pb-2 text-primary">Featured news articles</h2>
-        <p className="text-xs text-muted-foreground">Select published articles from this period to feature in this monthly review.</p>
-        
+        <p className="text-xs text-muted-foreground">
+          Select published articles from this period to feature in this monthly review.
+        </p>
+
         <div className="max-h-60 overflow-y-auto border rounded-xl p-3 space-y-1.5 bg-muted/10">
           {options.articles.map((article) => {
             const isFeatured = featuredArticles.includes(article.id);
@@ -441,7 +488,9 @@ export function AdminMonthlyReviewEditorPageContent({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="space-y-1.5 block">
-      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </span>
       {children}
     </label>
   );

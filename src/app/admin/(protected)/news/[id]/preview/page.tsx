@@ -89,12 +89,8 @@ export default async function AdminVersionPreviewPage({
           </p>
           <div className="flex flex-col gap-1 font-mono text-xs text-zinc-500">
             <span>content_hash: {version.contentHash}</span>
-            {version.previousHash && (
-              <span>previous_hash: {version.previousHash}</span>
-            )}
-            {version.stellarTxHash && (
-              <span>stellar_tx: {version.stellarTxHash}</span>
-            )}
+            {version.previousHash && <span>previous_hash: {version.previousHash}</span>}
+            {version.stellarTxHash && <span>stellar_tx: {version.stellarTxHash}</span>}
           </div>
         </div>
       </div>

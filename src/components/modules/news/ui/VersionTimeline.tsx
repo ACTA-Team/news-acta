@@ -9,10 +9,9 @@ interface VersionTimelineProps {
   selectedVersions?: number[];
 }
 
-const HORIZON_EXPLORER =
-  process.env.NEXT_PUBLIC_STELLAR_HORIZON_URL?.includes('testnet')
-    ? 'https://stellar.expert/explorer/testnet/tx'
-    : 'https://stellar.expert/explorer/public/tx';
+const HORIZON_EXPLORER = process.env.NEXT_PUBLIC_STELLAR_HORIZON_URL?.includes('testnet')
+  ? 'https://stellar.expert/explorer/testnet/tx'
+  : 'https://stellar.expert/explorer/public/tx';
 
 function maskEmail(email: string | null): string {
   if (!email) return 'system';
@@ -35,7 +34,11 @@ function formatTs(ts: string): string {
  * Server-rendered vertical timeline of all article versions.
  * Compare-selection is handled by the parent client wrapper.
  */
-export function VersionTimeline({ versions, articleSlug, selectedVersions = [] }: VersionTimelineProps) {
+export function VersionTimeline({
+  versions,
+  articleSlug,
+  selectedVersions = [],
+}: VersionTimelineProps) {
   if (versions.length === 0) {
     return (
       <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-8 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/40">

@@ -9,17 +9,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { recalculateUsageCounts, fetchOrphanedMedia } from '@/lib/storage/media.service';
 
-function isAdmin(user: { app_metadata?: Record<string, unknown>; user_metadata?: Record<string, unknown> }): boolean {
-  return (
-    user.app_metadata?.role === 'admin' ||
-    user.user_metadata?.is_admin === true
-  );
+function isAdmin(user: {
+  app_metadata?: Record<string, unknown>;
+  user_metadata?: Record<string, unknown>;
+}): boolean {
+  return user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
 }
 
 export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     if (!isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -35,7 +38,10 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     if (!isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });

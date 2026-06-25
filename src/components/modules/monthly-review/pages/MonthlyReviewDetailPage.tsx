@@ -60,4 +60,3 @@ export async function MonthlyReviewDetailPageContent({ params }: MonthlyReviewDe
     </Container>
   );
 }
-

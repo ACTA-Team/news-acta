@@ -62,26 +62,20 @@ export async function NewsHistoryPageContent({ params }: NewsHistoryPageProps) {
             <span className="font-medium text-zinc-700 dark:text-zinc-300">
               &ldquo;{article.title}&rdquo;
             </span>{' '}
-            is automatically snapshotted and anchored on Stellar. Select any two versions to
-            compare them side by side.
+            is automatically snapshotted and anchored on Stellar. Select any two versions to compare
+            them side by side.
           </p>
         </div>
 
         {/* Stats bar */}
         <div className="mb-8 flex flex-wrap gap-6 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm dark:border-zinc-800 dark:bg-zinc-900/40">
           <Stat label="Total versions" value={versions.length} />
-          <Stat
-            label="On-chain"
-            value={versions.filter((v) => v.stellarTxHash).length}
-          />
+          <Stat label="On-chain" value={versions.filter((v) => v.stellarTxHash).length} />
           <Stat
             label="Latest version"
             value={versions[0] ? `v${versions[0].versionNumber}` : '—'}
           />
-          <Stat
-            label="Hash chain"
-            value={versions.length > 1 ? '✓ intact' : '—'}
-          />
+          <Stat label="Hash chain" value={versions.length > 1 ? '✓ intact' : '—'} />
         </div>
 
         {/* Interactive timeline + comparison */}
@@ -91,9 +85,7 @@ export async function NewsHistoryPageContent({ params }: NewsHistoryPageProps) {
           articleSlug={slug}
           onRequestVersion={async (versionNumber) => {
             'use server';
-            const { fetchArticleVersionByNumber } = await import(
-              '../services/versions.service'
-            );
+            const { fetchArticleVersionByNumber } = await import('../services/versions.service');
             const { createClient: mkClient } = await import('@/lib/supabase/server');
             const s = await mkClient();
             return fetchArticleVersionByNumber(s, article.id, versionNumber);

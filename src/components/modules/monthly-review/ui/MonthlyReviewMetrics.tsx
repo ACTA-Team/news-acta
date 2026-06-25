@@ -7,7 +7,11 @@ interface MonthlyReviewMetricsProps {
   period: string;
 }
 
-export function MonthlyReviewMetrics({ metrics, previousMetrics, period }: MonthlyReviewMetricsProps) {
+export function MonthlyReviewMetrics({
+  metrics,
+  previousMetrics,
+  period,
+}: MonthlyReviewMetricsProps) {
   const isOnChainSchema = !Array.isArray(metrics) && metrics?.onChain !== undefined;
 
   if (isOnChainSchema) {
@@ -22,7 +26,9 @@ export function MonthlyReviewMetrics({ metrics, previousMetrics, period }: Month
     );
   }
 
-  const items = Array.isArray(metrics) ? metrics : (metrics as MonthlyReviewMetricsSchema)?.editorial ?? [];
+  const items = Array.isArray(metrics)
+    ? metrics
+    : ((metrics as MonthlyReviewMetricsSchema)?.editorial ?? []);
   if (items.length === 0) return null;
 
   return (
@@ -56,4 +62,3 @@ export function MonthlyReviewMetrics({ metrics, previousMetrics, period }: Month
     </dl>
   );
 }
-

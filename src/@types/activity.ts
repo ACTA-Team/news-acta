@@ -25,7 +25,7 @@ export interface ActivityEvent {
   source_account: string;
   event_type: EventType;
   significance: Significance;
-  raw_data: any;
+  raw_data: unknown;
   summary?: string;
   processed: boolean;
   draft_article_id?: string | null;

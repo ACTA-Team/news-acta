@@ -14,17 +14,20 @@ interface Params {
   params: Promise<{ id: string }>;
 }
 
-function isAdmin(user: { app_metadata?: Record<string, unknown>; user_metadata?: Record<string, unknown> }): boolean {
-  return (
-    user.app_metadata?.role === 'admin' ||
-    user.user_metadata?.is_admin === true
-  );
+function isAdmin(user: {
+  app_metadata?: Record<string, unknown>;
+  user_metadata?: Record<string, unknown>;
+}): boolean {
+  return user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
 }
 
 export async function PATCH(request: NextRequest, { params }: Params): Promise<NextResponse> {
   try {
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     if (!isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -48,7 +51,10 @@ export async function PATCH(request: NextRequest, { params }: Params): Promise<N
 export async function DELETE(_request: NextRequest, { params }: Params): Promise<NextResponse> {
   try {
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     if (!isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });

@@ -16,7 +16,11 @@ interface CoverImagePickerProps {
  * Replaces the raw URL text input for cover images.
  * Shows a thumbnail preview and opens the ImagePickerModal on click.
  */
-export function CoverImagePicker({ value, onChange, label = 'Cover Image' }: CoverImagePickerProps) {
+export function CoverImagePicker({
+  value,
+  onChange,
+  label = 'Cover Image',
+}: CoverImagePickerProps) {
   const [showPicker, setShowPicker] = useState(false);
 
   function handleSelect(item: MediaItem, url: string) {

@@ -82,7 +82,8 @@ function isSafeUrl(url: string): boolean {
       /^192\.168\./.test(hostname) ||
       /^169\.254\./.test(hostname) ||
       hostname === '0.0.0.0'
-    ) return false;
+    )
+      return false;
     return true;
   } catch {
     return false;
@@ -105,7 +106,9 @@ function extractImageUrls(content: string): string[] {
   return [...new Set(urls)];
 }
 
-async function downloadImage(url: string): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
+async function downloadImage(
+  url: string
+): Promise<{ buffer: Buffer; mimeType: string; filename: string }> {
   if (!isSafeUrl(url)) {
     throw new Error(`Blocked URL (private/internal address not allowed): ${url}`);
   }
@@ -137,11 +140,7 @@ function guessBucket(field: 'cover_image_url' | 'content'): MediaBucket {
   return field === 'cover_image_url' ? 'article-covers' : 'article-content';
 }
 
-async function migrateUrl(
-  url: string,
-  bucket: MediaBucket,
-  uploadedBy: string
-): Promise<string> {
+async function migrateUrl(url: string, bucket: MediaBucket, uploadedBy: string): Promise<string> {
   const { buffer, mimeType, filename } = await downloadImage(url);
 
   // Generate path — use only the sanitized extension from the filename
@@ -195,7 +194,10 @@ async function migrateUrl(
   if (insertError) {
     // Rollback uploaded objects
     const allPaths = [path, ...Object.values(variantPaths)];
-    await supabase.storage.from(bucket).remove(allPaths).catch(() => undefined);
+    await supabase.storage
+      .from(bucket)
+      .remove(allPaths)
+      .catch(() => undefined);
     throw new Error(`media_library insert failed: ${insertError.message}`);
   }
 
@@ -237,7 +239,11 @@ async function main() {
 
       try {
         console.log(`  Migrating cover: ${article.slug}`);
-        const newUrl = await migrateUrl(article.cover_image_url, 'article-covers', 'migration-script');
+        const newUrl = await migrateUrl(
+          article.cover_image_url,
+          'article-covers',
+          'migration-script'
+        );
 
         await supabase
           .from('news_articles')
@@ -275,10 +281,7 @@ async function main() {
 
         // Replace URL in content
         const newContent = article.content.replaceAll(url, newUrl);
-        await supabase
-          .from('news_articles')
-          .update({ content: newContent })
-          .eq('id', article.id);
+        await supabase.from('news_articles').update({ content: newContent }).eq('id', article.id);
 
         // Update local copy for subsequent replacements in same article
         article.content = newContent;

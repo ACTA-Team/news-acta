@@ -17,7 +17,11 @@ export function MonthlyReviewDetail({ review, previousMetrics }: MonthlyReviewDe
         <p className="max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">{review.summary}</p>
       </header>
 
-      <MonthlyReviewMetrics metrics={review.metrics} previousMetrics={previousMetrics} period={review.period} />
+      <MonthlyReviewMetrics
+        metrics={review.metrics}
+        previousMetrics={previousMetrics}
+        period={review.period}
+      />
 
       <section className="flex flex-col gap-4">
         <h2 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">Highlights</h2>

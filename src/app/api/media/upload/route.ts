@@ -20,17 +20,20 @@ import type { MediaBucket } from '@/@types/media';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-function isAdmin(user: { app_metadata?: Record<string, unknown>; user_metadata?: Record<string, unknown> }): boolean {
-  return (
-    user.app_metadata?.role === 'admin' ||
-    user.user_metadata?.is_admin === true
-  );
+function isAdmin(user: {
+  app_metadata?: Record<string, unknown>;
+  user_metadata?: Record<string, unknown>;
+}): boolean {
+  return user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

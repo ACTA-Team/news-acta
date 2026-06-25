@@ -28,7 +28,9 @@ export function OrphanViewer({ initialItems }: OrphanViewerProps) {
       setItems(data.items ?? []);
       setSelectedIds(new Set());
       setConfirmDelete(false);
-      setScanResult(`Scan complete. Found ${data.orphanCount} orphaned file${data.orphanCount !== 1 ? 's' : ''}.`);
+      setScanResult(
+        `Scan complete. Found ${data.orphanCount} orphaned file${data.orphanCount !== 1 ? 's' : ''}.`
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Scan failed');
     } finally {

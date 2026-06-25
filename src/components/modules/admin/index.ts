@@ -8,7 +8,6 @@ export { AdminNewsEditorPageContent } from './pages/AdminNewsEditorPage';
 export { AdminMonthlyReviewsPageContent } from './pages/AdminMonthlyReviewsPage';
 export { AdminMonthlyReviewEditorPageContent } from './pages/AdminMonthlyReviewEditorPage';
 
-
 // Actions
 export {
   saveAdminNewsArticleAction,

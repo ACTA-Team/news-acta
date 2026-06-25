@@ -183,7 +183,10 @@ export async function uploadMedia(
 
   if (insertError || !record) {
     // Rollback: remove uploaded objects to avoid orphans
-    await supabase.storage.from(bucket).remove(uploadedPaths).catch(() => undefined);
+    await supabase.storage
+      .from(bucket)
+      .remove(uploadedPaths)
+      .catch(() => undefined);
     throw new Error(`Failed to record media metadata: ${insertError?.message}`);
   }
 

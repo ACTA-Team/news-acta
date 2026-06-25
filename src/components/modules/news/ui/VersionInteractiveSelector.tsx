@@ -84,17 +84,17 @@ export function VersionInteractiveSelector({
         </div>
       )}
 
-      {loading && (
-        <p className="text-sm text-zinc-400 dark:text-zinc-500">Loading version…</p>
-      )}
+      {loading && <p className="text-sm text-zinc-400 dark:text-zinc-500">Loading version…</p>}
 
       {/* Timeline with interactive checkboxes */}
-      <div onChange={(e) => {
-        const input = e.target as HTMLInputElement;
-        if (input.name === 'compare') {
-          handleCheckChange(Number(input.value), input.checked);
-        }
-      }}>
+      <div
+        onChange={(e) => {
+          const input = e.target as HTMLInputElement;
+          if (input.name === 'compare') {
+            handleCheckChange(Number(input.value), input.checked);
+          }
+        }}
+      >
         <VersionTimeline
           versions={versions}
           articleSlug={articleSlug}
