@@ -1,5 +1,7 @@
 export * from './horizon';
 export * from './soroban';
+export { anchorHashOnStellar, verifyAnchor } from './anchor';
+export type { AnchorResult } from './anchor';
 
 export interface EcosystemSnapshotMetrics {
   horizon: import('./horizon').HorizonAggregateMetrics;
