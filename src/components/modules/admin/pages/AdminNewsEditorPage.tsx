@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Languages } from 'lucide-react';
 import { saveAdminNewsArticleAction } from '@/components/modules/admin/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +12,8 @@ import { StellarReferenceField } from '../ui/StellarReferenceField';
 import { fetchAdminArticleVersions } from '../services/versions.service';
 import { requireAdmin } from '../services/auth.service';
 import { listThread } from '../services/reviews.service';
+import { getTranslationStatus } from '../services/translations.service';
+import { TranslationStatusBadge } from '../ui/TranslationStatusBadge';
 import { StatusTransitionMenu } from '../ui/StatusTransitionMenu';
 import { SchedulePicker } from '../ui/SchedulePicker';
 import { ReviewCommentThread } from '../ui/ReviewCommentThread';
@@ -33,6 +37,9 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
   const currentVersionNumber = versions.length > 0 ? versions[0].versionNumber : 1;
 
   const reviewEvents = articleId ? await listThread(supabase, articleId) : [];
+
+  // Null on a brand new article, which has no row to translate yet.
+  const translationStatus = articleId ? await getTranslationStatus(supabase, articleId) : null;
 
   const ownsArticle =
     article !== null && session.authorId !== null && session.authorId === article.authorId;
@@ -161,6 +168,27 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
               canSubmit={canEdit}
             />
           </>
+        ) : null}
+
+        {articleId && translationStatus ? (
+          <section className="space-y-3 rounded-2xl border bg-card p-4">
+            <div className="flex items-center gap-2">
+              <Languages className="size-4 text-muted-foreground" strokeWidth={1.5} aria-hidden />
+              <h3 className="text-sm font-semibold">Translations</h3>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {Object.values(translationStatus).map((entry) => (
+                <TranslationStatusBadge
+                  key={entry.locale}
+                  locale={entry.locale}
+                  status={entry.status}
+                />
+              ))}
+            </div>
+            <Button asChild size="sm" variant="outline" className="w-full justify-center">
+              <Link href={`/admin/news/${articleId}/translations`}>Edit translations</Link>
+            </Button>
+          </section>
         ) : null}
 
         {articleId && (

@@ -1,6 +1,6 @@
 /**
- * POST /api/media/orphans — trigger orphan detection (recalculate usage counts)
- * GET  /api/media/orphans — fetch orphaned media items
+ * POST /api/media/orphans: trigger orphan detection (recalculate usage counts)
+ * GET  /api/media/orphans: fetch orphaned media items
  *
  * Both require an admin session.
  */

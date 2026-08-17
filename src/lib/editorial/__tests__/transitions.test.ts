@@ -16,7 +16,7 @@ import {
  *
  * This is the same table encoded in `public.enforce_status_transition()` in
  * `supabase/migrations/0006_editorial_workflow.sql`. Asserting every ordered
- * pair — allowed *and* forbidden — means a change on either side that is not
+ * pair (allowed *and* forbidden) means a change on either side that is not
  * mirrored on the other shows up as a failure here.
  */
 const EXPECTED: Record<EditorialStatus, EditorialStatus[]> = {

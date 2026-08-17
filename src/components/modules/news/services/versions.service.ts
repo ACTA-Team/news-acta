@@ -2,7 +2,7 @@
  * Version read service for the public `news` module.
  *
  * Fetches `article_versions` for published articles only (RLS enforced).
- * Only the service layer is allowed to query Supabase — UI never queries directly.
+ * Only the service layer is allowed to query Supabase: UI never queries directly.
  */
 
 import type {
@@ -94,7 +94,7 @@ const VERSION_FULL_SELECT = `
 ` as const;
 
 /**
- * Fetch all version list items for an article (public — RLS filters to published).
+ * Fetch all version list items for an article (public: RLS filters to published).
  */
 export async function fetchArticleVersions(
   supabase: TypedSupabaseClient,
@@ -118,7 +118,7 @@ export async function fetchArticleVersions(
 }
 
 /**
- * Fetch a single full version by article + version number (public — RLS applies).
+ * Fetch a single full version by article + version number (public: RLS applies).
  */
 export async function fetchArticleVersionByNumber(
   supabase: TypedSupabaseClient,

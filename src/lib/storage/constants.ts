@@ -16,7 +16,7 @@ export const ALLOWED_MIME_TYPES: AllowedMimeType[] = [
   'image/svg+xml',
 ];
 
-/** Variant specs — width (and optional height) for each named size. */
+/** Variant specs: width (and optional height) for each named size. */
 export const VARIANT_SPECS: VariantSpec[] = [
   { key: 'thumb', width: 200 },
   { key: 'sm', width: 640 },

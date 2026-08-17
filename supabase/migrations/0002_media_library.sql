@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — media_library table + Storage bucket policies
+-- ACTA News: media_library table + Storage bucket policies
 --
 -- Adds:
 --   - media_library table with full metadata, variant paths, and Stellar anchoring

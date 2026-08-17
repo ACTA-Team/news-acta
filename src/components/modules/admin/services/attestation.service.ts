@@ -52,7 +52,7 @@ export async function attestPublishedArticle(
   const version = latestVersion?.version_number ?? 1;
 
   // Claim the (article_id, version) slot. An empty result means another run
-  // already attested this version — nothing left to do.
+  // already attested this version: nothing left to do.
   const { data: claimed, error: claimError } = await supabase
     .from('article_attestations')
     .upsert(
@@ -73,7 +73,7 @@ export async function attestPublishedArticle(
   if (!attestationId) return;
 
   if (!process.env.STELLAR_BLOG_SECRET_KEY) {
-    console.info('[stellar] STELLAR_BLOG_SECRET_KEY not set — skipping attestation submission.');
+    console.info('[stellar] STELLAR_BLOG_SECRET_KEY not set. Skipping attestation submission.');
     return;
   }
 

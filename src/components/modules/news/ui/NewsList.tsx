@@ -4,15 +4,19 @@ import type { NewsListProps } from '@/@types/news';
 import { useNewsList } from '@/components/modules/news/hooks/useNewsList';
 import { NewsCard } from '@/components/modules/news/ui/NewsCard';
 import { NewsFilters } from '@/components/modules/news/ui/NewsFilters';
+import { useTranslations } from '@/hooks/useTranslations';
+import type { Translator } from '@/i18n/translate';
 
 /**
  * News grid container.
  *
  * - Client Component because it orchestrates filters + refetch.
  * - Can receive `initialData` from a Server Component for SSR.
- * - The card (`NewsCard`) stays Server-safe.
+ * - Refetches in the reader's locale, so a search runs against the Spanish text
+ *   search configuration on `/es` and the English one on `/en`.
  */
 export function NewsList({ initialData, initialFilters }: NewsListProps) {
+  const { t } = useTranslations();
   const { data, filters, isLoading, error, setFilters } = useNewsList({
     initialData,
     initialFilters,
@@ -23,11 +27,11 @@ export function NewsList({ initialData, initialFilters }: NewsListProps) {
       <NewsFilters value={filters} onChange={setFilters} />
 
       {error ? (
-        <ErrorState message={error.message} />
+        <ErrorState message={error.message} t={t} />
       ) : isLoading && !data ? (
         <LoadingState />
       ) : !data || data.items.length === 0 ? (
-        <EmptyState />
+        <EmptyState t={t} />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {data.items.map((article) => (
@@ -52,18 +56,18 @@ function LoadingState() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ t }: { t: Translator }) {
   return (
     <div className="rounded-2xl border border-dashed border-zinc-300 p-10 text-center text-zinc-500 dark:border-zinc-800">
-      No news yet. Check back soon.
+      {t('news.list.empty')}
     </div>
   );
 }
 
-function ErrorState({ message }: { message: string }) {
+function ErrorState({ message, t }: { message: string; t: Translator }) {
   return (
     <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
-      Failed to load news: {message}
+      {t('news.list.error', { message })}
     </div>
   );
 }

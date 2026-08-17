@@ -8,7 +8,7 @@ export function ActivityFeed({ events }: { events: ActivityEvent[] }) {
       <ul>
         {events.map((e) => (
           <li key={e.id}>
-            <strong>{e.event_type}</strong> — {e.summary} — <em>{e.significance}</em>
+            <strong>{e.event_type}</strong> · {e.summary} · <em>{e.significance}</em>
           </li>
         ))}
       </ul>

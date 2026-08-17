@@ -1,4 +1,5 @@
 import type { Author } from '@/@types/author';
+import { DEFAULT_LOCALE, isLocale, type Locale } from '@/i18n/config';
 import type { Database, TypedSupabaseClient } from '@/lib/supabase';
 import {
   isMissingSchemaCacheError,
@@ -13,27 +14,66 @@ interface AuthorSocial {
   linkedin?: string;
 }
 
-function mapAuthor(row: AuthorRow): Author {
+interface EmbeddedAuthorTranslation {
+  locale: Locale;
+  role: string | null;
+  bio: string | null;
+}
+
+type AuthorRowWithTranslations = AuthorRow & {
+  translations: EmbeddedAuthorTranslation[] | null;
+};
+
+/**
+ * A person's name and avatar are the same in every language; `role` and `bio`
+ * are the only prose, so those are what `author_translations` carries.
+ */
+const AUTHOR_SELECT = `
+  id, slug, name, role, bio, avatar_url, social, created_at, updated_at,
+  translations:author_translations ( locale, role, bio )
+` as const;
+
+function mapAuthor(row: AuthorRowWithTranslations, requested: Locale): Author {
   const social = (row.social ?? {}) as AuthorSocial;
+  const match = (row.translations ?? []).find(
+    (translation) => isLocale(translation.locale) && translation.locale === requested
+  );
+
+  const availableLocales = [
+    DEFAULT_LOCALE,
+    ...(row.translations ?? [])
+      .map((translation) => translation.locale)
+      .filter((locale): locale is Locale => isLocale(locale)),
+  ];
+
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
-    role: row.role ?? undefined,
-    bio: row.bio ?? undefined,
+    // A translation row may fill in only one of the two fields; each falls back
+    // to the source independently rather than as a pair.
+    role: match?.role ?? row.role ?? undefined,
+    bio: match?.bio ?? row.bio ?? undefined,
     avatarUrl: row.avatar_url ?? undefined,
     social: {
       x: social.x,
       github: social.github,
       linkedin: social.linkedin,
     },
+    locale: match ? requested : DEFAULT_LOCALE,
+    sourceLocale: DEFAULT_LOCALE,
+    isTranslated: Boolean(match),
+    availableLocales: [...new Set(availableLocales)],
   };
 }
 
-export async function fetchAuthors(supabase: TypedSupabaseClient): Promise<Author[]> {
+export async function fetchAuthors(
+  supabase: TypedSupabaseClient,
+  locale: Locale = DEFAULT_LOCALE
+): Promise<Author[]> {
   const { data, error } = await supabase
     .from('authors')
-    .select('*')
+    .select(AUTHOR_SELECT)
     .order('name', { ascending: true });
 
   if (error) {
@@ -43,14 +83,22 @@ export async function fetchAuthors(supabase: TypedSupabaseClient): Promise<Autho
     }
     throw error;
   }
-  return (data ?? []).map(mapAuthor);
+
+  return ((data ?? []) as unknown as AuthorRowWithTranslations[]).map((row) =>
+    mapAuthor(row, locale)
+  );
 }
 
 export async function fetchAuthorBySlug(
   supabase: TypedSupabaseClient,
-  slug: string
+  slug: string,
+  locale: Locale = DEFAULT_LOCALE
 ): Promise<Author | null> {
-  const { data, error } = await supabase.from('authors').select('*').eq('slug', slug).maybeSingle();
+  const { data, error } = await supabase
+    .from('authors')
+    .select(AUTHOR_SELECT)
+    .eq('slug', slug)
+    .maybeSingle();
 
   if (error) {
     if (isMissingSchemaCacheError(error)) {
@@ -61,5 +109,5 @@ export async function fetchAuthorBySlug(
   }
   if (!data) return null;
 
-  return mapAuthor(data);
+  return mapAuthor(data as unknown as AuthorRowWithTranslations, locale);
 }

@@ -3,7 +3,7 @@
  *
  * `requireRole` mirrors `requireAdmin`: it resolves the session first (which
  * redirects anonymous visitors to the login page) and then asserts the role.
- * RLS remains the real boundary — this layer exists so an action fails with a
+ * RLS remains the real boundary: this layer exists so an action fails with a
  * readable message instead of an opaque Postgres error, and so the UI can hide
  * what the role cannot do.
  */
@@ -33,7 +33,7 @@ export async function requireRole(...allowed: EditorialRole[]): Promise<AdminSes
   return session;
 }
 
-/** The team roster shown on `/admin/team`. Owner-only in practice — RLS
+/** The team roster shown on `/admin/team`. Owner-only in practice: RLS
  *  returns just the caller's own row to anyone else. */
 export async function listTeam(): Promise<TeamMember[]> {
   const supabase = await createClient();

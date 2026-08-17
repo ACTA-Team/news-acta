@@ -21,7 +21,7 @@ import { fetchContract, isContractNotFound } from '@/lib/stellar/soroban';
  *
  * Guarantees: this never throws. Any failure for a single entity resolves to
  * `status: 'error'` (render a fallback link), and a top-level catch maps the
- * whole batch to errors — article rendering is never blocked.
+ * whole batch to errors: article rendering is never blocked.
  */
 
 export function entityKey(ref: StellarEntityRef): string {

@@ -1,15 +1,21 @@
+import { DEFAULT_LOCALE, type Locale } from '@/i18n/config';
+import { formatMonthYear } from '@/i18n/format';
+
 /**
  * Pure utilities for the `monthly-review` module.
+ *
+ * `formatPeriodLabel` takes a `Locale`, not a BCP 47 string: the mapping from
+ * one to the other lives in `src/i18n/config.ts` and nothing else should have to
+ * know that 'es' means 'es-CR'.
  */
 
-/** "2026-03" -> "March 2026" */
-export function formatPeriodLabel(period: string, locale: string = 'en-US'): string {
+/** "2026-03" -> "March 2026" / "marzo de 2026" */
+export function formatPeriodLabel(period: string, locale: Locale = DEFAULT_LOCALE): string {
   const [yearStr, monthStr] = period.split('-');
   const year = Number(yearStr);
   const month = Number(monthStr);
   if (!year || !month) return period;
-  const date = new Date(year, month - 1, 1);
-  return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+  return formatMonthYear(new Date(year, month - 1, 1), locale);
 }
 
 /** Sorts YYYY-MM periods chronologically, newest first. */

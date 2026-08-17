@@ -9,18 +9,28 @@ import { AnimatedThemeToggler } from '@/components/ui/AnimatedThemeToggler';
 import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { useScroll } from '@/hooks/useScroll';
+import { useTranslations } from '@/hooks/useTranslations';
+import { withLocale } from '@/i18n';
 import { cn } from '@/lib/utils';
 
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 /**
- * Efferd @efferd/header-2 — single scroll surface (no nested bars / ghost header).
+ * Efferd @efferd/header-2: single scroll surface (no nested bars / ghost header).
+ *
+ * Every href goes through `withLocale`, so the nav never leaves the reader's
+ * language, and the labels come from the dictionary rather than from siteConfig.
  */
 export function SiteHeader() {
   const scrolled = useScroll(10);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { locale, t } = useTranslations();
+
+  const href = (path: string) => withLocale(locale, path);
 
   return (
     <header className="sticky top-0 z-50 w-full">
-      {/* Spacer: only the inner shell gets the frosted bar — the outer <header> stays a transparent track */}
+      {/* Spacer: only the inner shell gets the frosted bar, the outer <header> stays a transparent track */}
       <div
         className={cn(
           'px-3 transition-[padding] duration-200 ease-out sm:px-4',
@@ -38,10 +48,10 @@ export function SiteHeader() {
         >
           <nav
             className="flex h-12 w-full min-w-0 items-center justify-between gap-2 px-3 sm:h-12 sm:px-4"
-            aria-label="Primary"
+            aria-label={t('common.primaryNav')}
           >
             <Link
-              href="/"
+              href={href('/')}
               className="flex shrink-0 items-center gap-2 rounded-md py-0.5 pr-2 transition-opacity hover:opacity-90"
               onClick={() => setIsMobileOpen(false)}
             >
@@ -75,12 +85,13 @@ export function SiteHeader() {
                   size="sm"
                   className="shrink-0 text-[0.8125rem] text-muted-foreground"
                 >
-                  <Link href={item.href}>{item.label}</Link>
+                  <Link href={href(item.href)}>{t(item.labelKey)}</Link>
                 </Button>
               ))}
               <Button asChild variant="outline" size="sm" className="shrink-0 text-[0.8125rem]">
-                <Link href="/login">Log in</Link>
+                <Link href={href('/login')}>{t('common.logIn')}</Link>
               </Button>
+              <LanguageSwitcher className="ml-0.5 shrink-0" />
               <AnimatedThemeToggler
                 variant="circle"
                 className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&_svg]:size-4"
@@ -95,7 +106,7 @@ export function SiteHeader() {
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
+                aria-label={isMobileOpen ? t('common.closeMenu') : t('common.openMenu')}
                 aria-expanded={isMobileOpen}
                 onClick={() => setIsMobileOpen((o) => !o)}
               >
@@ -112,18 +123,24 @@ export function SiteHeader() {
             {siteConfig.nav.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={href(item.href)}
                 className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                 onClick={() => setIsMobileOpen(false)}
               >
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             ))}
             <Button asChild variant="outline" size="sm" className="mt-1 w-full justify-center">
-              <Link href="/login" onClick={() => setIsMobileOpen(false)}>
-                Log in
+              <Link href={href('/login')} onClick={() => setIsMobileOpen(false)}>
+                {t('common.logIn')}
               </Link>
             </Button>
+            <div className="mt-2 border-t border-border/60 pt-2">
+              <p className="px-3 pb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                {t('common.language')}
+              </p>
+              <LanguageSwitcher expanded onNavigate={() => setIsMobileOpen(false)} />
+            </div>
           </div>
         </div>
       ) : null}

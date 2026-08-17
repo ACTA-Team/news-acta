@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { siteConfig } from '@/config/site';
+import { useTranslations } from '@/hooks/useTranslations';
 import {
   buildXShareUrl,
   buildLinkedInShareUrl,
@@ -17,9 +18,11 @@ interface ShareButtonsProps {
 
 /**
  * Share button row. Client Component because it uses clipboard + local state.
- * Content-agnostic: it takes URL and title via props.
+ * Content-agnostic: it takes URL and title via props, and the caller is
+ * responsible for passing a locale-correct canonical URL.
  */
 export function ShareButtons({ url, title, description, hashtags }: ShareButtonsProps) {
+  const { t } = useTranslations();
   const [copied, setCopied] = useState(false);
 
   const target = {
@@ -42,7 +45,9 @@ export function ShareButtons({ url, title, description, hashtags }: ShareButtons
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="mr-2 text-xs font-medium uppercase tracking-wider text-zinc-500">Share</span>
+      <span className="mr-2 text-xs font-medium uppercase tracking-wider text-zinc-500">
+        {t('share.label')}
+      </span>
 
       <a
         href={buildXShareUrl(target)}
@@ -50,7 +55,7 @@ export function ShareButtons({ url, title, description, hashtags }: ShareButtons
         rel="noreferrer"
         className="rounded-full border border-zinc-200 px-3 py-1 text-sm hover:border-zinc-400 dark:border-zinc-800 dark:hover:border-zinc-600"
       >
-        X
+        {t('share.x')}
       </a>
 
       <a
@@ -59,7 +64,7 @@ export function ShareButtons({ url, title, description, hashtags }: ShareButtons
         rel="noreferrer"
         className="rounded-full border border-zinc-200 px-3 py-1 text-sm hover:border-zinc-400 dark:border-zinc-800 dark:hover:border-zinc-600"
       >
-        LinkedIn
+        {t('share.linkedin')}
       </a>
 
       <button
@@ -67,7 +72,7 @@ export function ShareButtons({ url, title, description, hashtags }: ShareButtons
         onClick={() => handleCopy(buildInstagramShareUrl(target))}
         className="rounded-full border border-zinc-200 px-3 py-1 text-sm hover:border-zinc-400 dark:border-zinc-800 dark:hover:border-zinc-600"
       >
-        Instagram
+        {t('share.instagram')}
       </button>
 
       <button
@@ -75,7 +80,7 @@ export function ShareButtons({ url, title, description, hashtags }: ShareButtons
         onClick={() => handleCopy(url)}
         className="rounded-full border border-zinc-200 px-3 py-1 text-sm hover:border-zinc-400 dark:border-zinc-800 dark:hover:border-zinc-600"
       >
-        {copied ? 'Copied!' : 'Copy link'}
+        {copied ? t('share.copied') : t('share.copyLink')}
       </button>
     </div>
   );

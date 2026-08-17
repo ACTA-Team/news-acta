@@ -1,6 +1,6 @@
 /**
- * PATCH /api/media/[id]  — update alt text
- * DELETE /api/media/[id] — delete media item
+ * PATCH /api/media/[id] : update alt text
+ * DELETE /api/media/[id]: delete media item
  *
  * Both require an admin session.
  */

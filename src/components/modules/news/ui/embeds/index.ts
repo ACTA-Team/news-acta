@@ -5,7 +5,7 @@
  * components (e.g. the admin "Insert Stellar Reference" modal renders a live
  * preview with `StellarEmbed`).
  *
- * NOTE: `ArticleContent` is deliberately NOT exported here — it depends on the
+ * NOTE: `ArticleContent` is deliberately NOT exported here: it depends on the
  * server-only resolver. Import it from the news module barrel instead
  * (`@/components/modules/news`).
  */

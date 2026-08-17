@@ -113,7 +113,7 @@ export function VersionTimeline({
                   </div>
                 </div>
 
-                {/* Compare checkbox — handled by the client selector above */}
+                {/* Compare checkbox: handled by the client selector above */}
                 <label
                   className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                   title="Select for comparison"

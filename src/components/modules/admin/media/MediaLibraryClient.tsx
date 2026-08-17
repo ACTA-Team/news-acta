@@ -24,7 +24,7 @@ export function MediaLibraryClient({ initialData }: MediaLibraryClientProps) {
   const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
   const didInitRef = useRef(false);
 
-  // Fetch media list whenever filters change — skip the very first render
+  // Fetch media list whenever filters change: skip the very first render
   useEffect(() => {
     if (!didInitRef.current) {
       didInitRef.current = true;

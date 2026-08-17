@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { NewsListFilters, NewsListResponse } from '@/@types/news';
 import { fetchNewsList } from '@/components/modules/news/services/news.service';
 import { NEWS_DEFAULT_PAGE_SIZE } from '@/components/modules/news/constants';
+import { useTranslations } from '@/hooks/useTranslations';
 import { createClient } from '@/lib/supabase/client';
 import type { TypedSupabaseClient } from '@/lib/supabase/client';
 import { hasSupabasePublicEnv } from '@/lib/supabase/env';
@@ -27,11 +28,15 @@ interface UseNewsListResult {
  *
  * - Accepts `initialData` to hydrate from a Server Component.
  * - All network logic lives in `news.service`; this hook only orchestrates state.
+ * - Reads the locale from the translations context and passes it to every fetch,
+ *   so a client-side refetch resolves translations and stems search terms the
+ *   same way the server-rendered first page did.
  */
 export function useNewsList({
   initialData,
   initialFilters,
 }: UseNewsListArgs = {}): UseNewsListResult {
+  const { locale } = useTranslations();
   const supabaseRef = useRef<TypedSupabaseClient | null>(null);
   const [data, setData] = useState<NewsListResponse | null>(initialData ?? null);
   const [filters, setFiltersState] = useState<NewsListFilters>(
@@ -40,42 +45,45 @@ export function useNewsList({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const load = useCallback(async (next: NewsListFilters) => {
-    if (!hasSupabasePublicEnv()) {
-      if (process.env.NODE_ENV === 'development') {
-        setData({
-          items: [],
-          total: 0,
-          page: next.page ?? 1,
-          pageSize: next.pageSize ?? NEWS_DEFAULT_PAGE_SIZE,
-        });
-        setError(null);
+  const load = useCallback(
+    async (next: NewsListFilters) => {
+      if (!hasSupabasePublicEnv()) {
+        if (process.env.NODE_ENV === 'development') {
+          setData({
+            items: [],
+            total: 0,
+            page: next.page ?? 1,
+            pageSize: next.pageSize ?? NEWS_DEFAULT_PAGE_SIZE,
+          });
+          setError(null);
+          return;
+        }
+
+        setError(
+          new Error(
+            'Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL and/or NEXT_PUBLIC_SUPABASE_ANON_KEY.'
+          )
+        );
         return;
       }
 
-      setError(
-        new Error(
-          'Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL and/or NEXT_PUBLIC_SUPABASE_ANON_KEY.'
-        )
-      );
-      return;
-    }
+      if (!supabaseRef.current) {
+        supabaseRef.current = createClient();
+      }
 
-    if (!supabaseRef.current) {
-      supabaseRef.current = createClient();
-    }
-
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetchNewsList(supabaseRef.current, next);
-      setData(response);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error(String(err)));
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetchNewsList(supabaseRef.current, next, locale);
+        setData(response);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error(String(err)));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [locale]
+  );
 
   useEffect(() => {
     if (initialData) return;

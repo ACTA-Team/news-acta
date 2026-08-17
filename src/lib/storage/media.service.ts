@@ -1,5 +1,5 @@
 /**
- * Media library service — reads media records from the database.
+ * Media library service: reads media records from the database.
  *
  * Works with both browser and server Supabase clients.
  */

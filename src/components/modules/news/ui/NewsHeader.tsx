@@ -1,17 +1,20 @@
+import type { Translator } from '@/i18n/translate';
+
 /**
  * Presentational header for the News module.
- * Server Component — no state and no handlers here.
+ * Server Component: no state and no handlers here.
  */
-export function NewsHeader() {
+export function NewsHeader({ t }: { t: Translator }) {
   return (
     <header className="flex flex-col gap-3 border-b border-zinc-200 pb-8 dark:border-zinc-800">
-      <p className="text-sm font-medium uppercase tracking-widest text-zinc-500">ACTA News</p>
+      <p className="text-sm font-medium uppercase tracking-widest text-zinc-500">
+        {t('news.header.eyebrow')}
+      </p>
       <h1 className="text-4xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-        What&apos;s happening in the ACTA ecosystem
+        {t('news.header.title')}
       </h1>
       <p className="max-w-2xl text-base text-zinc-600 dark:text-zinc-400">
-        Announcements, product updates, engineering deep-dives and community highlights from the
-        teams building ACTA.
+        {t('news.header.description')}
       </p>
     </header>
   );

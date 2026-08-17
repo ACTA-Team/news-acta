@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — Stellar ecosystem snapshots
+-- ACTA News: Stellar ecosystem snapshots
 --
 -- Stores aggregated Horizon API and Soroban RPC metrics for a given YYYY-MM
 -- period, for both mainnet and testnet.

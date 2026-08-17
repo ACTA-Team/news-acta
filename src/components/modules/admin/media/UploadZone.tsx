@@ -78,7 +78,7 @@ export function UploadZone({
         setState({ status: 'success', progress: 100, fileName: file.name });
         onUploaded(result.media, result.publicUrl);
 
-        // Reset after a short delay — store timer so it can be cancelled
+        // Reset after a short delay: store timer so it can be cancelled
         resetTimerRef.current = setTimeout(() => {
           setState({ status: 'idle', progress: 0 });
           resetTimerRef.current = null;

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MonthlyReviewListItem } from '@/@types/monthly-review';
 import { fetchMonthlyReviews } from '@/components/modules/monthly-review/services/monthly-review.service';
+import { useTranslations } from '@/hooks/useTranslations';
 import { createClient } from '@/lib/supabase/client';
 
 interface UseMonthlyReviewsArgs {
@@ -10,6 +11,7 @@ interface UseMonthlyReviewsArgs {
 }
 
 export function useMonthlyReviews({ initialData }: UseMonthlyReviewsArgs = {}) {
+  const { locale } = useTranslations();
   const supabaseRef = useRef(createClient());
   const [data, setData] = useState<MonthlyReviewListItem[]>(initialData ?? []);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,13 +21,13 @@ export function useMonthlyReviews({ initialData }: UseMonthlyReviewsArgs = {}) {
     setIsLoading(true);
     setError(null);
     try {
-      setData(await fetchMonthlyReviews(supabaseRef.current));
+      setData(await fetchMonthlyReviews(supabaseRef.current, locale));
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     if (initialData && initialData.length > 0) return;

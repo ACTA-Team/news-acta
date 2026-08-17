@@ -80,7 +80,7 @@ export function StellarReferenceModal({ open, onClose, onInsert }: StellarRefere
       if (json.ok) {
         setEntity(json.entity as ResolvedStellarEntity);
       } else {
-        // The ref is valid; resolution failed — still allow insert with a fallback.
+        // The ref is valid; resolution failed: still allow insert with a fallback.
         setEntity({ ref: detected, status: 'error', resolvedAt: new Date().toISOString() });
       }
     } catch {

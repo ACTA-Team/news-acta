@@ -3,15 +3,15 @@
  *
  * This module is a mirror of `public.enforce_status_transition()` in
  * `supabase/migrations/0006_editorial_workflow.sql`. The database is the real
- * boundary — it rejects an invalid change even when the REST API is called
- * directly — and this table exists so the UI can offer only the moves that
+ * boundary: it rejects an invalid change even when the REST API is called
+ * directly. This table exists so the UI can offer only the moves that
  * will actually succeed.
  *
  * Keep the two in sync: `transitions.test.ts` asserts the full matrix, so a
  * change here without a matching change in the migration will be caught by a
  * failing expectation rather than silently diverging.
  *
- * Pure module — no Supabase, no server imports, safe to use from a Client
+ * Pure module: no Supabase, no server imports, safe to use from a Client
  * Component and from Node tests.
  */
 

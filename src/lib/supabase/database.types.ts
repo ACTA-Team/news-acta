@@ -261,12 +261,15 @@ export interface Database {
           cover_image_url: string | null;
           category: Database['public']['Enums']['news_category'];
           status: Database['public']['Enums']['news_status'];
+          source_locale: Database['public']['Enums']['content_locale'];
           reading_time_minutes: number;
           published_at: string | null;
           scheduled_at: string | null;
           created_at: string;
           updated_at: string;
           author_id: string;
+          /** Generated column: sha256 of title\nsummary\ncontent. */
+          translation_source_hash: string;
         };
         Insert: {
           id?: string;
@@ -277,6 +280,7 @@ export interface Database {
           cover_image_url?: string | null;
           category: Database['public']['Enums']['news_category'];
           status: Database['public']['Enums']['news_status'];
+          source_locale?: Database['public']['Enums']['content_locale'];
           reading_time_minutes?: number;
           published_at?: string | null;
           scheduled_at?: string | null;
@@ -293,6 +297,7 @@ export interface Database {
           cover_image_url?: string | null;
           category?: Database['public']['Enums']['news_category'];
           status?: Database['public']['Enums']['news_status'];
+          source_locale?: Database['public']['Enums']['content_locale'];
           reading_time_minutes?: number;
           published_at?: string | null;
           scheduled_at?: string | null;
@@ -301,6 +306,172 @@ export interface Database {
           author_id?: string;
         };
         Relationships: [];
+      };
+      article_translations: {
+        Row: {
+          id: string;
+          article_id: string;
+          locale: Database['public']['Enums']['content_locale'];
+          slug: string;
+          title: string;
+          summary: string;
+          content: string;
+          source_content_hash: string;
+          source_field_hashes: Json;
+          translated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          article_id: string;
+          locale: Database['public']['Enums']['content_locale'];
+          slug: string;
+          title: string;
+          summary: string;
+          content: string;
+          source_content_hash: string;
+          source_field_hashes?: Json;
+          translated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          article_id?: string;
+          locale?: Database['public']['Enums']['content_locale'];
+          slug?: string;
+          title?: string;
+          summary?: string;
+          content?: string;
+          source_content_hash?: string;
+          source_field_hashes?: Json;
+          translated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'article_translations_article_id_fkey';
+            columns: ['article_id'];
+            referencedRelation: 'news_articles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      monthly_review_translations: {
+        Row: {
+          id: string;
+          review_id: string;
+          locale: Database['public']['Enums']['content_locale'];
+          title: string;
+          summary: string;
+          highlights: Json;
+          source_content_hash: string;
+          translated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          review_id: string;
+          locale: Database['public']['Enums']['content_locale'];
+          title: string;
+          summary: string;
+          highlights?: Json;
+          source_content_hash: string;
+          translated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          review_id?: string;
+          locale?: Database['public']['Enums']['content_locale'];
+          title?: string;
+          summary?: string;
+          highlights?: Json;
+          source_content_hash?: string;
+          translated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'monthly_review_translations_review_id_fkey';
+            columns: ['review_id'];
+            referencedRelation: 'monthly_reviews';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      tag_translations: {
+        Row: {
+          tag_slug: string;
+          locale: Database['public']['Enums']['content_locale'];
+          label: string;
+          description: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          tag_slug: string;
+          locale: Database['public']['Enums']['content_locale'];
+          label: string;
+          description?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          tag_slug?: string;
+          locale?: Database['public']['Enums']['content_locale'];
+          label?: string;
+          description?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'tag_translations_tag_slug_fkey';
+            columns: ['tag_slug'];
+            referencedRelation: 'tags';
+            referencedColumns: ['slug'];
+          },
+        ];
+      };
+      author_translations: {
+        Row: {
+          author_id: string;
+          locale: Database['public']['Enums']['content_locale'];
+          role: string | null;
+          bio: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          author_id: string;
+          locale: Database['public']['Enums']['content_locale'];
+          role?: string | null;
+          bio?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          author_id?: string;
+          locale?: Database['public']['Enums']['content_locale'];
+          role?: string | null;
+          bio?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'author_translations_author_id_fkey';
+            columns: ['author_id'];
+            referencedRelation: 'authors';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       news_article_tags: {
         Row: {
@@ -326,9 +497,12 @@ export interface Database {
           cover_image_url: string | null;
           highlights: Json | null;
           metrics: Json | null;
+          source_locale: Database['public']['Enums']['content_locale'];
           published_at: string;
           created_at: string;
           updated_at: string;
+          /** Generated column: sha256 of title\nsummary. */
+          translation_source_hash: string;
         };
         Insert: {
           id?: string;
@@ -338,6 +512,7 @@ export interface Database {
           cover_image_url?: string | null;
           highlights?: Json | null;
           metrics?: Json | null;
+          source_locale?: Database['public']['Enums']['content_locale'];
           published_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -350,6 +525,7 @@ export interface Database {
           cover_image_url?: string | null;
           highlights?: Json | null;
           metrics?: Json | null;
+          source_locale?: Database['public']['Enums']['content_locale'];
           published_at?: string;
           created_at?: string;
           updated_at?: string;
@@ -562,12 +738,24 @@ export interface Database {
         Args: { target_article: string };
         Returns: boolean;
       };
+      search_articles: {
+        Args: {
+          p_query: string;
+          p_locale?: Database['public']['Enums']['content_locale'];
+        };
+        Returns: {
+          article_id: string;
+          rank: number;
+          matched_locale: Database['public']['Enums']['content_locale'];
+        }[];
+      };
     };
     Enums: {
       news_status: 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
       news_category: 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
       editorial_role: 'owner' | 'editor' | 'author' | 'contributor';
       review_state: 'requested' | 'approved' | 'changes_requested';
+      content_locale: 'en' | 'es';
     };
     CompositeTypes: Record<string, never>;
   };

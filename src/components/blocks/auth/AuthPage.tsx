@@ -8,22 +8,25 @@ import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/InputGroup';
 import { legalRoutes } from '@/config/legal';
 import { siteConfig } from '@/config/site';
+import { useTranslations } from '@/hooks/useTranslations';
+import { withLocale } from '@/i18n';
 import { AtSignIcon, ChevronLeftIcon } from 'lucide-react';
 
 import { AuthDivider } from './AuthDivider';
 import { FloatingPaths } from './FloatingPaths';
 
 /**
- * Efferd @efferd/auth-5 — sign-in surface (UI only, no auth wiring).
+ * Efferd @efferd/auth-5: sign-in surface (UI only, no auth wiring).
  */
 export function AuthPage() {
-  const heroQuote = `${siteConfig.name} is where we share how ACTA grows - from protocol updates to community stories.`;
+  const { locale, t } = useTranslations();
+  const href = (path: string) => withLocale(locale, path);
 
   return (
     <main className="relative md:min-h-screen md:overflow-hidden lg:grid lg:grid-cols-2">
       <div className="relative hidden h-full flex-col border-r bg-secondary p-10 lg:flex dark:bg-secondary/20">
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background" />
-        <Link href="/" className="mr-auto">
+        <Link href={href('/')} className="mr-auto">
           <Image
             src="/black.png"
             alt=""
@@ -42,18 +45,18 @@ export function AuthPage() {
             priority
             sizes="140px"
           />
-          <span className="sr-only">{siteConfig.name} home</span>
+          <span className="sr-only">{t('login.homeLogoAlt', { siteName: siteConfig.name })}</span>
         </Link>
 
         <div className="z-10 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-pretty text-xl text-foreground/90">
               {'"'}
-              {heroQuote}
+              {t('login.heroQuote', { siteName: siteConfig.name })}
               {'"'}
             </p>
             <footer className="font-mono text-sm font-semibold text-muted-foreground">
-              - ACTA
+              {t('login.heroAttribution')}
             </footer>
           </blockquote>
         </div>
@@ -69,14 +72,14 @@ export function AuthPage() {
           <div className="absolute top-0 right-0 h-320 w-60 -translate-y-87.5 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,--theme(--color-foreground/.04)_0,--theme(--color-foreground/.01)_80%,transparent_100%)]" />
         </div>
         <Button asChild className="absolute top-7 left-5" variant="ghost">
-          <Link href="/">
+          <Link href={href('/')}>
             <ChevronLeftIcon data-icon="inline-start" />
-            Home
+            {t('common.home')}
           </Link>
         </Button>
 
         <div className="mx-auto w-full max-w-sm space-y-4 sm:max-w-sm">
-          <Link href="/" className="mb-1 inline-flex lg:hidden">
+          <Link href={href('/')} className="mb-1 inline-flex lg:hidden">
             <Image
               src="/black.png"
               alt=""
@@ -96,24 +99,23 @@ export function AuthPage() {
             <span className="sr-only">{siteConfig.name}</span>
           </Link>
           <div className="flex flex-col space-y-1">
-            <h1 className="text-2xl font-bold tracking-wide">Sign in</h1>
+            <h1 className="text-2xl font-bold tracking-wide">{t('login.title')}</h1>
             <p className="text-base text-muted-foreground">
-              Access the {siteConfig.shortName} editorial workspace. UI preview - authentication is
-              not connected yet.
+              {t('login.description', { brand: siteConfig.shortName })}
             </p>
           </div>
           <div className="space-y-2">
             <Button className="w-full" type="button">
               <GoogleIcon data-icon="inline-start" />
-              Continue with Google
+              {t('login.continueWithGoogle')}
             </Button>
             <Button className="w-full" type="button">
               <GithubIcon data-icon="inline-start" />
-              Continue with GitHub
+              {t('login.continueWithGithub')}
             </Button>
           </div>
 
-          <AuthDivider>OR</AuthDivider>
+          <AuthDivider>{t('login.divider')}</AuthDivider>
 
           <form
             className="space-y-2"
@@ -121,14 +123,12 @@ export function AuthPage() {
               e.preventDefault();
             }}
           >
-            <p className="text-start text-xs text-muted-foreground">
-              Enter your email to sign in or create an account
-            </p>
+            <p className="text-start text-xs text-muted-foreground">{t('login.emailHint')}</p>
             <InputGroup>
               <InputGroupInput
                 autoComplete="email"
                 name="email"
-                placeholder="your.email@example.com"
+                placeholder={t('login.emailPlaceholder')}
                 type="email"
               />
               <InputGroupAddon align="inline-start">
@@ -137,23 +137,23 @@ export function AuthPage() {
             </InputGroup>
 
             <Button className="w-full" type="submit">
-              Continue with email
+              {t('login.continueWithEmail')}
             </Button>
           </form>
           <p className="mt-8 text-balance text-sm text-muted-foreground">
-            By continuing, you agree to our{' '}
+            {t('login.legalPrefix')}{' '}
             <Link
               className="text-foreground underline underline-offset-4 hover:text-primary"
-              href={legalRoutes.terms}
+              href={href(legalRoutes.terms)}
             >
-              Terms of Service
+              {t('login.legalTerms')}
             </Link>{' '}
-            and{' '}
+            {t('login.legalSeparator')}{' '}
             <Link
               className="text-foreground underline underline-offset-4 hover:text-primary"
-              href={legalRoutes.privacy}
+              href={href(legalRoutes.privacy)}
             >
-              Privacy Policy
+              {t('login.legalPrivacy')}
             </Link>
             .
           </p>

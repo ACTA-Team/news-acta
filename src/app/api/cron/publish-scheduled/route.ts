@@ -7,7 +7,7 @@ import { publishScheduledArticles } from '@/components/modules/admin/services/sc
  *
  * Invoked by the Vercel Cron declared in `vercel.json` (every 10 minutes),
  * which sends `CRON_SECRET` as a Bearer token. Running here rather than in an
- * edge function lets the job reuse the existing TypeScript services —
+ * edge function lets the job reuse the existing TypeScript services:
  * attestation, versioning and Next.js revalidation.
  *
  * Overlapping runs are safe: see `publishScheduledArticles`.

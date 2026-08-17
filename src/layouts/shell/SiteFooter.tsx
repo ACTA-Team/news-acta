@@ -1,15 +1,24 @@
+'use client';
+
 import type { SVGProps } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Globe } from 'lucide-react';
+import { Globe, Rss } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { legalRoutes } from '@/config/legal';
-import { siteConfig } from '@/config/site';
+import { rssPath, siteConfig } from '@/config/site';
+import { useTranslations } from '@/hooks/useTranslations';
+import { withLocale } from '@/i18n';
 import { cn } from '@/lib/utils';
 
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 /**
- * Efferd @efferd/footer-1 — minimal two-tier footer with ACTA links and socials.
+ * Efferd @efferd/footer-1: minimal two-tier footer with ACTA links and socials.
+ *
+ * A Client Component now, because the nav labels and the feed link both depend on
+ * the active locale, which lives in the translations context.
  */
 function XIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -38,12 +47,15 @@ function InstagramIcon(props: SVGProps<SVGSVGElement>) {
 const footerLinkClass = 'text-muted-foreground transition-colors hover:text-foreground';
 
 export function SiteFooter() {
+  const { locale, t } = useTranslations();
   const year = new Date().getFullYear();
+  const href = (path: string) => withLocale(locale, path);
+
   const socialLinks = [
     {
       key: 'website',
       href: siteConfig.social.website.url,
-      label: 'ACTA — acta.build',
+      label: 'ACTA (acta.build)',
       node: <Globe className="size-4" strokeWidth={1.5} aria-hidden />,
     },
     {
@@ -70,7 +82,7 @@ export function SiteFooter() {
     <footer className={cn('mt-24 w-full border-t border-border/80 bg-background', 'px-4 md:px-6')}>
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <Link href="/" className="inline-flex shrink-0 items-center self-start">
+          <Link href={href('/')} className="inline-flex shrink-0 items-center self-start">
             <Image
               src="/black.png"
               alt=""
@@ -90,40 +102,47 @@ export function SiteFooter() {
             <span className="sr-only">{siteConfig.name}</span>
           </Link>
           <div className="flex items-center gap-0.5">
-            {socialLinks.map(({ key, href, label, node }) => (
+            {socialLinks.map(({ key, href: socialHref, label, node }) => (
               <Button key={key} asChild size="icon-sm" variant="ghost">
-                <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                <a href={socialHref} target="_blank" rel="noopener noreferrer" aria-label={label}>
                   {node}
                 </a>
               </Button>
             ))}
+            {/* One feed per language: this points at the reader's own. */}
+            <Button asChild size="icon-sm" variant="ghost">
+              <a href={rssPath(locale)} aria-label={`RSS (${locale})`}>
+                <Rss className="size-4" strokeWidth={1.5} aria-hidden />
+              </a>
+            </Button>
           </div>
         </div>
 
-        <nav aria-label="Footer">
+        <nav aria-label={t('common.footerNav')}>
           <ul className="flex flex-wrap gap-x-4 gap-y-2 pb-2 font-medium text-sm">
             {siteConfig.nav.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className={footerLinkClass}>
-                  {item.label}
+                <Link href={href(item.href)} className={footerLinkClass}>
+                  {t(item.labelKey)}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href={legalRoutes.terms} className={footerLinkClass}>
-                Terms
+              <Link href={href(legalRoutes.terms)} className={footerLinkClass}>
+                {t('common.terms')}
               </Link>
             </li>
             <li>
-              <Link href={legalRoutes.privacy} className={footerLinkClass}>
-                Privacy
+              <Link href={href(legalRoutes.privacy)} className={footerLinkClass}>
+                {t('common.privacy')}
               </Link>
             </li>
           </ul>
         </nav>
 
-        <div className="border-t border-border/60 py-5 text-muted-foreground text-sm">
-          <p>© {year} ACTA. All rights reserved.</p>
+        <div className="flex flex-col gap-3 border-t border-border/60 py-5 text-muted-foreground text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>{t('common.copyright', { year })}</p>
+          <LanguageSwitcher expanded />
         </div>
       </div>
     </footer>

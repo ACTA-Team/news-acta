@@ -1,45 +1,52 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import '../globals.css';
+
+import { ThemeInit } from '@/components/ThemeInit';
+import { LOCALE_TAGS, DEFAULT_LOCALE } from '@/i18n/config';
+
+/**
+ * Root layout for the admin panel.
+ *
+ * A second root layout, alongside `src/app/[locale]/layout.tsx`: there is no
+ * `src/app/layout.tsx` because `<html lang>` on the public site has to reflect
+ * the URL's locale, and only a layout below the `[locale]` segment can know it.
+ *
+ * The admin interface stays English only. It is an internal tool, localizing it
+ * is explicitly out of scope, and its `lang` is therefore fixed.
+ */
+
+const fontSans = Plus_Jakarta_Sans({
+  variable: '--font-app-sans',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const fontMono = JetBrains_Mono({
+  variable: '--font-app-mono',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: 'Admin — ACTA News',
+  title: 'Admin (ACTA News)',
   robots: { index: false, follow: false },
 };
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect('/');
-
-  const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.is_admin === true;
-  if (!isAdmin) redirect('/');
-
+export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
-      <nav className="border-b border-zinc-800 bg-zinc-900 px-6 py-3">
-        <div className="flex items-center gap-6">
-          <span className="text-sm font-semibold tracking-wider text-zinc-300 uppercase">
-            ACTA Admin
-          </span>
-          <a
-            href="/admin/media"
-            className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
-          >
-            Media Library
-          </a>
-          <a
-            href="/admin/media/orphans"
-            className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
-          >
-            Orphaned Media
-          </a>
-        </div>
-      </nav>
-      <main className="p-6">{children}</main>
-    </div>
+    <html
+      lang={LOCALE_TAGS[DEFAULT_LOCALE]}
+      className={`${fontSans.variable} ${fontMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body
+        className="flex min-h-dvh flex-col bg-background text-foreground"
+        suppressHydrationWarning
+      >
+        <ThemeInit />
+        {children}
+      </body>
+    </html>
   );
 }

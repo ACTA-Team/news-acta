@@ -17,7 +17,7 @@
  *   6. Updates the article to point to the new Storage URL
  *   7. Generates a migration report
  *
- * Run as a standalone script — NOT an automated migration.
+ * Run as a standalone script: NOT an automated migration.
  * Safe to re-run: skips URLs that already point to Supabase Storage.
  */
 
@@ -128,7 +128,7 @@ async function downloadImage(
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Extract and sanitize filename from URL — strip directory components and
+  // Extract and sanitize filename from URL: strip directory components and
   // allow only safe characters to prevent path traversal / command injection.
   const rawName = basename(new URL(url).pathname);
   const filename = rawName.replace(/[^a-zA-Z0-9._-]/g, '_') || `image-${randomUUID()}.jpg`;
@@ -143,7 +143,7 @@ function guessBucket(field: 'cover_image_url' | 'content'): MediaBucket {
 async function migrateUrl(url: string, bucket: MediaBucket, uploadedBy: string): Promise<string> {
   const { buffer, mimeType, filename } = await downloadImage(url);
 
-  // Generate path — use only the sanitized extension from the filename
+  // Generate path: use only the sanitized extension from the filename
   const now = new Date();
   const year = now.getUTCFullYear();
   const month = String(now.getUTCMonth() + 1).padStart(2, '0');

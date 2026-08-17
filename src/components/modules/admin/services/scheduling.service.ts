@@ -38,7 +38,7 @@ export interface PublishScheduledResult {
 }
 
 export interface SchedulingDeps {
-  /** Service-role client — bypasses RLS. */
+  /** Service-role client: bypasses RLS. */
   client: TypedSupabaseClient;
   /** Invalidates a Next.js route cache entry. */
   revalidate: (path: string) => void;
@@ -79,7 +79,7 @@ export async function publishScheduledArticles(
   }
 
   // Anchor each article on-chain. Attestation failures are recorded but never
-  // roll back a publication — the article is already live.
+  // roll back a publication: the article is already live.
   for (const article of published) {
     try {
       await deps.attest(article);

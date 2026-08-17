@@ -102,7 +102,7 @@ export function OrphanViewer({ initialItems }: OrphanViewerProps) {
       )}
 
       <div className="rounded-lg border border-amber-800 bg-amber-950/20 px-4 py-3 text-sm text-amber-400">
-        ⚠ These images are not referenced in any article. Review before deleting — they may be
+        ⚠ These images are not referenced in any article. Review before deleting: they may be
         recently uploaded or used in drafts. Deletion is permanent.
       </div>
 

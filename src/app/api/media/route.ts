@@ -1,5 +1,5 @@
 /**
- * GET /api/media — paginated media library query
+ * GET /api/media: paginated media library query
  *
  * Query params: bucket, search, usage, dateFrom, dateTo, page, pageSize
  * Public read (matches RLS policy).

@@ -67,7 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       false // never block on Stellar inside uploadMedia
     );
 
-    // Fire-and-forget Stellar anchoring — does not block the response
+    // Fire-and-forget Stellar anchoring: does not block the response
     if (anchorOnStellar && result.media.contentHash) {
       const mediaId = result.media.id;
       const contentHash = result.media.contentHash;

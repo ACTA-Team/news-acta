@@ -4,7 +4,7 @@ import { fetchOrphanedMedia } from '@/lib/storage/media.service';
 import { OrphanViewer } from '@/components/modules/admin/media';
 
 export const metadata: Metadata = {
-  title: 'Orphaned Media — ACTA Admin',
+  title: 'Orphaned Media (ACTA Admin)',
 };
 
 export default async function OrphansPage() {

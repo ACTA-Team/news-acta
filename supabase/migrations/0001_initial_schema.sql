@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — initial schema
+-- ACTA News: initial schema
 --
 -- Tables: authors, tags, news_articles, news_article_tags,
 --         monthly_reviews, monthly_review_articles

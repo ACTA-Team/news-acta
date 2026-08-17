@@ -3,14 +3,14 @@ import { getActiveNetwork } from '@/lib/stellar/config';
 import { isValidAccountId, isValidContractId } from '@/lib/stellar/strkey';
 
 /**
- * Stellar entity parser — pure and client-safe (no SDK, no I/O).
+ * Stellar entity parser: pure and client-safe (no SDK, no I/O).
  *
  * Scans article content (HTML or plain text) for Stellar entities and returns
  * an ordered list of segments: HTML passes through verbatim; recognised
  * entities become `entity` segments that the renderer swaps for embed cards.
  *
- * Detection is skipped inside protected regions — `<pre>`, `<code>`, `<a>…</a>`,
- * HTML tag interiors and bare URLs — so transaction hashes shown as code and
+ * Detection is skipped inside protected regions (`<pre>`, `<code>`, `<a>…</a>`,
+ * HTML tag interiors and bare URLs) so transaction hashes shown as code and
  * ids embedded in links are never mangled. `G…`/`C…` candidates and asset
  * issuers are checksum-validated (see `strkey.ts`) to reject look-alikes.
  */

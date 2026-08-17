@@ -13,7 +13,7 @@ interface ContractEmbedProps {
 /**
  * Rich card for a Soroban contract. Server Component (presentational).
  * Deploy date / deployer require an indexer that plain Soroban RPC does not
- * expose, so they show "—" with the explorer link covering the rest.
+ * expose, so they show "-" with the explorer link covering the rest.
  */
 export function ContractEmbed({ data, network }: ContractEmbedProps) {
   return (
@@ -30,17 +30,17 @@ export function ContractEmbed({ data, network }: ContractEmbedProps) {
           {data.wasmHash ? (
             <CopyChip value={data.wasmHash} display={truncateMiddle(data.wasmHash, 6, 6)} />
           ) : (
-            '—'
+            '-'
           )}
         </EmbedRow>
         <EmbedRow label="Storage entries">
-          {data.storageEntries !== undefined ? formatCount(data.storageEntries) : '—'}
+          {data.storageEntries !== undefined ? formatCount(data.storageEntries) : '-'}
         </EmbedRow>
         <EmbedRow label="Deployed">
-          {data.deployedAt ? formatTimestamp(data.deployedAt) : '—'}
+          {data.deployedAt ? formatTimestamp(data.deployedAt) : '-'}
         </EmbedRow>
         <EmbedRow label="Deployer">
-          {data.deployer ? <CopyChip value={data.deployer} /> : '—'}
+          {data.deployer ? <CopyChip value={data.deployer} /> : '-'}
         </EmbedRow>
       </EmbedGrid>
     </EmbedShell>

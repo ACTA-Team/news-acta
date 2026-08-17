@@ -1,5 +1,5 @@
 /**
- * GET /api/media/[id]/articles — articles that reference a media item
+ * GET /api/media/[id]/articles: articles that reference a media item
  */
 
 import { NextRequest, NextResponse } from 'next/server';

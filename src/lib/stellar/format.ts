@@ -2,7 +2,7 @@
  * Display formatting helpers for Stellar embeds. Pure and client-safe.
  */
 
-/** `GABCD…WXYZ` — middle-truncate a long id for compact display. */
+/** `GABCD…WXYZ`: middle-truncate a long id for compact display. */
 export function truncateMiddle(value: string, lead = 4, tail = 4): string {
   if (value.length <= lead + tail + 1) return value;
   return `${value.slice(0, lead)}…${value.slice(-tail)}`;

@@ -18,10 +18,16 @@ import {
   isValidTransition,
   type EditorialStatus,
 } from '@/lib/editorial/transitions';
+import { isLocale, LOCALES, type Locale } from '@/i18n/config';
 import { requireAdmin } from './services/auth.service';
 import { requireRole } from './services/roles.service';
 import { approve, requestChanges, requestReview } from './services/reviews.service';
 import { schedule, unschedule } from './services/scheduling.service';
+import {
+  deleteTranslation,
+  markTranslationCurrent,
+  upsertTranslation,
+} from './services/translations.service';
 
 export interface AdminLoginState {
   type: 'idle' | 'success' | 'error';
@@ -132,7 +138,7 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
 
   if (articleId) {
     // -----------------------------------------------------------------------
-    // UPDATE path — snapshot happens via DB trigger; we then patch diff_summary
+    // UPDATE path: snapshot happens via DB trigger; we then patch diff_summary
     // and fire the Stellar anchor asynchronously.
     // -----------------------------------------------------------------------
 
@@ -216,7 +222,7 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
     }
   } else {
     // -----------------------------------------------------------------------
-    // INSERT path — first save; no prior version to diff against.
+    // INSERT path: first save; no prior version to diff against.
     // Everything starts as a draft regardless of role.
     // -----------------------------------------------------------------------
     const { data, error } = await supabase
@@ -242,25 +248,29 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
     if (insertTagsError) throw insertTagsError;
   }
 
-  revalidatePath('/admin');
-  revalidatePath('/admin/news');
-  revalidatePath('/news');
+  revalidateArticlePaths(slug, await articleSlugs(articleId));
   redirect('/admin/news');
 }
 
 export async function deleteAdminNewsArticleAction(formData: FormData): Promise<void> {
-  // Deleting is destructive and unversioned — owners only. Everyone else archives.
+  // Deleting is destructive and unversioned: owners only. Everyone else archives.
   await requireRole('owner');
   const supabase = await createClient();
   const id = String(formData.get('id') ?? '').trim();
   if (!id) throw new Error('Invalid ID');
 
+  // Read the translated slugs before the delete cascades them away.
+  const translatedSlugs = await articleSlugs(id);
+  const { data: articleRow } = await supabase
+    .from('news_articles')
+    .select('slug')
+    .eq('id', id)
+    .maybeSingle();
+
   const { error } = await supabase.from('news_articles').delete().eq('id', id);
   if (error) throw error;
 
-  revalidatePath('/admin');
-  revalidatePath('/admin/news');
-  revalidatePath('/news');
+  revalidateArticlePaths(articleRow?.slug ?? null, translatedSlugs);
   redirect('/admin/news');
 }
 
@@ -268,18 +278,54 @@ export async function deleteAdminNewsArticleAction(formData: FormData): Promise<
 // Editorial workflow
 //
 // Each action re-checks the role before touching the database. RLS and the
-// status-transition trigger remain the real boundary — these checks exist so a
+// status-transition trigger remain the real boundary: these checks exist so a
 // blocked action fails with a readable message instead of a Postgres error.
 // ===========================================================================
 
-function revalidateArticlePaths(slug?: string | null): void {
+/**
+ * Invalidate every public path an article can appear on, in every locale.
+ *
+ * The public site lives under a `[locale]` segment, so `/news` alone no longer
+ * matches anything: a change has to be flushed for each language, plus the
+ * translated slugs, which differ per locale.
+ */
+function revalidateArticlePaths(slug?: string | null, translatedSlugs: string[] = []): void {
   revalidatePath('/admin');
   revalidatePath('/admin/news');
   revalidatePath('/admin/reviews');
   revalidatePath('/admin/calendar');
-  revalidatePath('/news');
-  if (slug) revalidatePath(`/news/${slug}`);
-  revalidatePath('/');
+
+  for (const locale of LOCALES) {
+    revalidatePath(`/${locale}`);
+    revalidatePath(`/${locale}/news`);
+    revalidatePath(`/${locale}/rss.xml`);
+    if (slug) revalidatePath(`/${locale}/news/${slug}`);
+    for (const translatedSlug of translatedSlugs) {
+      revalidatePath(`/${locale}/news/${translatedSlug}`);
+    }
+  }
+}
+
+/** Every slug an article answers to, so a save flushes the translated URLs too. */
+async function articleSlugs(articleId: string): Promise<string[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('article_translations')
+    .select('slug')
+    .eq('article_id', articleId);
+  return (data ?? []).map((row) => row.slug);
+}
+
+/** Same idea as {@link revalidateArticlePaths}, for monthly reviews. */
+function revalidateMonthlyReviewPaths(period: string | null): void {
+  revalidatePath('/admin');
+  revalidatePath('/admin/monthly-reviews');
+
+  for (const locale of LOCALES) {
+    revalidatePath(`/${locale}`);
+    revalidatePath(`/${locale}/monthly-review`);
+    if (period) revalidatePath(`/${locale}/monthly-review/${period}`);
+  }
 }
 
 async function fetchArticleForWorkflow(articleId: string) {
@@ -356,7 +402,7 @@ export async function scheduleArticleAction(formData: FormData): Promise<void> {
  *
  * Called from the editorial calendar's drag-and-drop, so it takes plain
  * arguments instead of FormData and refreshes via `revalidatePath` rather than
- * redirecting — a redirect would tear down the client transition.
+ * redirecting: a redirect would tear down the client transition.
  */
 export async function rescheduleArticleAction(articleId: string, isoDate: string): Promise<void> {
   await requireRole('owner', 'editor');
@@ -456,7 +502,123 @@ export async function requestChangesAction(formData: FormData): Promise<void> {
   redirect('/admin/reviews');
 }
 
-/** Change a team member's role. Owners only — enforced again by RLS. */
+// ===========================================================================
+// Translations
+//
+// The admin panel itself stays English; these actions manage the *content*
+// translations that the public site renders. Every one of them re-reads the
+// article's current source hash inside the service, so a translation is always
+// stamped against the text it was actually written from.
+// ===========================================================================
+
+function parseLocale(value: FormDataEntryValue | null): Locale {
+  const raw = String(value ?? '').trim();
+  if (!isLocale(raw)) throw new Error(`Unknown locale: ${raw}`);
+  return raw;
+}
+
+/** Create or replace one article translation. */
+export async function saveArticleTranslationAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const locale = parseLocale(formData.get('locale'));
+  const slug = String(formData.get('slug') ?? '').trim();
+  const title = String(formData.get('title') ?? '').trim();
+  const summary = String(formData.get('summary') ?? '').trim();
+  const content = String(formData.get('content') ?? '').trim();
+
+  if (!articleId) throw new Error('Invalid article ID.');
+  if (!slug || !title || !summary || !content) {
+    throw new Error('Required fields are missing.');
+  }
+
+  const article = await fetchArticleForWorkflow(articleId);
+
+  if (
+    !canEditArticle(session.role, {
+      ownsArticle: session.authorId !== null && session.authorId === article.author_id,
+      status: article.status as EditorialStatus,
+    })
+  ) {
+    throw new ForbiddenError(
+      `role ${session.role} cannot translate this article in "${article.status}"`
+    );
+  }
+
+  const supabase = await createClient();
+  await upsertTranslation(supabase, {
+    articleId,
+    locale,
+    slug,
+    title,
+    summary,
+    content,
+    translatedBy: session.email,
+  });
+
+  revalidatePath(`/admin/news/${articleId}/translations`);
+  revalidateArticlePaths(article.slug, await articleSlugs(articleId));
+  redirect(`/admin/news/${articleId}/translations`);
+}
+
+/** Remove a translation, sending readers of that locale back to the source text. */
+export async function deleteArticleTranslationAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const locale = parseLocale(formData.get('locale'));
+  if (!articleId) throw new Error('Invalid article ID.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+
+  if (
+    !canEditArticle(session.role, {
+      ownsArticle: session.authorId !== null && session.authorId === article.author_id,
+      status: article.status as EditorialStatus,
+    })
+  ) {
+    throw new ForbiddenError(
+      `role ${session.role} cannot delete translations of this article in "${article.status}"`
+    );
+  }
+
+  // Captured before the delete so the removed URL is flushed from the cache too.
+  const slugs = await articleSlugs(articleId);
+
+  const supabase = await createClient();
+  await deleteTranslation(supabase, articleId, locale);
+
+  revalidatePath(`/admin/news/${articleId}/translations`);
+  revalidateArticlePaths(article.slug, slugs);
+  redirect(`/admin/news/${articleId}/translations`);
+}
+
+/**
+ * Confirm an existing translation still reads correctly after a source edit.
+ *
+ * Reviewers only, same bar as approving a review: clearing a stale flag is an
+ * editorial judgement that the change to the source did not alter the meaning,
+ * and it is the only thing standing between a drifted translation and readers.
+ */
+export async function markArticleTranslationCurrentAction(formData: FormData): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const locale = parseLocale(formData.get('locale'));
+  if (!articleId) throw new Error('Invalid article ID.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+
+  const supabase = await createClient();
+  await markTranslationCurrent(supabase, articleId, locale);
+
+  revalidatePath(`/admin/news/${articleId}/translations`);
+  revalidateArticlePaths(article.slug, await articleSlugs(articleId));
+  redirect(`/admin/news/${articleId}/translations`);
+}
+
+/** Change a team member's role. Owners only: enforced again by RLS. */
 export async function updateTeamMemberRoleAction(formData: FormData): Promise<void> {
   const session = await requireRole('owner');
 
@@ -471,7 +633,7 @@ export async function updateTeamMemberRoleAction(formData: FormData): Promise<vo
   // Guards against the last owner demoting themselves and locking the team
   // page for everyone.
   if (email === session.email) {
-    throw new ForbiddenError('You cannot change your own role — ask another owner.');
+    throw new ForbiddenError('You cannot change your own role. Ask another owner.');
   }
 
   if (!isEditorialRole(role)) throw new Error(`Unknown role: ${role}`);
@@ -560,11 +722,7 @@ export async function saveAdminMonthlyReviewAction(formData: FormData): Promise<
     if (insertFeaturedError) throw insertFeaturedError;
   }
 
-  revalidatePath('/admin');
-  revalidatePath('/admin/monthly-reviews');
-  revalidatePath('/monthly-review');
-  revalidatePath(`/monthly-review/${period}`);
-  revalidatePath('/');
+  revalidateMonthlyReviewPaths(period);
   redirect('/admin/monthly-reviews');
 }
 
@@ -578,13 +736,7 @@ export async function deleteAdminMonthlyReviewAction(formData: FormData): Promis
   const { error } = await supabase.from('monthly_reviews').delete().eq('id', id);
   if (error) throw error;
 
-  revalidatePath('/admin');
-  revalidatePath('/admin/monthly-reviews');
-  revalidatePath('/monthly-review');
-  if (period) {
-    revalidatePath(`/monthly-review/${period}`);
-  }
-  revalidatePath('/');
+  revalidateMonthlyReviewPaths(period || null);
   redirect('/admin/monthly-reviews');
 }
 
@@ -695,8 +847,7 @@ export async function restoreArticleVersionAction(formData: FormData): Promise<v
 
   if (updateError) throw updateError;
 
-  revalidatePath('/admin');
   revalidatePath(`/admin/news/${articleId}/edit`);
-  revalidatePath('/news');
+  revalidateArticlePaths(article.slug, await articleSlugs(articleId));
   redirect(`/admin/news/${articleId}/edit`);
 }

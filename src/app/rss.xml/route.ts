@@ -1,64 +1,28 @@
-import { siteConfig } from '@/config/site';
-import { fetchNewsList } from '@/components/modules/news';
-import { createClient } from '@/lib/supabase/server';
-import { absoluteUrl } from '@/lib/url';
+import { NextResponse, type NextRequest } from 'next/server';
+import { LOCALE_COOKIE, negotiateLocale } from '@/i18n';
+import { localizedUrl } from '@/lib/url';
 
 /**
- * RSS 2.0 feed. Consumed from the footer and from external readers.
- * Revalidation aligned with the news service interval.
+ * Compatibility redirect for the pre-bilingual feed URL.
+ *
+ * There is one feed per language now, at `/<locale>/rss.xml`. Anyone already
+ * subscribed to `/rss.xml` keeps working: they are sent to the feed for their
+ * negotiated locale, with the same cookie-then-header precedence the rest of the
+ * site uses.
+ *
+ * This has to be a route handler rather than a proxy rule: the proxy matcher
+ * deliberately skips `.xml` paths so `/sitemap.xml` is never rewritten.
+ *
+ * 302 rather than 301: the target depends on the request's own locale signals, so
+ * it is not a permanent one-to-one move and must not be cached as one.
  */
-export const revalidate = 1800;
+export const dynamic = 'force-dynamic';
 
-function escapeXml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-export async function GET() {
-  let items: Awaited<ReturnType<typeof fetchNewsList>>['items'] = [];
-  try {
-    const supabase = await createClient();
-    ({ items } = await fetchNewsList(supabase, {
-      page: 1,
-      pageSize: 30,
-    }).catch(() => ({ items: [], total: 0, page: 1, pageSize: 30 })));
-  } catch {
-    items = [];
-  }
-
-  const rssItems = items
-    .map((article) => {
-      const link = absoluteUrl(`/news/${article.slug}`);
-      return `
-        <item>
-          <title>${escapeXml(article.title)}</title>
-          <link>${link}</link>
-          <guid isPermaLink="true">${link}</guid>
-          <pubDate>${new Date(article.publishedAt).toUTCString()}</pubDate>
-          <description>${escapeXml(article.summary)}</description>
-        </item>
-      `;
-    })
-    .join('');
-
-  const xml = `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
-  <channel>
-    <title>${escapeXml(siteConfig.name)}</title>
-    <link>${siteConfig.url}</link>
-    <description>${escapeXml(siteConfig.description)}</description>
-    <language>${siteConfig.locale}</language>
-    ${rssItems}
-  </channel>
-</rss>`;
-
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
-    },
+export function GET(request: NextRequest) {
+  const locale = negotiateLocale({
+    cookie: request.cookies.get(LOCALE_COOKIE)?.value,
+    acceptLanguage: request.headers.get('accept-language'),
   });
+
+  return NextResponse.redirect(localizedUrl(locale, '/rss.xml'), 302);
 }

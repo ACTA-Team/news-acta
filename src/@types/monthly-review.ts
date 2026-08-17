@@ -1,3 +1,4 @@
+import type { LocalizedContent } from '@/@types/i18n';
 import type { NewsArticle } from '@/@types/news';
 
 /**
@@ -45,9 +46,9 @@ export interface MonthlyReviewMetricsSchema {
   editorial: MonthlyReviewMetric[];
 }
 
-export interface MonthlyReview {
+export interface MonthlyReview extends LocalizedContent {
   id: string;
-  /** YYYY-MM — e.g. "2026-03" */
+  /** YYYY-MM, e.g. "2026-03". The route segment, identical in every locale. */
   period: string;
   title: string;
   summary: string;
@@ -58,7 +59,7 @@ export interface MonthlyReview {
   publishedAt: string;
 }
 
-export interface MonthlyReviewListItem {
+export interface MonthlyReviewListItem extends LocalizedContent {
   id: string;
   period: string;
   title: string;

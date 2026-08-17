@@ -6,6 +6,9 @@
  * UI consumes types from this file, not the other way around.
  */
 
+import type { LocalizedContent } from '@/@types/i18n';
+import type { Locale } from '@/i18n/config';
+
 export type NewsCategory = 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
 
 /**
@@ -22,7 +25,15 @@ export interface NewsAuthor {
   role?: string;
 }
 
-export interface NewsArticle {
+/**
+ * A published article resolved for one locale.
+ *
+ * `title` / `summary` / `content` are already the translated values when a
+ * translation exists; when it does not, they hold the source text and
+ * `isTranslated` is false so the UI can label it. `slug` is likewise the slug
+ * for the rendered locale, which is not the source slug on a translated article.
+ */
+export interface NewsArticle extends LocalizedContent {
   id: string;
   slug: string;
   title: string;
@@ -36,6 +47,12 @@ export interface NewsArticle {
   publishedAt: string;
   updatedAt: string;
   readingTimeMinutes: number;
+  /**
+   * The slug this article answers to in each locale it exists in. The language
+   * switcher and the hreflang alternates both read it; a locale missing from the
+   * map has no URL of its own.
+   */
+  slugByLocale: Partial<Record<Locale, string>>;
 }
 
 export interface NewsListFilters {

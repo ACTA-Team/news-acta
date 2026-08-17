@@ -1,0 +1,241 @@
+{
+  "common": {
+    "eyebrow": "ACTA News",
+    "logIn": "Log in",
+    "home": "Home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "primaryNav": "Primary",
+    "footerNav": "Footer",
+    "breadcrumb": "Breadcrumb",
+    "language": "Language",
+    "switchLanguage": "Switch language",
+    "viewAll": "View all",
+    "readMore": "Read more",
+    "loading": "Loading",
+    "copyright": "© {year} ACTA. All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "notAvailable": "Not available"
+  },
+  "nav": {
+    "news": "News",
+    "monthlyReview": "Monthly Review",
+    "authors": "Authors"
+  },
+  "share": {
+    "label": "Share",
+    "x": "X",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram",
+    "copyLink": "Copy link",
+    "copied": "Copied!"
+  },
+  "home": {
+    "metaTitle": "Home",
+    "hero": {
+      "badge": "New",
+      "badgeText": "Read the latest from {brand}",
+      "typingLines": [
+        "The editorial home for the ACTA ecosystem",
+        "Every release, milestone and decision in one feed",
+        "Verifiable credentials, explained in the open"
+      ],
+      "browseNews": "Browse news",
+      "monthlyReviews": "Monthly reviews",
+      "imageAlt": "ACTA dashboard preview"
+    },
+    "why": {
+      "eyebrow": "Why it exists",
+      "title": "One minimal feed for the whole story.",
+      "description": "{siteName} is the public editorial layer for the ACTA network, so nothing important gets lost in chat or social noise."
+    },
+    "features": {
+      "announcements": {
+        "title": "Latest announcements",
+        "description": "Product launches, milestones and protocol news in one stream."
+      },
+      "ecosystem": {
+        "title": "Ecosystem and engineering",
+        "description": "Editorial deep dives for builders, contributors, and partners."
+      },
+      "authors": {
+        "title": "Authors and monthly reviews",
+        "description": "Voices from the community and structured monthly recaps."
+      }
+    },
+    "latest": {
+      "eyebrow": "Latest",
+      "title": "New articles",
+      "empty": "No articles yet. Check back soon."
+    },
+    "review": {
+      "eyebrow": "Monthly review",
+      "title": "Ecosystem progress in one place.",
+      "description": "Each issue collects highlights, metrics, and community notes: a stable reference for what changed last month.",
+      "latestIssue": "Latest issue",
+      "allReviews": "All reviews"
+    },
+    "explore": {
+      "title": "Keep exploring",
+      "description": "Jump to the most-used destinations.",
+      "news": "News",
+      "reviews": "Reviews",
+      "authors": "Authors"
+    }
+  },
+  "news": {
+    "metaTitle": "News",
+    "metaDescription": "Announcements, product updates, engineering deep-dives and community highlights from the ACTA ecosystem.",
+    "header": {
+      "eyebrow": "ACTA News",
+      "title": "What's happening in the ACTA ecosystem",
+      "description": "Announcements, product updates, engineering deep-dives and community highlights from the teams building ACTA."
+    },
+    "filters": {
+      "searchLabel": "Search news articles",
+      "searchPlaceholder": "Search articles...",
+      "clearSearch": "Clear search",
+      "categoryNav": "Filter news by category",
+      "all": "All"
+    },
+    "categories": {
+      "announcement": "Announcements",
+      "product": "Product",
+      "ecosystem": "Ecosystem",
+      "engineering": "Engineering",
+      "community": "Community"
+    },
+    "list": {
+      "empty": "No news yet. Check back soon.",
+      "error": "Failed to load news: {message}"
+    },
+    "card": {
+      "readingTime": "{minutes} min read"
+    },
+    "detail": {
+      "readingTime": "{minutes} min read",
+      "historyLink": "View version history and on-chain audit trail",
+      "notTranslated": "This article has not been translated yet. You are reading the original in {language}.",
+      "machineAssisted": "Translation reviewed by the ACTA editorial team.",
+      "availableIn": "Also available in {language}"
+    },
+    "history": {
+      "metaTitle": "Version History",
+      "metaDescription": "Full edit history for this article, anchored on Stellar.",
+      "title": "Version History",
+      "descriptionPrefix": "Every edit to",
+      "descriptionSuffix": "is automatically snapshotted and anchored on Stellar. Select any two versions to compare them side by side.",
+      "totalVersions": "Total versions",
+      "onChain": "On-chain",
+      "latestVersion": "Latest version",
+      "hashChain": "Hash chain",
+      "hashChainIntact": "✓ intact",
+      "empty": "-"
+    }
+  },
+  "monthlyReview": {
+    "metaTitle": "Monthly Review",
+    "metaDescription": "Monthly reviews of the ACTA ecosystem: milestones, metrics and featured content from the month.",
+    "label": "Monthly Review",
+    "index": {
+      "eyebrow": "Monthly Review",
+      "title": "What happened at ACTA, month by month"
+    },
+    "list": {
+      "empty": "No monthly reviews published yet.",
+      "error": "Failed to load reviews: {message}"
+    },
+    "detail": {
+      "highlights": "Highlights",
+      "featuredArticles": "Featured articles",
+      "notTranslated": "This review has not been translated yet. You are reading the original in {language}."
+    },
+    "dashboard": {
+      "totalTransactions": "Total Transactions",
+      "activeAccounts": "Active Accounts",
+      "contractCalls": "Smart Contract Calls",
+      "averageNetFee": "Average Net Fee",
+      "volumeTrendTitle": "Transaction Volume Trend",
+      "volumeTrendDescription": "Daily transaction volume throughout the month.",
+      "operationsTitle": "Operations by Type",
+      "operationsDescription": "Distribution of operation types over 200 samples.",
+      "activeContractsTitle": "Active Smart Contracts",
+      "activeContractsDescription": "Top Soroban smart contracts ranked by active monthly invocations.",
+      "callsSuffix": "{count} calls",
+      "noContracts": "No active contracts tracked.",
+      "sorobanTitle": "Soroban Activity",
+      "sorobanDescription": "Overview of Soroban smart contract performance benchmarks.",
+      "contractsDeployed": "Contracts Deployed",
+      "gasPerCall": "Gas per Call (avg)",
+      "latestLedgerSync": "Latest Ledger Sync",
+      "syncSuccess": "SUCCESS",
+      "sourceNote": "On-chain ecosystem parameters fetched from decentralized RPC interfaces. Verified immutable and authenticated.",
+      "kpiTitle": "Key Performance Indicators",
+      "kpiDescription": "Editorial and strategic on-chain metrics monitored by ACTA analysts."
+    }
+  },
+  "authors": {
+    "metaTitle": "Contributors",
+    "metaDescription": "Writers, editors, and guest voices on the official ACTA blog.",
+    "fallbackTitle": "Author",
+    "unknown": "Unknown",
+    "header": {
+      "eyebrow": "ACTA News",
+      "title": "Contributors",
+      "description": "People who publish and co-author stories across the ecosystem."
+    },
+    "empty": {
+      "title": "No profiles yet",
+      "description": "When contributor pages go live, they will appear here."
+    },
+    "profile": {
+      "photoAlt": "Photo of {name}",
+      "x": "X",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
+  "tags": {
+    "eyebrow": "Tag",
+    "fallbackTitle": "Tag"
+  },
+  "login": {
+    "metaTitle": "Sign in",
+    "metaDescription": "Sign in to {siteName} (preview UI).",
+    "heroQuote": "{siteName} is where we share how ACTA grows, from protocol updates to community stories.",
+    "heroAttribution": "ACTA",
+    "homeLogoAlt": "{siteName} home",
+    "title": "Sign in",
+    "description": "Access the {brand} editorial workspace. UI preview, authentication is not connected yet.",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGithub": "Continue with GitHub",
+    "divider": "OR",
+    "emailHint": "Enter your email to sign in or create an account",
+    "emailPlaceholder": "your.email@example.com",
+    "continueWithEmail": "Continue with email",
+    "legalPrefix": "By continuing, you agree to our",
+    "legalSeparator": "and",
+    "legalTerms": "Terms of Service",
+    "legalPrivacy": "Privacy Policy"
+  },
+  "notFound": {
+    "metaTitle": "Not found",
+    "metaDescription": "The page you requested could not be found.",
+    "code": "404",
+    "description": "The page you are looking for may have been moved, renamed, or does not exist.",
+    "home": "Home",
+    "news": "News"
+  },
+  "legal": {
+    "lastUpdated": "Last updated: {date}",
+    "termsTitle": "Terms of Service",
+    "termsDescription": "Terms governing your use of ACTA News, our editorial and publication services, and related features.",
+    "privacyTitle": "Privacy Policy",
+    "privacyDescription": "How ACTA News collects, uses, and protects personal information when you use our website and services."
+  },
+  "languages": {
+    "en": "English",
+    "es": "Spanish"
+  }
+}

@@ -24,7 +24,7 @@ export function EmbedFallback({ entityRef, notFound }: EmbedFallbackProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      title={notFound ? `${entityRef.id} — not found on ${entityRef.network}` : entityRef.id}
+      title={notFound ? `${entityRef.id}: not found on ${entityRef.network}` : entityRef.id}
       className={cn(
         'inline-flex items-center gap-1 rounded-md px-1 font-mono text-[0.95em] underline-offset-2 hover:underline',
         notFound ? 'text-muted-foreground' : 'text-primary'

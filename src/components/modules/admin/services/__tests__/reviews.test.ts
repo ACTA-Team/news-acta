@@ -7,7 +7,7 @@ import { approve, listOpen, listThread, requestChanges, requestReview } from '..
  *
  * Every builder is thenable and records what it was asked to do, so the tests
  * can assert both the returned data and the exact rows the service tried to
- * write — the version pinning in particular, which is what ties a review to
+ * write: the version pinning in particular, which is what ties a review to
  * the content it was written against.
  */
 interface Call {

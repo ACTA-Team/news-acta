@@ -19,16 +19,16 @@ export async function AdminTeamPageContent() {
         <h2 className="text-sm font-semibold">What each role can do</h2>
         <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
           <li>
-            <strong>owner</strong> — everything, including managing this page.
+            <strong>owner</strong>: everything, including managing this page.
           </li>
           <li>
-            <strong>editor</strong> — edit any article, approve reviews, publish, schedule, archive.
+            <strong>editor</strong>: edit any article, approve reviews, publish, schedule, archive.
           </li>
           <li>
-            <strong>author</strong> — create and edit their own articles, submit for review.
+            <strong>author</strong>: create and edit their own articles, submit for review.
           </li>
           <li>
-            <strong>contributor</strong> — create and edit their own drafts; cannot see others’
+            <strong>contributor</strong>: create and edit their own drafts; cannot see others’
             drafts.
           </li>
         </ul>
@@ -58,7 +58,7 @@ export async function AdminTeamPageContent() {
                   <td className="px-4 py-3">
                     <RoleBadge role={member.role} />
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{member.authorName ?? '—'}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{member.authorName ?? '-'}</td>
                   <td className="px-4 py-3">
                     <form
                       action={updateTeamMemberRoleAction}
@@ -105,7 +105,7 @@ export async function AdminTeamPageContent() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        You cannot change your own role — ask another owner. Linking a member to an author record is
+        You cannot change your own role. Ask another owner. Linking a member to an author record is
         what makes “their own articles” resolvable for the author and contributor roles.
       </p>
     </div>

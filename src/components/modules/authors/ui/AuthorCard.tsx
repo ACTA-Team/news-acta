@@ -1,10 +1,17 @@
 import Link from 'next/link';
 import type { AuthorCardProps } from '@/@types/author';
+import { withLocale, type Locale } from '@/i18n';
 
-export function AuthorCard({ author, compact }: AuthorCardProps) {
+import { AUTHOR_ROUTES } from '../constants';
+
+interface Props extends AuthorCardProps {
+  locale: Locale;
+}
+
+export function AuthorCard({ author, compact, locale }: Props) {
   return (
     <Link
-      href={`/authors/${author.slug}`}
+      href={withLocale(locale, AUTHOR_ROUTES.detail(author.slug))}
       className="flex items-center gap-3 rounded-2xl border border-zinc-200 p-4 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
     >
       <div className="h-12 w-12 shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-800" />

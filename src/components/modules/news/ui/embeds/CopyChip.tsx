@@ -15,7 +15,7 @@ interface CopyChipProps {
 
 /**
  * A monospace, middle-truncated id with a copy-to-clipboard button.
- * Client Component — uses the clipboard and local "copied" feedback.
+ * Client Component: uses the clipboard and local "copied" feedback.
  */
 export function CopyChip({ value, display, className }: CopyChipProps) {
   const { copied, copy } = useCopyToClipboard();

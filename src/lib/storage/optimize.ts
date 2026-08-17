@@ -16,7 +16,7 @@ import { ALLOWED_MIME_TYPES, VARIANT_SPECS } from './constants';
  * Process a single image buffer into all named variants.
  *
  * @param input   Raw file buffer from the upload.
- * @param mimeType  Original MIME type — SVGs are skipped.
+ * @param mimeType  Original MIME type: SVGs are skipped.
  * @returns Array of processed variants ready for upload.
  */
 export async function generateVariants(
@@ -27,7 +27,7 @@ export async function generateVariants(
     throw new Error(`Unsupported MIME type: ${mimeType}`);
   }
 
-  // SVG: return empty variants — Sharp cannot rasterize SVGs; original is uploaded as-is.
+  // SVG: return empty variants: Sharp cannot rasterize SVGs; original is uploaded as-is.
   if (mimeType === 'image/svg+xml') {
     return [];
   }
@@ -66,7 +66,7 @@ export async function getImageDimensions(
 
 async function processVariant(input: Buffer, spec: VariantSpec): Promise<ProcessedVariant> {
   let pipeline = sharp(input)
-    // Strip EXIF metadata for privacy — use withMetadata({}) to clear all
+    // Strip EXIF metadata for privacy: use withMetadata({}) to clear all
     .withMetadata({})
     .rotate(); // Auto-rotate based on EXIF orientation before stripping
 
@@ -77,7 +77,7 @@ async function processVariant(input: Buffer, spec: VariantSpec): Promise<Process
       position: 'centre',
     });
   } else {
-    // Width-only resize — preserve aspect ratio
+    // Width-only resize: preserve aspect ratio
     pipeline = pipeline.resize(spec.width, undefined, {
       fit: 'inside',
       withoutEnlargement: true,

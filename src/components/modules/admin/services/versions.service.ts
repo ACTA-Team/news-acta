@@ -59,7 +59,7 @@ function mapVersionListItem(row: VersionRow): ArticleVersionListItem {
   };
 }
 
-/** Fetch all version list items for an article (admin — can see draft article versions). */
+/** Fetch all version list items for an article (admin: can see draft article versions). */
 export async function fetchAdminArticleVersions(
   supabase: TypedSupabaseClient,
   articleId: string

@@ -1,5 +1,5 @@
 /**
- * Upload service — server-side only.
+ * Upload service: server-side only.
  *
  * Validates, processes, uploads to Supabase Storage, and records
  * metadata in the media_library table.
@@ -195,7 +195,7 @@ export async function uploadMedia(
 
   const mediaItem = mapRecord(record);
 
-  // Optionally anchor on Stellar (fire-and-forget — caller handles this)
+  // Optionally anchor on Stellar (fire-and-forget: caller handles this)
   if (anchorOnStellar) {
     // Stellar anchoring is handled by the API route after this function returns
     // so the upload doesn't block on the Stellar transaction.

@@ -13,6 +13,9 @@ import {
 } from 'recharts';
 import type { MonthlyReviewMetricsSchema } from '@/@types/monthly-review';
 import { ArrowUpRight, ArrowDownRight, TrendingUp, Cpu, Users, Award } from 'lucide-react';
+import { useTranslations } from '@/hooks/useTranslations';
+import { formatNumber, formatPercent, formatSignedPercent } from '@/i18n/format';
+import type { Locale } from '@/i18n/config';
 
 interface MonthlyReviewDashboardProps {
   metrics: MonthlyReviewMetricsSchema;
@@ -25,6 +28,7 @@ export default function MonthlyReviewDashboard({
   previousMetrics,
   period,
 }: MonthlyReviewDashboardProps) {
+  const { locale, t } = useTranslations();
   const current = metrics.onChain;
 
   // 1. Calculate Deltas comparing with previous period
@@ -108,9 +112,10 @@ export default function MonthlyReviewDashboard({
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* KPI: Transactions */}
         <KpiCard
-          title="Total Transactions"
-          value={current.horizon.txCount.toLocaleString()}
+          title={t('monthlyReview.dashboard.totalTransactions')}
+          value={formatNumber(current.horizon.txCount, locale)}
           delta={txDelta}
+          locale={locale}
           icon={<TrendingUp className="h-4 w-4 text-muted-foreground" />}
           sparkline={
             <div className="h-10 w-full mt-2 opacity-80">
@@ -133,9 +138,10 @@ export default function MonthlyReviewDashboard({
 
         {/* KPI: Active Accounts */}
         <KpiCard
-          title="Active Accounts"
-          value={current.horizon.activeAccounts.toLocaleString()}
+          title={t('monthlyReview.dashboard.activeAccounts')}
+          value={formatNumber(current.horizon.activeAccounts, locale)}
           delta={activeAccountsDelta}
+          locale={locale}
           icon={<Users className="h-4 w-4 text-muted-foreground" />}
           sparkline={
             <div className="h-10 w-full mt-2 opacity-80">
@@ -160,9 +166,10 @@ export default function MonthlyReviewDashboard({
 
         {/* KPI: Smart Contract Calls */}
         <KpiCard
-          title="Smart Contract Calls"
-          value={current.soroban.invocationCount.toLocaleString()}
+          title={t('monthlyReview.dashboard.contractCalls')}
+          value={formatNumber(current.soroban.invocationCount, locale)}
           delta={sorobanCallsDelta}
+          locale={locale}
           icon={<Cpu className="h-4 w-4 text-muted-foreground" />}
           sparkline={
             <div className="h-10 w-full mt-2 opacity-80">
@@ -189,7 +196,7 @@ export default function MonthlyReviewDashboard({
         <div className="rounded-2xl border bg-card p-4 shadow-sm flex flex-col justify-between min-h-[110px]">
           <div className="flex justify-between items-start">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Average Net Fee
+              {t('monthlyReview.dashboard.averageNetFee')}
             </span>
             <Award className="h-4 w-4 text-muted-foreground" />
           </div>
@@ -209,9 +216,11 @@ export default function MonthlyReviewDashboard({
         {/* Daily transaction volume Area Chart */}
         <div className="rounded-2xl border bg-card p-5 shadow-sm space-y-4">
           <div>
-            <h3 className="font-semibold text-foreground">Transaction Volume Trend</h3>
+            <h3 className="font-semibold text-foreground">
+              {t('monthlyReview.dashboard.volumeTrendTitle')}
+            </h3>
             <p className="text-xs text-muted-foreground">
-              Daily transaction volume throughout the month.
+              {t('monthlyReview.dashboard.volumeTrendDescription')}
             </p>
           </div>
           <div className="h-64 w-full">
@@ -269,9 +278,11 @@ export default function MonthlyReviewDashboard({
         {/* Operations Breakdown Bar Chart */}
         <div className="rounded-2xl border bg-card p-5 shadow-sm space-y-4">
           <div>
-            <h3 className="font-semibold text-foreground">Operations by Type</h3>
+            <h3 className="font-semibold text-foreground">
+              {t('monthlyReview.dashboard.operationsTitle')}
+            </h3>
             <p className="text-xs text-muted-foreground">
-              Distribution of operation types over 200 samples.
+              {t('monthlyReview.dashboard.operationsDescription')}
             </p>
           </div>
           <div className="h-64 w-full">
@@ -315,9 +326,11 @@ export default function MonthlyReviewDashboard({
       <div className="grid gap-6 md:grid-cols-3">
         <div className="rounded-2xl border bg-card p-5 shadow-sm space-y-4 md:col-span-2">
           <div>
-            <h3 className="font-semibold text-foreground">Active Smart Contracts</h3>
+            <h3 className="font-semibold text-foreground">
+              {t('monthlyReview.dashboard.activeContractsTitle')}
+            </h3>
             <p className="text-xs text-muted-foreground">
-              Top Soroban smart contracts ranked by active monthly invocations.
+              {t('monthlyReview.dashboard.activeContractsDescription')}
             </p>
           </div>
 
@@ -332,7 +345,9 @@ export default function MonthlyReviewDashboard({
                       {contract.contractId}
                     </span>
                     <span className="text-muted-foreground shrink-0">
-                      {contract.invocations} calls
+                      {t('monthlyReview.dashboard.callsSuffix', {
+                        count: formatNumber(contract.invocations, locale),
+                      })}
                     </span>
                   </div>
                   <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
@@ -346,7 +361,7 @@ export default function MonthlyReviewDashboard({
             })}
             {current.soroban.topContracts.length === 0 ? (
               <p className="text-xs text-muted-foreground py-6 text-center">
-                No active contracts tracked.
+                {t('monthlyReview.dashboard.noContracts')}
               </p>
             ) : null}
           </div>
@@ -355,16 +370,18 @@ export default function MonthlyReviewDashboard({
         {/* Soroban Contracts Summary */}
         <div className="rounded-2xl border bg-card p-5 shadow-sm space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
-            <h3 className="font-semibold text-foreground">Soroban Activity</h3>
+            <h3 className="font-semibold text-foreground">
+              {t('monthlyReview.dashboard.sorobanTitle')}
+            </h3>
             <p className="text-xs text-muted-foreground">
-              Overview of Soroban smart contract performance benchmarks.
+              {t('monthlyReview.dashboard.sorobanDescription')}
             </p>
           </div>
 
           <div className="space-y-4 my-auto">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                Contracts Deployed
+                {t('monthlyReview.dashboard.contractsDeployed')}
               </span>
               <span className="text-lg font-bold text-foreground flex items-center gap-1.5">
                 {current.soroban.contractsDeployed}
@@ -372,8 +389,7 @@ export default function MonthlyReviewDashboard({
                   <span
                     className={`text-xs font-bold flex items-center ${contractsDeployedDelta >= 0 ? 'text-emerald-500' : 'text-red-500'}`}
                   >
-                    {contractsDeployedDelta >= 0 ? '+' : ''}
-                    {contractsDeployedDelta.toFixed(1)}%
+                    {formatSignedPercent(contractsDeployedDelta, locale)}
                   </span>
                 ) : null}
               </span>
@@ -381,26 +397,25 @@ export default function MonthlyReviewDashboard({
 
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                Gas per Call (avg)
+                {t('monthlyReview.dashboard.gasPerCall')}
               </span>
               <span className="text-lg font-bold text-foreground font-mono">
-                {current.soroban.avgGasUsage.toLocaleString()}
+                {formatNumber(current.soroban.avgGasUsage, locale)}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                Latest Ledger Sync
+                {t('monthlyReview.dashboard.latestLedgerSync')}
               </span>
               <span className="text-xs font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground font-mono">
-                SUCCESS
+                {t('monthlyReview.dashboard.syncSuccess')}
               </span>
             </div>
           </div>
 
           <div className="text-[10px] text-muted-foreground border-t pt-2 mt-2 leading-relaxed">
-            On-chain ecosystem parameters fetched from decentralized RPC interfaces. Verified
-            immutable and authenticated.
+            {t('monthlyReview.dashboard.sourceNote')}
           </div>
         </div>
       </div>
@@ -409,9 +424,11 @@ export default function MonthlyReviewDashboard({
       {metrics.editorial && metrics.editorial.length > 0 ? (
         <div className="rounded-2xl border bg-card p-5 shadow-sm space-y-4">
           <div>
-            <h3 className="font-semibold text-foreground">Key Performance Indicators</h3>
+            <h3 className="font-semibold text-foreground">
+              {t('monthlyReview.dashboard.kpiTitle')}
+            </h3>
             <p className="text-xs text-muted-foreground">
-              Editorial and strategic on-chain metrics monitored by ACTA analysts.
+              {t('monthlyReview.dashboard.kpiDescription')}
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
@@ -463,11 +480,12 @@ interface KpiCardProps {
   title: string;
   value: string;
   delta: number | null;
+  locale: Locale;
   icon: React.ReactNode;
   sparkline?: React.ReactNode;
 }
 
-function KpiCard({ title, value, delta, icon, sparkline }: KpiCardProps) {
+function KpiCard({ title, value, delta, locale, icon, sparkline }: KpiCardProps) {
   const isUp = delta !== null && delta >= 0;
 
   return (
@@ -491,7 +509,7 @@ function KpiCard({ title, value, delta, icon, sparkline }: KpiCardProps) {
             ) : (
               <ArrowDownRight className="h-3 w-3 mr-0.5" />
             )}
-            {Math.abs(delta).toFixed(1)}%
+            {formatPercent(Math.abs(delta), locale)}
           </span>
         ) : null}
       </div>
