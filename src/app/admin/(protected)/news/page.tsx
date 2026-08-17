@@ -1,7 +1,10 @@
-import { AdminNewsPageContent } from '@/components/modules/admin/pages/AdminNewsPage';
+import {
+  AdminNewsPageContent,
+  type AdminNewsFilterStatus,
+} from '@/components/modules/admin/pages/AdminNewsPage';
 
 interface AdminNewsPageProps {
-  searchParams: Promise<{ status?: 'all' | 'draft' | 'published' | 'archived' }>;
+  searchParams: Promise<{ status?: AdminNewsFilterStatus }>;
 }
 
 export default async function AdminNewsPage({ searchParams }: AdminNewsPageProps) {

@@ -4,9 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/server';
+import { canEditArticle, canPublish, canReview } from '@/lib/editorial/permissions';
 import { fetchAdminNewsById, fetchAdminNewsFormOptions } from '../services/news.service';
 import { StellarReferenceField } from '../ui/StellarReferenceField';
 import { fetchAdminArticleVersions } from '../services/versions.service';
+import { requireAdmin } from '../services/auth.service';
+import { listThread } from '../services/reviews.service';
+import { StatusTransitionMenu } from '../ui/StatusTransitionMenu';
+import { SchedulePicker } from '../ui/SchedulePicker';
+import { ReviewCommentThread } from '../ui/ReviewCommentThread';
 import { VersionHistorySidebar } from '@/components/modules/news/ui/VersionHistorySidebar';
 
 interface AdminNewsEditorPageContentProps {
@@ -14,6 +20,7 @@ interface AdminNewsEditorPageContentProps {
 }
 
 export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorPageContentProps) {
+  const session = await requireAdmin();
   const supabase = await createClient();
   const options = await fetchAdminNewsFormOptions(supabase);
   const article = articleId ? await fetchAdminNewsById(supabase, articleId) : null;
@@ -24,6 +31,13 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
 
   const versions = articleId ? await fetchAdminArticleVersions(supabase, articleId) : [];
   const currentVersionNumber = versions.length > 0 ? versions[0].versionNumber : 1;
+
+  const reviewEvents = articleId ? await listThread(supabase, articleId) : [];
+
+  const ownsArticle =
+    article !== null && session.authorId !== null && session.authorId === article.authorId;
+  const canEdit =
+    article === null || canEditArticle(session.role, { ownsArticle, status: article.status });
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
@@ -70,20 +84,6 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
               <option value="community">community</option>
             </select>
           </Field>
-          <Field label="Status">
-            <select
-              name="status"
-              defaultValue={article?.status ?? 'draft'}
-              className="h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm"
-            >
-              <option value="draft">draft</option>
-              <option value="published">published</option>
-              <option value="archived">archived</option>
-            </select>
-          </Field>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-2">
           <Field label="Author">
             <select
               name="authorId"
@@ -97,6 +97,9 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
               ))}
             </select>
           </Field>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-2">
           <Field label="Reading time (minutes)">
             <Input
               type="number"
@@ -106,16 +109,14 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
               defaultValue={article?.readingTimeMinutes ?? 2}
             />
           </Field>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-2">
           <Field label="Cover image URL">
             <Input name="coverImageUrl" defaultValue={article?.coverImageUrl} />
           </Field>
-          <Field label="Published at">
-            <Input type="datetime-local" name="publishedAt" defaultValue={article?.publishedAt} />
-          </Field>
         </div>
+
+        <Field label="Published at">
+          <Input type="datetime-local" name="publishedAt" defaultValue={article?.publishedAt} />
+        </Field>
 
         <Field label="Tags (comma-separated slugs)">
           <Input
@@ -125,19 +126,51 @@ export async function AdminNewsEditorPageContent({ articleId }: AdminNewsEditorP
           />
         </Field>
 
-        <div className="flex justify-end">
-          <Button type="submit">{articleId ? 'Save changes' : 'Create article'}</Button>
+        <div className="flex items-center justify-end gap-3">
+          {!canEdit ? (
+            <p className="text-xs text-muted-foreground">
+              Your role cannot edit this article in “{article?.status}”.
+            </p>
+          ) : null}
+          <Button type="submit" disabled={!canEdit}>
+            {articleId ? 'Save changes' : 'Create article'}
+          </Button>
         </div>
       </form>
 
-      {/* ── Version history sidebar ── */}
-      {articleId && (
-        <VersionHistorySidebar
-          articleId={articleId}
-          versions={versions}
-          currentVersionNumber={currentVersionNumber}
-        />
-      )}
+      {/* ── Workflow sidebar ── */}
+      <div className="space-y-4">
+        {articleId && article ? (
+          <>
+            <StatusTransitionMenu
+              articleId={articleId}
+              status={article.status}
+              role={session.role}
+            />
+            <SchedulePicker
+              articleId={articleId}
+              status={article.status}
+              scheduledAt={article.scheduledAt}
+              canSchedule={canPublish(session.role)}
+            />
+            <ReviewCommentThread
+              articleId={articleId}
+              status={article.status}
+              events={reviewEvents}
+              canReview={canReview(session.role)}
+              canSubmit={canEdit}
+            />
+          </>
+        ) : null}
+
+        {articleId && (
+          <VersionHistorySidebar
+            articleId={articleId}
+            versions={versions}
+            currentVersionNumber={currentVersionNumber}
+          />
+        )}
+      </div>
     </div>
   );
 }

@@ -5,7 +5,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const admin = await requireAdmin();
 
   return (
-    <AdminShell email={admin.email} title="Editorial panel" subtitle="Manage news and publications">
+    <AdminShell
+      email={admin.email}
+      role={admin.role}
+      title="Editorial panel"
+      subtitle="Manage news and publications"
+    >
       {children}
     </AdminShell>
   );

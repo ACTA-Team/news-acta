@@ -2,9 +2,13 @@ import Link from 'next/link';
 import { adminLogoutAction } from '@/components/modules/admin/actions';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/layouts';
+import type { EditorialRole } from '@/@types/editorial';
+import { canManageTeam } from '@/lib/editorial/permissions';
+import { RoleBadge } from './RoleBadge';
 
 interface AdminShellProps {
   email: string;
+  role: EditorialRole;
   title: string;
   subtitle?: string;
   children: React.ReactNode;
@@ -14,11 +18,13 @@ const links = [
   { href: '/admin', label: 'Dashboard' },
   { href: '/admin/news', label: 'News' },
   { href: '/admin/news/new', label: 'New article' },
+  { href: '/admin/reviews', label: 'Review queue' },
+  { href: '/admin/calendar', label: 'Calendar' },
   { href: '/admin/monthly-reviews', label: 'Monthly Reviews' },
   { href: '/admin/monthly-reviews/new', label: 'New Review' },
 ] as const;
 
-export function AdminShell({ email, title, subtitle, children }: AdminShellProps) {
+export function AdminShell({ email, role, title, subtitle, children }: AdminShellProps) {
   return (
     <main className="min-h-dvh bg-background pb-16">
       <Container className="grid gap-6 pt-8 md:grid-cols-[220px_1fr]">
@@ -32,9 +38,16 @@ export function AdminShell({ email, title, subtitle, children }: AdminShellProps
                 <Link href={link.href}>{link.label}</Link>
               </Button>
             ))}
+            {/* Owner-only; proxy.ts blocks the route itself for everyone else. */}
+            {canManageTeam(role) ? (
+              <Button asChild variant="ghost" className="w-full justify-start">
+                <Link href="/admin/team">Team</Link>
+              </Button>
+            ) : null}
           </nav>
           <div className="mt-6 border-t pt-4">
             <p className="truncate text-xs text-muted-foreground">{email}</p>
+            <RoleBadge role={role} className="mt-1" />
             <form action={adminLogoutAction} className="mt-2">
               <Button type="submit" variant="outline" className="w-full">
                 Log out

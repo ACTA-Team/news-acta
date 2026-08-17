@@ -2,31 +2,37 @@ import Link from 'next/link';
 import { deleteAdminNewsArticleAction } from '@/components/modules/admin/actions';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/server';
+import { canDeleteArticles } from '@/lib/editorial/permissions';
+import { EDITORIAL_STATUSES, statusLabel, type EditorialStatus } from '@/lib/editorial/transitions';
 import { fetchAdminNewsList } from '../services/news.service';
+import { requireAdmin } from '../services/auth.service';
+import { StatusBadge } from '../ui/StatusBadge';
+
+export type AdminNewsFilterStatus = 'all' | EditorialStatus;
 
 interface AdminNewsPageContentProps {
-  status?: 'all' | 'draft' | 'published' | 'archived';
+  status?: AdminNewsFilterStatus;
 }
 
 export async function AdminNewsPageContent({ status = 'all' }: AdminNewsPageContentProps) {
+  const session = await requireAdmin();
   const supabase = await createClient();
   const items = await fetchAdminNewsList(supabase, status);
+
+  const canDelete = canDeleteArticles(session.role);
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
         <FilterButton href="/admin/news" active={status === 'all'} label="All" />
-        <FilterButton href="/admin/news?status=draft" active={status === 'draft'} label="Draft" />
-        <FilterButton
-          href="/admin/news?status=published"
-          active={status === 'published'}
-          label="Published"
-        />
-        <FilterButton
-          href="/admin/news?status=archived"
-          active={status === 'archived'}
-          label="Archived"
-        />
+        {EDITORIAL_STATUSES.map((value) => (
+          <FilterButton
+            key={value}
+            href={`/admin/news?status=${value}`}
+            active={status === value}
+            label={statusLabel(value)}
+          />
+        ))}
       </div>
 
       <div className="overflow-hidden rounded-2xl border bg-card">
@@ -47,7 +53,14 @@ export async function AdminNewsPageContent({ status = 'all' }: AdminNewsPageCont
                   <div className="font-medium">{item.title}</div>
                   <div className="text-xs text-muted-foreground">/{item.slug}</div>
                 </td>
-                <td className="px-4 py-3 uppercase">{item.status}</td>
+                <td className="px-4 py-3">
+                  <StatusBadge status={item.status} />
+                  {item.status === 'scheduled' && item.scheduledAt ? (
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {new Date(item.scheduledAt).toLocaleString()}
+                    </div>
+                  ) : null}
+                </td>
                 <td className="px-4 py-3">{item.authorName}</td>
                 <td className="px-4 py-3">{new Date(item.updatedAt).toLocaleString()}</td>
                 <td className="px-4 py-3">
@@ -55,12 +68,14 @@ export async function AdminNewsPageContent({ status = 'all' }: AdminNewsPageCont
                     <Button asChild size="sm" variant="outline">
                       <Link href={`/admin/news/${item.id}/edit`}>Edit</Link>
                     </Button>
-                    <form action={deleteAdminNewsArticleAction}>
-                      <input type="hidden" name="id" value={item.id} />
-                      <Button size="sm" variant="destructive" type="submit">
-                        Delete
-                      </Button>
-                    </form>
+                    {canDelete ? (
+                      <form action={deleteAdminNewsArticleAction}>
+                        <input type="hidden" name="id" value={item.id} />
+                        <Button size="sm" variant="destructive" type="submit">
+                          Delete
+                        </Button>
+                      </form>
+                    ) : null}
                   </div>
                 </td>
               </tr>
