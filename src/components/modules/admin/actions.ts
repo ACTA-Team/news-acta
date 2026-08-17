@@ -7,7 +7,21 @@ import { createClient } from '@/lib/supabase/server';
 import type { Json } from '@/lib/supabase';
 import { computeArticleDiff } from '@/lib/diff';
 import { submitVersionChain } from '@/lib/stellar/client';
+import {
+  canEditArticle,
+  canPublish,
+  ForbiddenError,
+  isEditorialRole,
+} from '@/lib/editorial/permissions';
+import {
+  isPublishingStatus,
+  isValidTransition,
+  type EditorialStatus,
+} from '@/lib/editorial/transitions';
 import { requireAdmin } from './services/auth.service';
+import { requireRole } from './services/roles.service';
+import { approve, requestChanges, requestReview } from './services/reviews.service';
+import { schedule, unschedule } from './services/scheduling.service';
 
 export interface AdminLoginState {
   type: 'idle' | 'success' | 'error';
@@ -80,7 +94,7 @@ function parseTags(value: FormDataEntryValue | null): string[] {
 }
 
 export async function saveAdminNewsArticleAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const session = await requireAdmin();
 
   const supabase = await createClient();
   const id = String(formData.get('id') ?? '').trim();
@@ -90,7 +104,6 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
   const content = String(formData.get('content') ?? '').trim();
   const coverImageUrl = String(formData.get('coverImageUrl') ?? '').trim();
   const category = String(formData.get('category') ?? 'announcement');
-  const status = String(formData.get('status') ?? 'draft');
   const authorId = String(formData.get('authorId') ?? '').trim();
   const readingTimeMinutes = Number(formData.get('readingTimeMinutes') ?? 1);
   const publishedAtRaw = String(formData.get('publishedAt') ?? '').trim();
@@ -100,6 +113,9 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
     throw new Error('Required fields are missing.');
   }
 
+  // Status is deliberately absent: it only ever moves through
+  // `transitionArticleStatusAction`, so the transition guard sees every change
+  // and an ordinary save can never publish something by accident.
   const payload = {
     slug,
     title,
@@ -107,7 +123,6 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
     content,
     cover_image_url: coverImageUrl || null,
     category: category as 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community',
-    status: status as 'draft' | 'published' | 'archived',
     author_id: authorId,
     reading_time_minutes: Number.isFinite(readingTimeMinutes) ? Math.max(1, readingTimeMinutes) : 1,
     published_at: publishedAtRaw ? new Date(publishedAtRaw).toISOString() : null,
@@ -124,11 +139,22 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
     // 1. Fetch current state BEFORE the update (for diff computation)
     const { data: currentRow, error: fetchError } = await supabase
       .from('news_articles')
-      .select('title, summary, content, category, slug')
+      .select('title, summary, content, category, slug, status, author_id')
       .eq('id', articleId)
       .single();
 
     if (fetchError) throw fetchError;
+
+    if (
+      !canEditArticle(session.role, {
+        ownsArticle: session.authorId !== null && session.authorId === currentRow.author_id,
+        status: currentRow.status,
+      })
+    ) {
+      throw new ForbiddenError(
+        `role ${session.role} cannot edit this article in "${currentRow.status}"`
+      );
+    }
 
     // 2. Persist the update (this fires the DB trigger, creating the version row)
     const { error: updateError } = await supabase
@@ -191,10 +217,11 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
   } else {
     // -----------------------------------------------------------------------
     // INSERT path — first save; no prior version to diff against.
+    // Everything starts as a draft regardless of role.
     // -----------------------------------------------------------------------
     const { data, error } = await supabase
       .from('news_articles')
-      .insert(payload)
+      .insert({ ...payload, status: 'draft' })
       .select('id')
       .single();
     if (error) throw error;
@@ -222,7 +249,8 @@ export async function saveAdminNewsArticleAction(formData: FormData): Promise<vo
 }
 
 export async function deleteAdminNewsArticleAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  // Deleting is destructive and unversioned — owners only. Everyone else archives.
+  await requireRole('owner');
   const supabase = await createClient();
   const id = String(formData.get('id') ?? '').trim();
   if (!id) throw new Error('Invalid ID');
@@ -234,6 +262,230 @@ export async function deleteAdminNewsArticleAction(formData: FormData): Promise<
   revalidatePath('/admin/news');
   revalidatePath('/news');
   redirect('/admin/news');
+}
+
+// ===========================================================================
+// Editorial workflow
+//
+// Each action re-checks the role before touching the database. RLS and the
+// status-transition trigger remain the real boundary — these checks exist so a
+// blocked action fails with a readable message instead of a Postgres error.
+// ===========================================================================
+
+function revalidateArticlePaths(slug?: string | null): void {
+  revalidatePath('/admin');
+  revalidatePath('/admin/news');
+  revalidatePath('/admin/reviews');
+  revalidatePath('/admin/calendar');
+  revalidatePath('/news');
+  if (slug) revalidatePath(`/news/${slug}`);
+  revalidatePath('/');
+}
+
+async function fetchArticleForWorkflow(articleId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('news_articles')
+    .select('id, slug, status, author_id')
+    .eq('id', articleId)
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Move an article between statuses.
+ *
+ * The database rejects an illegal move regardless; this validates first so the
+ * editor sees why, and so a stale UI cannot produce a confusing 500.
+ */
+export async function transitionArticleStatusAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const toStatus = String(formData.get('toStatus') ?? '').trim() as EditorialStatus;
+
+  if (!articleId || !toStatus) throw new Error('Invalid transition parameters.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+  const fromStatus = article.status as EditorialStatus;
+
+  if (!isValidTransition(fromStatus, toStatus)) {
+    throw new Error(`invalid status transition: ${fromStatus} -> ${toStatus}`);
+  }
+
+  if (isPublishingStatus(toStatus) && !canPublish(session.role)) {
+    throw new ForbiddenError(`role ${session.role} cannot move an article to ${toStatus}`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('news_articles')
+    .update({ status: toStatus })
+    .eq('id', articleId);
+
+  if (error) throw error;
+
+  revalidateArticlePaths(article.slug);
+  redirect(`/admin/news/${articleId}/edit`);
+}
+
+/** Queue an article for automatic publication. Owners and editors only. */
+export async function scheduleArticleAction(formData: FormData): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const scheduledAtRaw = String(formData.get('scheduledAt') ?? '').trim();
+
+  if (!articleId || !scheduledAtRaw) throw new Error('Invalid schedule parameters.');
+
+  const scheduledAt = new Date(scheduledAtRaw);
+  if (Number.isNaN(scheduledAt.getTime())) throw new Error('Invalid schedule date.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+  const supabase = await createClient();
+  await schedule(supabase, { articleId, scheduledAt });
+
+  revalidateArticlePaths(article.slug);
+  redirect(`/admin/news/${articleId}/edit`);
+}
+
+/**
+ * Move a scheduled article to another date.
+ *
+ * Called from the editorial calendar's drag-and-drop, so it takes plain
+ * arguments instead of FormData and refreshes via `revalidatePath` rather than
+ * redirecting — a redirect would tear down the client transition.
+ */
+export async function rescheduleArticleAction(articleId: string, isoDate: string): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  if (!articleId || !isoDate) throw new Error('Invalid reschedule parameters.');
+
+  const scheduledAt = new Date(isoDate);
+  if (Number.isNaN(scheduledAt.getTime())) throw new Error('Invalid schedule date.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+  if (article.status !== 'scheduled') {
+    throw new Error('Only scheduled articles can be moved on the calendar.');
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('news_articles')
+    .update({ scheduled_at: scheduledAt.toISOString() })
+    .eq('id', articleId);
+
+  if (error) throw error;
+
+  revalidateArticlePaths(article.slug);
+}
+
+/** Pull an article back out of the schedule, returning it to draft. */
+export async function unscheduleArticleAction(formData: FormData): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  if (!articleId) throw new Error('Invalid article ID.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+  const supabase = await createClient();
+  await unschedule(supabase, { articleId });
+
+  revalidateArticlePaths(article.slug);
+  redirect(`/admin/news/${articleId}/edit`);
+}
+
+/** Submit an article for review. Available to every role. */
+export async function requestReviewAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const comment = String(formData.get('comment') ?? '').trim();
+  if (!articleId) throw new Error('Invalid article ID.');
+
+  const article = await fetchArticleForWorkflow(articleId);
+
+  if (
+    !canEditArticle(session.role, {
+      ownsArticle: session.authorId !== null && session.authorId === article.author_id,
+      status: article.status as EditorialStatus,
+    })
+  ) {
+    throw new ForbiddenError(`role ${session.role} cannot submit this article for review`);
+  }
+
+  const supabase = await createClient();
+  await requestReview(supabase, { articleId, actorEmail: session.email, comment });
+
+  revalidateArticlePaths(article.slug);
+  redirect(`/admin/news/${articleId}/edit`);
+}
+
+/** Approve an open review. Owners and editors only. */
+export async function approveReviewAction(formData: FormData): Promise<void> {
+  const session = await requireRole('owner', 'editor');
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const comment = String(formData.get('comment') ?? '').trim();
+  if (!articleId) throw new Error('Invalid article ID.');
+
+  const supabase = await createClient();
+  await approve(supabase, { articleId, actorEmail: session.email, comment });
+
+  const article = await fetchArticleForWorkflow(articleId);
+  revalidateArticlePaths(article.slug);
+  redirect('/admin/reviews');
+}
+
+/** Send an article back to its author with a comment. Owners and editors only. */
+export async function requestChangesAction(formData: FormData): Promise<void> {
+  const session = await requireRole('owner', 'editor');
+
+  const articleId = String(formData.get('articleId') ?? '').trim();
+  const comment = String(formData.get('comment') ?? '').trim();
+  if (!articleId) throw new Error('Invalid article ID.');
+  if (!comment) throw new Error('A comment is required when requesting changes.');
+
+  const supabase = await createClient();
+  await requestChanges(supabase, { articleId, actorEmail: session.email, comment });
+
+  const article = await fetchArticleForWorkflow(articleId);
+  revalidateArticlePaths(article.slug);
+  redirect('/admin/reviews');
+}
+
+/** Change a team member's role. Owners only — enforced again by RLS. */
+export async function updateTeamMemberRoleAction(formData: FormData): Promise<void> {
+  const session = await requireRole('owner');
+
+  const email = String(formData.get('email') ?? '')
+    .trim()
+    .toLowerCase();
+  const role = String(formData.get('role') ?? '').trim();
+  const authorId = String(formData.get('authorId') ?? '').trim();
+
+  if (!email) throw new Error('Invalid email.');
+
+  // Guards against the last owner demoting themselves and locking the team
+  // page for everyone.
+  if (email === session.email) {
+    throw new ForbiddenError('You cannot change your own role — ask another owner.');
+  }
+
+  if (!isEditorialRole(role)) throw new Error(`Unknown role: ${role}`);
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('admin_users')
+    .update({ role, author_id: authorId || null })
+    .eq('email', email);
+
+  if (error) throw error;
+
+  revalidatePath('/admin/team');
+  redirect('/admin/team');
 }
 
 export async function saveAdminMonthlyReviewAction(formData: FormData): Promise<void> {
@@ -394,7 +646,7 @@ export async function fetchMetricsForPeriodAction(period: string, network: strin
  * which triggers the DB versioning hook and creates a new version entry.
  */
 export async function restoreArticleVersionAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const session = await requireAdmin();
 
   const supabase = await createClient();
   const articleId = String(formData.get('articleId') ?? '').trim();
@@ -420,6 +672,15 @@ export async function restoreArticleVersionAction(formData: FormData): Promise<v
     .single();
 
   if (articleError || !article) throw new Error('Article not found.');
+
+  if (
+    !canEditArticle(session.role, {
+      ownsArticle: session.authorId !== null && session.authorId === article.author_id,
+      status: article.status,
+    })
+  ) {
+    throw new ForbiddenError(`role ${session.role} cannot restore versions of this article`);
+  }
 
   // Write the restored content as a new update (triggers versioning)
   const { error: updateError } = await supabase

@@ -43,12 +43,19 @@ export async function proxy(request: NextRequest) {
 
     const { data: adminUser } = await supabase
       .from('admin_users')
-      .select('email')
+      .select('email, role')
       .eq('email', user.email.toLowerCase())
       .maybeSingle();
 
     if (!adminUser) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+
+    // Team management is owner-only. The page re-checks with `requireRole` and
+    // RLS refuses the write regardless — this just avoids showing a screen the
+    // visitor cannot use.
+    if (pathname.startsWith('/admin/team') && adminUser.role !== 'owner') {
+      return NextResponse.redirect(new URL('/admin', request.url));
     }
   }
 

@@ -13,6 +13,7 @@ export default async function AdminMonthlyReviewsPage() {
   return (
     <AdminShell
       email={admin.email}
+      role={admin.role}
       title="Monthly Reviews"
       subtitle="Manage and publish monthly ACTA reviews."
     >

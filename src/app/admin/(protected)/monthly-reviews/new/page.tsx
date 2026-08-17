@@ -17,6 +17,7 @@ export default async function AdminNewMonthlyReviewPage() {
   return (
     <AdminShell
       email={admin.email}
+      role={admin.role}
       title="Create Review"
       subtitle="Create a new monthly ecosystem review."
     >

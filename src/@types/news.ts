@@ -8,7 +8,12 @@
 
 export type NewsCategory = 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
 
-export type NewsStatus = 'draft' | 'published' | 'archived';
+/**
+ * Mirrors the `news_status` enum. `in_review` and `scheduled` were added by
+ * the editorial workflow (`0006_editorial_workflow.sql`); neither is ever
+ * visible to anonymous readers, which still only see `published`.
+ */
+export type NewsStatus = 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
 
 export interface NewsAuthor {
   id: string;
