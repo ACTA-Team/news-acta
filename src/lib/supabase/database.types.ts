@@ -90,12 +90,110 @@ export interface Database {
       admin_users: {
         Row: {
           email: string;
+          created_at: string;
+          role: Database['public']['Enums']['editorial_role'];
+          author_id: string | null;
+          display_name: string | null;
         };
         Insert: {
           email: string;
+          created_at?: string;
+          role?: Database['public']['Enums']['editorial_role'];
+          author_id?: string | null;
+          display_name?: string | null;
         };
         Update: {
           email?: string;
+          created_at?: string;
+          role?: Database['public']['Enums']['editorial_role'];
+          author_id?: string | null;
+          display_name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'admin_users_author_id_fkey';
+            columns: ['author_id'];
+            referencedRelation: 'authors';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      article_reviews: {
+        Row: {
+          id: string;
+          article_id: string;
+          version_number: number | null;
+          state: Database['public']['Enums']['review_state'];
+          requested_by: string;
+          reviewer_email: string | null;
+          comment: string | null;
+          created_at: string;
+          resolved_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          article_id: string;
+          version_number?: number | null;
+          state?: Database['public']['Enums']['review_state'];
+          requested_by: string;
+          reviewer_email?: string | null;
+          comment?: string | null;
+          created_at?: string;
+          resolved_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          article_id?: string;
+          version_number?: number | null;
+          state?: Database['public']['Enums']['review_state'];
+          requested_by?: string;
+          reviewer_email?: string | null;
+          comment?: string | null;
+          created_at?: string;
+          resolved_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'article_reviews_article_id_fkey';
+            columns: ['article_id'];
+            referencedRelation: 'news_articles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      editorial_audit_log: {
+        Row: {
+          id: string;
+          actor_email: string;
+          action: string;
+          entity: string;
+          entity_id: string | null;
+          from_status: string | null;
+          to_status: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          actor_email: string;
+          action: string;
+          entity: string;
+          entity_id?: string | null;
+          from_status?: string | null;
+          to_status?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          actor_email?: string;
+          action?: string;
+          entity?: string;
+          entity_id?: string | null;
+          from_status?: string | null;
+          to_status?: string | null;
+          metadata?: Json;
+          created_at?: string;
         };
         Relationships: [];
       };
@@ -165,6 +263,7 @@ export interface Database {
           status: Database['public']['Enums']['news_status'];
           reading_time_minutes: number;
           published_at: string | null;
+          scheduled_at: string | null;
           created_at: string;
           updated_at: string;
           author_id: string;
@@ -180,6 +279,7 @@ export interface Database {
           status: Database['public']['Enums']['news_status'];
           reading_time_minutes?: number;
           published_at?: string | null;
+          scheduled_at?: string | null;
           created_at?: string;
           updated_at?: string;
           author_id: string;
@@ -195,6 +295,7 @@ export interface Database {
           status?: Database['public']['Enums']['news_status'];
           reading_time_minutes?: number;
           published_at?: string | null;
+          scheduled_at?: string | null;
           created_at?: string;
           updated_at?: string;
           author_id?: string;
@@ -449,10 +550,24 @@ export interface Database {
         Args: { p_article_id: string };
         Returns: string | null;
       };
+      current_editorial_role: {
+        Args: Record<PropertyKey, never>;
+        Returns: Database['public']['Enums']['editorial_role'] | null;
+      };
+      can_publish: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      owns_article: {
+        Args: { target_article: string };
+        Returns: boolean;
+      };
     };
     Enums: {
-      news_status: 'draft' | 'published' | 'archived';
+      news_status: 'draft' | 'in_review' | 'scheduled' | 'published' | 'archived';
       news_category: 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
+      editorial_role: 'owner' | 'editor' | 'author' | 'contributor';
+      review_state: 'requested' | 'approved' | 'changes_requested';
     };
     CompositeTypes: Record<string, never>;
   };
