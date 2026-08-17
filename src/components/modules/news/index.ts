@@ -7,9 +7,11 @@
  *
  * This keeps the contract stable and lets us reorganize `ui/`, `hooks/`,
  * `services/` internally without breaking consumers.
+ *
+ * Page metadata is exported as a `generate*` function rather than a constant:
+ * every title and description is locale dependent now, so it cannot be computed
+ * at module load.
  */
-
-import { buildMetadata } from '@/lib/seo';
 
 // UI
 export { NewsHeader } from './ui/NewsHeader';
@@ -23,7 +25,7 @@ export { VersionDiffBadge } from './ui/VersionDiffBadge';
 export { VersionComparison } from './ui/VersionComparison';
 export { VersionHistorySidebar } from './ui/VersionHistorySidebar';
 export { VersionInteractiveSelector } from './ui/VersionInteractiveSelector';
-export { NewsPageContent } from './pages/NewsPage';
+export { NewsPageContent, generateNewsMetadata } from './pages/NewsPage';
 export { NewsDetailPageContent, generateNewsDetailMetadata } from './pages/NewsDetailPage';
 export { NewsHistoryPageContent, generateNewsHistoryMetadata } from './pages/NewsHistoryPage';
 
@@ -32,7 +34,12 @@ export { useNewsList } from './hooks/useNewsList';
 export { useNewsDetail } from './hooks/useNewsDetail';
 
 // Services (for Server Components that need SSR)
-export { fetchNewsList, fetchNewsBySlug } from './services/news.service';
+export {
+  fetchNewsList,
+  fetchNewsBySlug,
+  fetchNewsSitemapEntries,
+  type NewsSitemapEntry,
+} from './services/news.service';
 export { fetchArticleVersions, fetchArticleVersionByNumber } from './services/versions.service';
 
 // Constants
@@ -40,15 +47,10 @@ export { NEWS_CATEGORIES, NEWS_DEFAULT_PAGE_SIZE, NEWS_ROUTES, NEWS_QUERY_KEYS }
 
 // Utils
 export {
+  articleAlternatePaths,
+  articleHreflangPaths,
   getCategoryLabel,
   formatPublishedDate,
   estimateReadingTime,
   sortArticlesByDate,
 } from './utils';
-
-export const newsPageMetadata = buildMetadata({
-  title: 'News',
-  description:
-    'Announcements, product updates, engineering deep-dives and community highlights from the ACTA ecosystem.',
-  path: '/news',
-});

@@ -4,13 +4,15 @@ import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import type { NewsFiltersProps, NewsCategory } from '@/@types/news';
 import { NEWS_CATEGORIES } from '@/components/modules/news/constants';
+import { useTranslations } from '@/hooks/useTranslations';
 import { cn } from '@/lib/utils';
 
 /**
- * Category filter chips. Client Component (handles clicks).
- * It has no knowledge of the data source — it only emits `onChange`.
+ * Category filter chips and the search box. Client Component (handles clicks).
+ * It has no knowledge of the data source, it only emits `onChange`.
  */
 export function NewsFilters({ value, onChange }: NewsFiltersProps) {
+  const { t } = useTranslations();
   const active = value.category;
   const [searchTerm, setSearchTerm] = useState(value.search ?? '');
   const hasSearch = searchTerm.trim().length > 0;
@@ -82,15 +84,15 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
   return (
     <div className="flex flex-col gap-3">
       <label className="flex flex-col gap-2">
-        <span className="sr-only">Search news articles</span>
+        <span className="sr-only">{t('news.filters.searchLabel')}</span>
         <div className="relative">
           <input
             type="text"
             value={searchTerm}
             onChange={(event) => handleSearchChange(event.target.value)}
-            placeholder="Search articles..."
+            placeholder={t('news.filters.searchPlaceholder')}
             className="h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 pr-10 text-sm text-zinc-900 outline-none transition focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:focus:border-zinc-600"
-            aria-label="Search articles"
+            aria-label={t('news.filters.searchLabel')}
           />
 
           {hasSearch ? (
@@ -98,7 +100,7 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
               type="button"
               onClick={handleClearSearch}
               className="absolute right-2 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-              aria-label="Clear search"
+              aria-label={t('news.filters.clearSearch')}
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -106,9 +108,9 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
         </div>
       </label>
 
-      <nav aria-label="Filter news by category" className="flex flex-wrap items-center gap-2">
+      <nav aria-label={t('news.filters.categoryNav')} className="flex flex-wrap items-center gap-2">
         <FilterChip active={!active} onClick={() => handleSelect(undefined)}>
-          All
+          {t('news.filters.all')}
         </FilterChip>
         {NEWS_CATEGORIES.map((category) => (
           <FilterChip
@@ -116,7 +118,7 @@ export function NewsFilters({ value, onChange }: NewsFiltersProps) {
             active={active === category.value}
             onClick={() => handleSelect(category.value)}
           >
-            {category.label}
+            {t(category.labelKey)}
           </FilterChip>
         ))}
       </nav>

@@ -6,7 +6,7 @@ export type TypingAnimationElement = Extract<
   'article' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'li' | 'p' | 'section' | 'span'
 >;
 
-/** State machine input — used by {@link useTypingAnimation} (no `motion` props). */
+/** State machine input: used by {@link useTypingAnimation} (no `motion` props). */
 export type TypingAnimationBehavior = {
   children?: string;
   words?: string[];

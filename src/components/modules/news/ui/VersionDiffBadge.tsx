@@ -7,7 +7,7 @@ interface VersionDiffBadgeProps {
 
 /**
  * Compact badge showing fields changed and character-level counts.
- * Server component — no interactivity needed.
+ * Server component: no interactivity needed.
  */
 export function VersionDiffBadge({ diffSummary, className }: VersionDiffBadgeProps) {
   if (!diffSummary || diffSummary.fieldsChanged.length === 0) {

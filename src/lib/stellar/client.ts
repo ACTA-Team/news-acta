@@ -25,8 +25,8 @@ export function getBlogKeypair() {
  * so that version creation is never blocked by Stellar latency or downtime.
  *
  * Environment variables:
- *   STELLAR_SECRET_KEY   — required; signing keypair for the blog account
- *   STELLAR_HORIZON_URL  — optional; defaults to Testnet
+ *   STELLAR_SECRET_KEY   required; signing keypair for the blog account
+ *   STELLAR_HORIZON_URL  optional; defaults to Testnet
  */
 
 const HORIZON_URL = process.env.STELLAR_HORIZON_URL ?? 'https://horizon-testnet.stellar.org';
@@ -41,7 +41,7 @@ function getKeypair(): Keypair | null {
   try {
     return Keypair.fromSecret(secret);
   } catch {
-    console.warn('[stellar] Invalid STELLAR_SECRET_KEY — Stellar anchoring disabled.');
+    console.warn('[stellar] Invalid STELLAR_SECRET_KEY. Stellar anchoring disabled.');
     return null;
   }
 }
@@ -59,7 +59,7 @@ export async function submitVersionChain(
 ): Promise<string | null> {
   const keypair = getKeypair();
   if (!keypair) {
-    console.info('[stellar] STELLAR_SECRET_KEY not set — skipping on-chain anchor.');
+    console.info('[stellar] STELLAR_SECRET_KEY not set. Skipping on-chain anchor.');
     return null;
   }
 
@@ -67,11 +67,11 @@ export async function submitVersionChain(
     const server = new Horizon.Server(HORIZON_URL);
     const account = await server.loadAccount(keypair.publicKey());
 
-    // key: "version:<slug>" — Stellar data-key max is 64 bytes
+    // key: "version:<slug>" (Stellar data-key max is 64 bytes)
     const rawKey = `version:${slug}`;
     const dataKey = rawKey.length > 64 ? rawKey.slice(0, 64) : rawKey;
 
-    // value: "<versionNumber>:<first32charsOfHash>" — max 64 bytes
+    // value: "<versionNumber>:<first32charsOfHash>" (max 64 bytes)
     const dataValue = `${versionNumber}:${contentHash.slice(0, 32)}`;
 
     const tx = new TransactionBuilder(account, {
@@ -90,10 +90,10 @@ export async function submitVersionChain(
     tx.sign(keypair);
     const result = await server.submitTransaction(tx);
     const txHash = (result as { hash?: string }).hash ?? null;
-    console.info(`[stellar] Anchored version ${versionNumber} of "${slug}" — tx: ${txHash}`);
+    console.info(`[stellar] Anchored version ${versionNumber} of "${slug}" (tx: ${txHash})`);
     return txHash;
   } catch (err) {
-    // Never throw — version creation must succeed regardless
+    // Never throw: version creation must succeed regardless
     console.error('[stellar] Failed to submit version chain:', err);
     return null;
   }

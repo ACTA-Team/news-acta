@@ -34,7 +34,7 @@ export default async function AdminVersionPreviewPage({
         <div className="mb-8 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm dark:border-amber-900/40 dark:bg-amber-950/20">
           <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
             <span className="font-semibold">Previewing version {version.versionNumber}</span>
-            <span className="text-amber-500">—</span>
+            <span className="text-amber-500">-</span>
             <span>This is a historical snapshot, not the live article.</span>
           </div>
           <Link

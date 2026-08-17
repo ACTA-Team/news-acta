@@ -11,7 +11,7 @@ import { supabaseEnv } from '@/lib/supabase/env';
  * and Server Actions.
  *
  * A new client is created per request (it reads cookies from
- * `next/headers`) — do NOT cache it in a module-level variable.
+ * `next/headers`): do NOT cache it in a module-level variable.
  */
 export async function createClient(): Promise<TypedSupabaseClient> {
   const cookieStore = await cookies();

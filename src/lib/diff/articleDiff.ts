@@ -19,8 +19,8 @@ interface VersionableFields {
 /**
  * Compute a structured diff between two article snapshots.
  *
- * @param oldVersion — the state before the edit (what was snapshotted)
- * @param newVersion — the state after the edit (what was just saved)
+ * @param oldVersion the state before the edit (what was snapshotted)
+ * @param newVersion the state after the edit (what was just saved)
  */
 export function computeArticleDiff(
   oldVersion: VersionableFields,

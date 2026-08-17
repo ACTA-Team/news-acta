@@ -11,7 +11,7 @@ import { getHorizonUrl, STELLAR_FETCH_TIMEOUT_MS } from '@/lib/stellar/config';
 /**
  * Horizon REST clients (transactions, accounts, assets).
  *
- * Server-only. Plain `fetch` with a per-call timeout and `no-store` — our own
+ * Server-only. Plain `fetch` with a per-call timeout and `no-store`: our own
  * `stellar_embeds_cache` table is the cache layer, so Horizon responses are
  * never additionally cached by Next.
  *

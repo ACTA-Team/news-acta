@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import type { Author } from '@/@types/author';
+import type { Translator } from '@/i18n/translate';
 
 interface AuthorProfileProps {
   author: Author;
+  t: Translator;
 }
 
-export function AuthorProfile({ author }: AuthorProfileProps) {
+export function AuthorProfile({ author, t }: AuthorProfileProps) {
   const initials = author.name
     .split(' ')
     .map((n) => n[0])
@@ -18,7 +20,7 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
       {author.avatarUrl ? (
         <Image
           src={author.avatarUrl}
-          alt={`Photo of ${author.name}`}
+          alt={t('authors.profile.photoAlt', { name: author.name })}
           width={80}
           height={80}
           className="rounded-full object-cover"
@@ -41,17 +43,17 @@ export function AuthorProfile({ author }: AuthorProfileProps) {
         <div className="flex gap-3 text-sm">
           {author.social.x ? (
             <a href={author.social.x} target="_blank" rel="noreferrer" className="underline">
-              X
+              {t('authors.profile.x')}
             </a>
           ) : null}
           {author.social.github ? (
             <a href={author.social.github} target="_blank" rel="noreferrer" className="underline">
-              GitHub
+              {t('authors.profile.github')}
             </a>
           ) : null}
           {author.social.linkedin ? (
             <a href={author.social.linkedin} target="_blank" rel="noreferrer" className="underline">
-              LinkedIn
+              {t('authors.profile.linkedin')}
             </a>
           ) : null}
         </div>

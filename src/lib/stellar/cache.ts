@@ -15,7 +15,7 @@ import { CACHE_TTL_SECONDS, NOT_FOUND_TTL_SECONDS } from '@/lib/stellar/config';
  * `stellar_embeds_cache` access. Server-only.
  *
  * Reads go through the anon/public client (the table has a public SELECT
- * policy). Writes go through the service-role client, which bypasses RLS —
+ * policy). Writes go through the service-role client, which bypasses RLS:
  * if no service-role key is configured, caching is silently skipped so the
  * resolver still works (it just re-fetches each time). Nothing here throws to
  * the caller: failures degrade to "no cache".

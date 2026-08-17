@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — Stellar embeds cache (issue #27)
+-- ACTA News: Stellar embeds cache (issue #27)
 --
 -- Caches resolved Stellar entity data (transactions, contracts, accounts,
 -- assets) so article rendering can serve embeds without hitting Horizon /
@@ -12,7 +12,7 @@
 --   assets       → 6 hours
 --
 -- Deviation from the issue spec: the primary key is `(entity_id, network)`
--- rather than `entity_id` alone — the same id (hash/account/asset) can exist
+-- rather than `entity_id` alone: the same id (hash/account/asset) can exist
 -- on both testnet and mainnet, so the network must be part of the key.
 -- =============================================================================
 
@@ -36,7 +36,7 @@ create index if not exists stellar_embeds_cache_expires_at_idx
 --
 -- Resolved data is public (it is already public on-ledger), so anyone may
 -- read it. Writes happen only from the server via the service-role client,
--- which bypasses RLS — so no write policy is granted to anon/authenticated.
+-- which bypasses RLS: so no write policy is granted to anon/authenticated.
 -- ---------------------------------------------------------------------------
 alter table public.stellar_embeds_cache enable row level security;
 

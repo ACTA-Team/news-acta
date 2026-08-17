@@ -16,7 +16,7 @@ interface StellarReferenceFieldProps {
 
 /**
  * Article content field with a "Insert Stellar Reference" toolbar button.
- * Client Component — controls the textarea so the modal can insert a
+ * Client Component: controls the textarea so the modal can insert a
  * `[[stellar:…]]` tag at the caret. The underlying textarea keeps its `name`
  * so the existing server action reads `content` from FormData unchanged.
  */

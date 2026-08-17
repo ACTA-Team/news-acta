@@ -12,7 +12,7 @@ export default async function ActivityPage() {
     .limit(50);
   return (
     <div>
-      <h1>Admin — Activity</h1>
+      <h1>Admin: Activity</h1>
       <ActivityFeed events={(events ?? []) as unknown as ActivityEvent[]} />
     </div>
   );

@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — editorial workflow
+-- ACTA News: editorial workflow
 --
 -- Turns the single email allowlist into a real editorial tool:
 --   • four roles (owner / editor / author / contributor) enforced by RLS
@@ -116,7 +116,7 @@ $$;
 
 -- True for trusted server-side callers: the service-role client used by the
 -- publishing cron, and direct SQL with no JWT at all. Used only to exempt those
--- callers from the *role* check in the transition guard — the transition matrix
+-- callers from the *role* check in the transition guard: the transition matrix
 -- itself still applies to them.
 create or replace function public.is_backend_context()
 returns boolean
@@ -402,7 +402,7 @@ create policy "editorial read articles"
 -- USING clauses below.
 --
 -- Any admin may create, but only owners and editors may create something that
--- is already published or scheduled — the transition trigger fires on UPDATE
+-- is already published or scheduled: the transition trigger fires on UPDATE
 -- only, so this check is what closes the insert path.
 create policy "editorial insert articles"
   on public.news_articles
@@ -421,7 +421,7 @@ create policy "editorial insert articles"
 --
 -- The WITH CHECK deliberately allows 'archived' and 'draft' for non-publishers
 -- so it agrees exactly with `allowedTransitionsForRole` in
--- `src/lib/editorial/transitions.ts` — an author archiving their own piece must
+-- `src/lib/editorial/transitions.ts`: an author archiving their own piece must
 -- not hit an RLS error for a button the UI offered them.
 create policy "editorial update articles"
   on public.news_articles

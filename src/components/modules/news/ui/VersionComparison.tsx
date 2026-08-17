@@ -13,7 +13,7 @@ type DiffField = 'title' | 'summary' | 'content';
 
 /**
  * Side-by-side diff viewer between two article versions.
- * Client component — uses the `diff` package for character-level highlighting.
+ * Client component: uses the `diff` package for character-level highlighting.
  */
 export function VersionComparison({ versionA, versionB }: VersionComparisonProps) {
   const [activeField, setActiveField] = useState<DiffField>('content');
@@ -81,10 +81,10 @@ export function VersionComparison({ versionA, versionB }: VersionComparisonProps
       {/* Version headers */}
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 dark:bg-red-900/20 dark:text-red-300">
-          v{older.versionNumber} — {formatTs(older.createdAt)}
+          v{older.versionNumber} · {formatTs(older.createdAt)}
         </div>
         <div className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300">
-          v{newer.versionNumber} — {formatTs(newer.createdAt)}
+          v{newer.versionNumber} · {formatTs(newer.createdAt)}
         </div>
       </div>
 

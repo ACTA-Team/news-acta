@@ -1,5 +1,5 @@
 /**
- * Public barrel for the `stellar` lib — CLIENT-SAFE pieces only.
+ * Public barrel for the `stellar` lib: CLIENT-SAFE pieces only.
  *
  * The parser, StrKey validation, network config and explorer helpers are pure
  * and safe to import from client components (e.g. the admin modal).

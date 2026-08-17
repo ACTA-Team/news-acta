@@ -10,7 +10,7 @@ import { supabaseEnv } from '@/lib/supabase/env';
  *   - There is no request context (edge OG images, build-time generation).
  *   - You only need public read access covered by RLS.
  *
- * Do NOT use for user-specific queries — it has no session.
+ * Do NOT use for user-specific queries: it has no session.
  */
 export function createPublicClient(): TypedSupabaseClient {
   return createSupabaseClient<Database>(supabaseEnv.url, supabaseEnv.anonKey, {

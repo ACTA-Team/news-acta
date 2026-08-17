@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — development seed
+-- ACTA News: development seed
 -- Run with:  supabase db reset  (after the initial migration is applied)
 -- =============================================================================
 

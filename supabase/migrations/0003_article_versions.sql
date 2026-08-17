@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — article version history with on-chain audit trail
+-- ACTA News: article version history with on-chain audit trail
 --
 -- Tables:  article_versions
 -- Trigger: snapshot_article_version  (BEFORE UPDATE on news_articles)
@@ -185,4 +185,4 @@ create policy "admins can write article versions"
   with check (public.is_admin());
 
 -- Service-role can always write (needed for trigger + edge functions)
--- (service role bypasses RLS by default — no explicit policy needed)
+-- (service role bypasses RLS by default: no explicit policy needed)

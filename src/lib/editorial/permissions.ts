@@ -5,7 +5,7 @@
  * module exists so the UI can hide what a role cannot do and so server actions
  * can fail fast with a clear message instead of surfacing a Postgres error.
  *
- * Pure module — safe to import from Client Components and from Node tests.
+ * Pure module: safe to import from Client Components and from Node tests.
  */
 
 import type { EditorialRole } from '@/@types/editorial';

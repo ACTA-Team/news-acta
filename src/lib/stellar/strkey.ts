@@ -1,5 +1,5 @@
 /**
- * Stellar StrKey validation — hand-rolled, pure and dependency-free.
+ * Stellar StrKey validation: hand-rolled, pure and dependency-free.
  *
  * StrKeys are base32 (RFC 4648 alphabet) encodings of:
  *   [ 1-byte version ][ payload ][ 2-byte CRC16-XModem checksum ]
@@ -38,7 +38,7 @@ function base32Decode(input: string): Uint8Array | null {
   return Uint8Array.from(output);
 }
 
-/** CRC16-XModem (poly 0x1021, init 0x0000) — the checksum Stellar StrKeys use. */
+/** CRC16-XModem (poly 0x1021, init 0x0000): the checksum Stellar StrKeys use. */
 function crc16xmodem(bytes: Uint8Array): number {
   let crc = 0x0000;
   for (const byte of bytes) {

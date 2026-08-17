@@ -1,6 +1,7 @@
 'use client';
 
 import { useMonthlyReviews } from '@/components/modules/monthly-review/hooks/useMonthlyReviews';
+import { useTranslations } from '@/hooks/useTranslations';
 import { MonthlyReviewCard } from './MonthlyReviewCard';
 import type { MonthlyReviewListItem } from '@/@types/monthly-review';
 
@@ -9,12 +10,13 @@ interface MonthlyReviewListProps {
 }
 
 export function MonthlyReviewList({ initialData }: MonthlyReviewListProps) {
+  const { t } = useTranslations();
   const { data, isLoading, error } = useMonthlyReviews({ initialData });
 
   if (error) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
-        Failed to load reviews: {error.message}
+        {t('monthlyReview.list.error', { message: error.message })}
       </div>
     );
   }
@@ -35,7 +37,7 @@ export function MonthlyReviewList({ initialData }: MonthlyReviewListProps) {
   if (data.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-zinc-300 p-10 text-center text-zinc-500 dark:border-zinc-800">
-        No monthly reviews published yet.
+        {t('monthlyReview.list.empty')}
       </div>
     );
   }

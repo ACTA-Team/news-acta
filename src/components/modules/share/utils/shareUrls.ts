@@ -39,7 +39,7 @@ export function buildLinkedInShareUrl({ url }: ShareTarget): string {
 }
 
 export function buildInstagramShareUrl({ url }: ShareTarget): string {
-  // Instagram has no direct share URL — return the tracked link
+  // Instagram has no direct share URL: return the tracked link
   // so the component can copy it to the clipboard.
   return withUtm(url, 'instagram');
 }

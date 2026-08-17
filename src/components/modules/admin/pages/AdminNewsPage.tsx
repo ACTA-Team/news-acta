@@ -5,8 +5,10 @@ import { createClient } from '@/lib/supabase/server';
 import { canDeleteArticles } from '@/lib/editorial/permissions';
 import { EDITORIAL_STATUSES, statusLabel, type EditorialStatus } from '@/lib/editorial/transitions';
 import { fetchAdminNewsList } from '../services/news.service';
+import { getTranslationStatusForArticles } from '../services/translations.service';
 import { requireAdmin } from '../services/auth.service';
 import { StatusBadge } from '../ui/StatusBadge';
+import { TranslationStatusBadge } from '../ui/TranslationStatusBadge';
 
 export type AdminNewsFilterStatus = 'all' | EditorialStatus;
 
@@ -18,6 +20,12 @@ export async function AdminNewsPageContent({ status = 'all' }: AdminNewsPageCont
   const session = await requireAdmin();
   const supabase = await createClient();
   const items = await fetchAdminNewsList(supabase, status);
+
+  // Two queries for the whole page rather than one per row.
+  const translationStatus = await getTranslationStatusForArticles(
+    supabase,
+    items.map((item) => item.id)
+  );
 
   const canDelete = canDeleteArticles(session.role);
 
@@ -41,6 +49,7 @@ export async function AdminNewsPageContent({ status = 'all' }: AdminNewsPageCont
             <tr>
               <th className="px-4 py-3">Title</th>
               <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Translations</th>
               <th className="px-4 py-3">Author</th>
               <th className="px-4 py-3">Updated</th>
               <th className="px-4 py-3 text-right">Actions</th>
@@ -61,12 +70,26 @@ export async function AdminNewsPageContent({ status = 'all' }: AdminNewsPageCont
                     </div>
                   ) : null}
                 </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-1">
+                    {Object.values(translationStatus.get(item.id) ?? {}).map((entry) => (
+                      <TranslationStatusBadge
+                        key={entry.locale}
+                        locale={entry.locale}
+                        status={entry.status}
+                      />
+                    ))}
+                  </div>
+                </td>
                 <td className="px-4 py-3">{item.authorName}</td>
                 <td className="px-4 py-3">{new Date(item.updatedAt).toLocaleString()}</td>
                 <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
                     <Button asChild size="sm" variant="outline">
                       <Link href={`/admin/news/${item.id}/edit`}>Edit</Link>
+                    </Button>
+                    <Button asChild size="sm" variant="outline">
+                      <Link href={`/admin/news/${item.id}/translations`}>Translate</Link>
                     </Button>
                     {canDelete ? (
                       <form action={deleteAdminNewsArticleAction}>

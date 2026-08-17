@@ -5,19 +5,32 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NEWS_ROUTES } from '@/components/modules/news';
 import { MONTHLY_REVIEW_ROUTES } from '@/components/modules/monthly-review';
-import { siteConfig } from '@/config/site';
+import { siteConfig, siteDescription } from '@/config/site';
+import { getTranslations } from '@/i18n/dictionaries';
+import { withLocale, type Locale } from '@/i18n';
+import { translateList } from '@/i18n/translate';
 import { cn } from '@/lib/utils';
 
 import { HomeHeroTypingTitle } from './HomeHeroTypingTitle';
 
 type HomeHeroProps = {
+  locale: Locale;
   className?: string;
 };
 
 /**
- * Efferd @efferd/hero-3 — adapted for ACTA News (headline, CTAs, brand badge).
+ * Efferd @efferd/hero-3, adapted for ACTA News (headline, CTAs, brand badge).
+ *
+ * An async Server Component so the typed headline phrases can come from the
+ * dictionary. They used to be built from a template literal in code, which meant
+ * the most prominent sentence on the site was the one string that could not be
+ * translated.
  */
-export function HomeHero({ className }: HomeHeroProps) {
+export async function HomeHero({ locale, className }: HomeHeroProps) {
+  const { dictionary, t } = await getTranslations(locale);
+  const typingLines = translateList(dictionary, 'home.hero.typingLines');
+  const href = (path: string) => withLocale(locale, path);
+
   return (
     <section
       className={cn(
@@ -39,7 +52,7 @@ export function HomeHero({ className }: HomeHeroProps) {
 
       <div className="relative z-10 flex max-w-2xl flex-col gap-5 px-4">
         <Link
-          href={NEWS_ROUTES.index}
+          href={href(NEWS_ROUTES.index)}
           className={cn(
             'group flex w-fit items-center gap-3 rounded-sm border border-border/80 bg-card p-1 pr-2 shadow-sm',
             'transition-colors hover:border-border hover:bg-muted/30',
@@ -47,18 +60,16 @@ export function HomeHero({ className }: HomeHeroProps) {
           )}
         >
           <span className="rounded-xs border border-border/60 bg-background px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            New
+            {t('home.hero.badge')}
           </span>
           <span className="text-sm text-muted-foreground">
-            Read the latest from {siteConfig.shortName}
+            {t('home.hero.badgeText', { brand: siteConfig.shortName })}
           </span>
           <span className="h-4 w-px bg-border" aria-hidden />
           <ArrowRight className="size-3.5 -translate-x-0.5 text-muted-foreground transition group-hover:translate-x-0" />
         </Link>
 
-        <HomeHeroTypingTitle
-          line={`The editorial home for the ${siteConfig.shortName} ecosystem`}
-        />
+        <HomeHeroTypingTitle lines={typingLines} />
 
         <p
           className={cn(
@@ -66,7 +77,7 @@ export function HomeHero({ className }: HomeHeroProps) {
             'animate-in fade-in slide-in-from-bottom-2 fill-mode-both delay-200 duration-500'
           )}
         >
-          {siteConfig.description}
+          {siteDescription(locale)}
         </p>
 
         <div
@@ -76,15 +87,15 @@ export function HomeHero({ className }: HomeHeroProps) {
           )}
         >
           <Button asChild size="lg" className="font-medium">
-            <Link href={NEWS_ROUTES.index}>
-              Browse news
+            <Link href={href(NEWS_ROUTES.index)}>
+              {t('home.hero.browseNews')}
               <ArrowRight className="size-4" />
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="font-medium">
-            <Link href={MONTHLY_REVIEW_ROUTES.index}>
+            <Link href={href(MONTHLY_REVIEW_ROUTES.index)}>
               <Sparkles className="size-4" />
-              Monthly reviews
+              {t('home.hero.monthlyReviews')}
             </Link>
           </Button>
         </div>
@@ -107,7 +118,7 @@ export function HomeHero({ className }: HomeHeroProps) {
         >
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-lg border border-border/60 bg-card/50 p-2 shadow-xl ring-1 ring-border/40 dark:bg-background/30">
             <Image
-              alt="ACTA dashboard preview"
+              alt={t('home.hero.imageAlt')}
               className="z-2 h-auto w-full rounded-md border border-border/40 object-contain"
               height={1080}
               src="/image.png"

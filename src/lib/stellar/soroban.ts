@@ -10,7 +10,7 @@ import { getSorobanRpcUrl, STELLAR_FETCH_TIMEOUT_MS } from '@/lib/stellar/config
  * Best-effort by design: it reads the contract instance's executable (wasm
  * hash) and storage-entry count via `getContractData`. Deploy date and
  * deployer require an indexer that plain Soroban RPC does not expose, so those
- * fields are left undefined — the embed shows what it has plus an explorer
+ * fields are left undefined: the embed shows what it has plus an explorer
  * link. Any parsing/transport failure throws and is rendered as a fallback.
  */
 
@@ -54,7 +54,7 @@ export async function fetchContract(
 
   const result: StellarContractData = { contractId };
 
-  // Defensive XDR walk — the executable/storage shape varies by SDK version,
+  // Defensive XDR walk: the executable/storage shape varies by SDK version,
   // so any access failure degrades to "wasm hash unavailable" rather than
   // breaking resolution.
   try {

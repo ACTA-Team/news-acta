@@ -4,7 +4,7 @@ import { fetchMediaList } from '@/lib/storage/media.service';
 import { MediaLibraryClient } from '@/components/modules/admin/media';
 
 export const metadata: Metadata = {
-  title: 'Media Library — ACTA Admin',
+  title: 'Media Library (ACTA Admin)',
 };
 
 export default async function MediaLibraryPage() {

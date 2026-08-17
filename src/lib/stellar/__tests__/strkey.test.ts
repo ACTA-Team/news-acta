@@ -17,7 +17,7 @@ describe('isValidAccountId', () => {
 
   it('rejects a tampered checksum', () => {
     const valid = Keypair.random().publicKey();
-    // Flip one base32 char in the middle — shape stays valid, checksum breaks.
+    // Flip one base32 char in the middle: shape stays valid, checksum breaks.
     const ch = valid[30] === 'A' ? 'B' : 'A';
     const tampered = valid.slice(0, 30) + ch + valid.slice(31);
     expect(tampered).toHaveLength(56);

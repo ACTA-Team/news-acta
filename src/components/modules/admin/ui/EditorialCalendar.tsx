@@ -132,7 +132,7 @@ export function EditorialCalendar({ month, entries, canReschedule }: EditorialCa
                           ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                           : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
                       } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
-                      title={`${entry.title} — ${new Date(entry.date).toLocaleString()}`}
+                      title={`${entry.title} · ${new Date(entry.date).toLocaleString()}`}
                     >
                       <Link
                         href={`/admin/news/${entry.articleId}/edit`}

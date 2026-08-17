@@ -1,5 +1,5 @@
 -- =============================================================================
--- ACTA News — admin access model
+-- ACTA News: admin access model
 -- =============================================================================
 
 create table if not exists public.admin_users (

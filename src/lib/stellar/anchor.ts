@@ -6,7 +6,7 @@
  * is the first 64 bytes of the hex hash (Stellar manageData values
  * are limited to 64 bytes).
  *
- * Server-side only — requires STELLAR_SECRET_KEY.
+ * Server-side only: requires STELLAR_SECRET_KEY.
  */
 
 import 'server-only';

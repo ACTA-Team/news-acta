@@ -5,7 +5,7 @@
  * UI and lib consume these types; nothing imports types out of `lib/stellar/*`
  * or the embed components.
  *
- * Backs issue #27 — rich, inline previews for Stellar transaction hashes,
+ * Backs issue #27: rich, inline previews for Stellar transaction hashes,
  * contract IDs, account addresses and assets mentioned in article content.
  */
 
@@ -23,7 +23,7 @@ export type StellarEntityType = 'transaction' | 'contract' | 'account' | 'asset'
  *     account     → `G…` StrKey
  *     asset       → `CODE:ISSUER`
  * - `raw` is the exact substring matched in the content (may be a
- *   `[[stellar:…]]` tag or a bare string) — used to replace it in place.
+ *   `[[stellar:…]]` tag or a bare string): used to replace it in place.
  */
 export interface StellarEntityRef {
   type: StellarEntityType;
