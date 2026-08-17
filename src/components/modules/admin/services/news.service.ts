@@ -23,6 +23,7 @@ const ADMIN_ARTICLE_SELECT = `
   author_id,
   reading_time_minutes,
   published_at,
+  scheduled_at,
   created_at,
   updated_at,
   author:authors ( id, name, slug ),
@@ -36,7 +37,9 @@ export interface AdminNewsListItem {
   status: Database['public']['Enums']['news_status'];
   category: Database['public']['Enums']['news_category'];
   authorName: string;
+  authorId: string;
   publishedAt: string | null;
+  scheduledAt: string | null;
   updatedAt: string;
 }
 
@@ -52,6 +55,7 @@ export interface AdminNewsEditorData {
   authorId: string;
   readingTimeMinutes: number;
   publishedAt: string;
+  scheduledAt: string | null;
   tags: string[];
 }
 
@@ -83,7 +87,9 @@ export async function fetchAdminNewsList(
     status: row.status,
     category: row.category,
     authorName: row.author?.name ?? 'Unknown',
+    authorId: row.author_id,
     publishedAt: row.published_at,
+    scheduledAt: row.scheduled_at,
     updatedAt: row.updated_at,
   }));
 }
@@ -114,6 +120,7 @@ export async function fetchAdminNewsById(
     authorId: row.author_id,
     readingTimeMinutes: row.reading_time_minutes,
     publishedAt: row.published_at ? row.published_at.slice(0, 16) : '',
+    scheduledAt: row.scheduled_at,
     tags: row.tags.map((tag: ArticleTagRow) => tag.tag_slug),
   };
 }
