@@ -1,11 +1,24 @@
+import Link from 'next/link';
 import type { ArticleAttestation } from '@/@types/attestation';
+import { withLocale, type Locale } from '@/i18n';
+import { CREDENTIAL_ROUTES } from '@/components/modules/credentials/constants';
 
 interface AttestationPanelProps {
   attestation: ArticleAttestation | null;
   articleHash: string;
+  /** The author credential active when this article was attested, if any. */
+  authorDid?: string;
+  authorCredentialVcId?: string;
+  locale: Locale;
 }
 
-export function AttestationPanel({ attestation, articleHash }: AttestationPanelProps) {
+export function AttestationPanel({
+  attestation,
+  articleHash,
+  authorDid,
+  authorCredentialVcId,
+  locale,
+}: AttestationPanelProps) {
   if (!attestation) return null;
   const verified = attestation.content_hash === articleHash;
   return (
@@ -36,6 +49,24 @@ export function AttestationPanel({ attestation, articleHash }: AttestationPanelP
           {verified ? 'Verified' : 'Hash mismatch'}
         </span>
       </div>
+      {authorDid ? (
+        <div className="mb-1">
+          Author: <span className="font-mono break-all">{authorDid}</span>
+          {authorCredentialVcId ? (
+            <>
+              {' '}
+              (
+              <Link
+                href={withLocale(locale, CREDENTIAL_ROUTES.verify(authorCredentialVcId))}
+                className="text-blue-600 underline"
+              >
+                verify
+              </Link>
+              )
+            </>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

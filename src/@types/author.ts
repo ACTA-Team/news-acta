@@ -1,4 +1,5 @@
 import type { LocalizedContent } from '@/@types/i18n';
+import type { AuthorCredentialStatus } from '@/@types/credential';
 
 /**
  * An author resolved for one locale. `name` is never translated; `role` and
@@ -15,6 +16,14 @@ export interface Author extends Partial<LocalizedContent> {
     x?: string;
     github?: string;
     linkedin?: string;
+  };
+  /** `did:stellar` identity, when one has been registered for this author. */
+  did?: string;
+  /** The author's ACTA Author credential, when one has been issued. */
+  credential?: {
+    vcId: string;
+    status: AuthorCredentialStatus;
+    revocationReason?: string;
   };
 }
 

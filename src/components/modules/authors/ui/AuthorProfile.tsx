@@ -1,13 +1,16 @@
 import Image from 'next/image';
 import type { Author } from '@/@types/author';
 import type { Translator } from '@/i18n/translate';
+import type { Locale } from '@/i18n/config';
+import { VerifiedAuthorBadge } from './VerifiedAuthorBadge';
 
 interface AuthorProfileProps {
   author: Author;
   t: Translator;
+  locale: Locale;
 }
 
-export function AuthorProfile({ author, t }: AuthorProfileProps) {
+export function AuthorProfile({ author, t, locale }: AuthorProfileProps) {
   const initials = author.name
     .split(' ')
     .map((n) => n[0])
@@ -31,9 +34,17 @@ export function AuthorProfile({ author, t }: AuthorProfileProps) {
         </div>
       )}
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-          {author.name}
-        </h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
+            {author.name}
+          </h1>
+          <VerifiedAuthorBadge
+            status={author.credential?.status}
+            vcId={author.credential?.vcId}
+            locale={locale}
+            t={t}
+          />
+        </div>
         {author.role ? <p className="text-sm text-zinc-500">{author.role}</p> : null}
       </div>
       {author.bio ? (

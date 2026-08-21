@@ -3,7 +3,7 @@ import { adminLogoutAction } from '@/components/modules/admin/actions';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/layouts';
 import type { EditorialRole } from '@/@types/editorial';
-import { canManageTeam } from '@/lib/editorial/permissions';
+import { canManageTeam, canPublish } from '@/lib/editorial/permissions';
 import { RoleBadge } from './RoleBadge';
 
 interface AdminShellProps {
@@ -38,6 +38,12 @@ export function AdminShell({ email, role, title, subtitle, children }: AdminShel
                 <Link href={link.href}>{link.label}</Link>
               </Button>
             ))}
+            {/* Owner/editor-only; the page itself re-checks with requireRole. */}
+            {canPublish(role) ? (
+              <Button asChild variant="ghost" className="w-full justify-start">
+                <Link href="/admin/authors">Authors</Link>
+              </Button>
+            ) : null}
             {/* Owner-only; proxy.ts blocks the route itself for everyone else. */}
             {canManageTeam(role) ? (
               <Button asChild variant="ghost" className="w-full justify-start">

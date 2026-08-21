@@ -114,6 +114,17 @@ export async function proxy(request: NextRequest) {
     if (pathname.startsWith('/admin/team') && adminUser.role !== 'owner') {
       return NextResponse.redirect(new URL('/admin', request.url));
     }
+
+    // Author identity/credential issuance is owner/editor-only, same as
+    // publishing. The page re-checks with `requireRole` and RLS refuses the
+    // write regardless.
+    if (
+      pathname.startsWith('/admin/authors') &&
+      adminUser.role !== 'owner' &&
+      adminUser.role !== 'editor'
+    ) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
   }
 
   return response;

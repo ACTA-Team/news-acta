@@ -4,6 +4,7 @@ import { Languages } from 'lucide-react';
 import type { NewsDetailProps } from '@/@types/news';
 import { formatPublishedDate, getCategoryLabel } from '@/components/modules/news/utils';
 import { ArticleContent } from '@/components/modules/news/ui/embeds/ArticleContent';
+import { VerifiedAuthorBadge } from '@/components/modules/authors/ui/VerifiedAuthorBadge';
 import { LOCALE_NAMES, type Locale } from '@/i18n/config';
 import type { Translator } from '@/i18n/translate';
 
@@ -56,10 +57,18 @@ export function NewsDetail({ article, locale, t }: Props) {
       </p>
 
       <div className="flex items-center gap-3 border-y border-zinc-200 py-4 text-sm dark:border-zinc-800">
-        <div className="flex flex-col">
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">
-            {article.author.name}
-          </span>
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-medium text-zinc-900 dark:text-zinc-100">
+              {article.author.name}
+            </span>
+            <VerifiedAuthorBadge
+              status={article.author.credential?.status}
+              vcId={article.author.credential?.vcId}
+              locale={locale}
+              t={t}
+            />
+          </div>
           {article.author.role ? (
             <span className="text-zinc-500">{article.author.role}</span>
           ) : null}

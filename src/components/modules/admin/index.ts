@@ -11,6 +11,7 @@ export { AdminMonthlyReviewEditorPageContent } from './pages/AdminMonthlyReviewE
 export { AdminReviewQueuePageContent } from './pages/AdminReviewQueuePage';
 export { AdminCalendarPageContent } from './pages/AdminCalendarPage';
 export { AdminTeamPageContent } from './pages/AdminTeamPage';
+export { AdminAuthorsPageContent } from './pages/AdminAuthorsPage';
 
 // Editorial UI
 export { RoleBadge } from './ui/RoleBadge';
@@ -22,6 +23,7 @@ export { SchedulePicker } from './ui/SchedulePicker';
 export { ReviewQueue } from './ui/ReviewQueue';
 export { ReviewCommentThread } from './ui/ReviewCommentThread';
 export { EditorialCalendar } from './ui/EditorialCalendar';
+export { AuthorIdentityPanel } from './ui/AuthorIdentityPanel';
 
 // Actions
 export {
@@ -36,6 +38,9 @@ export {
   approveReviewAction,
   requestChangesAction,
   updateTeamMemberRoleAction,
+  createAuthorIdentityAction,
+  issueAuthorCredentialAction,
+  revokeAuthorCredentialAction,
   saveArticleTranslationAction,
   deleteArticleTranslationAction,
   markArticleTranslationCurrentAction,
