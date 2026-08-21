@@ -7,7 +7,13 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
   },
   resolve: {
-    // Mirror the `@/*` → `./src/*` alias from tsconfig.json.
-    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+    alias: {
+      // Mirror the `@/*` → `./src/*` alias from tsconfig.json.
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // Next.js aliases `server-only` to a no-op at build time; it is not a
+      // real dependency, so it cannot resolve under plain Node. See
+      // `src/test/server-only-stub.ts`.
+      'server-only': fileURLToPath(new URL('./src/test/server-only-stub.ts', import.meta.url)),
+    },
   },
 });

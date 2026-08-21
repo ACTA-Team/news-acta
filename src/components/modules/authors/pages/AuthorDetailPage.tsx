@@ -51,7 +51,7 @@ export async function AuthorDetailPageContent({ params }: AuthorDetailPageProps)
 
   return (
     <Container className="py-16">
-      <AuthorProfile author={author} t={t} />
+      <AuthorProfile author={author} t={t} locale={locale} />
     </Container>
   );
 }

@@ -27,7 +27,7 @@ export async function attestPublishedArticle(
 ): Promise<void> {
   const { data: row, error } = await supabase
     .from('news_articles')
-    .select('id, slug, title, summary, content, published_at')
+    .select('id, slug, title, summary, content, published_at, author_id')
     .eq('id', article.id)
     .maybeSingle();
 
@@ -51,6 +51,15 @@ export async function attestPublishedArticle(
 
   const version = latestVersion?.version_number ?? 1;
 
+  // The author credential active right now, so the attestation records
+  // which one vouched for the article at publish time.
+  const { data: credential } = await supabase
+    .from('author_credentials')
+    .select('id')
+    .eq('author_id', row.author_id)
+    .eq('status', 'active')
+    .maybeSingle();
+
   // Claim the (article_id, version) slot. An empty result means another run
   // already attested this version: nothing left to do.
   const { data: claimed, error: claimError } = await supabase
@@ -62,6 +71,7 @@ export async function attestPublishedArticle(
         content_hash: contentHash,
         network: getActiveNetwork(),
         status: 'pending',
+        author_credential_id: credential?.id ?? null,
       },
       { onConflict: 'article_id,version', ignoreDuplicates: true }
     )

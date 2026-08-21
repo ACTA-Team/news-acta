@@ -7,6 +7,7 @@ import { NEWS_ROUTES } from '@/components/modules/news/constants';
 import { formatPublishedDate, getCategoryLabel } from '@/components/modules/news/utils';
 import { useTranslations } from '@/hooks/useTranslations';
 import { LOCALE_NAMES, withLocale } from '@/i18n';
+import { VerifiedAuthorBadge } from '@/components/modules/authors/ui/VerifiedAuthorBadge';
 
 /**
  * Presentational card for a news article.
@@ -71,11 +72,17 @@ export function NewsCard({ article }: NewsCardProps) {
           {article.summary}
         </p>
 
-        <footer className="mt-auto flex items-center gap-2 pt-3 text-xs text-zinc-500">
+        <footer className="mt-auto flex flex-wrap items-center gap-2 pt-3 text-xs text-zinc-500">
           <span className="font-medium text-zinc-700 dark:text-zinc-300">
             {article.author.name}
           </span>
           {article.author.role ? <span>· {article.author.role}</span> : null}
+          <VerifiedAuthorBadge
+            status={article.author.credential?.status}
+            vcId={article.author.credential?.vcId}
+            locale={locale}
+            t={t}
+          />
         </footer>
       </div>
     </article>

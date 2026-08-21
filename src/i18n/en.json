@@ -200,6 +200,29 @@
     "eyebrow": "Tag",
     "fallbackTitle": "Tag"
   },
+  "credential": {
+    "badge": {
+      "verified": "Verified ACTA author",
+      "revoked": "Credential revoked"
+    },
+    "verify": {
+      "metaTitle": "Verify credential",
+      "metaDescription": "Check the status of an ACTA Author verifiable credential.",
+      "title": "Credential verification",
+      "description": "This confirms the credential exists in its owner's vault and its current on-chain status. It is re-checked on every visit.",
+      "statusLabel": "Status",
+      "statusValid": "Valid",
+      "statusRevoked": "Revoked",
+      "statusInvalid": "Not found",
+      "credentialIdLabel": "Credential ID",
+      "issuerLabel": "Issuer DID",
+      "subjectLabel": "Subject DID",
+      "issuedByActaNews": "Issued by ACTA News",
+      "issuedByOther": "Issuer does not match ACTA News",
+      "sinceLabel": "Since",
+      "checkedAtLabel": "Checked at"
+    }
+  },
   "login": {
     "metaTitle": "Sign in",
     "metaDescription": "Sign in to {siteName} (preview UI).",

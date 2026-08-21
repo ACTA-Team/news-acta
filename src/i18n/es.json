@@ -200,6 +200,29 @@
     "eyebrow": "Etiqueta",
     "fallbackTitle": "Etiqueta"
   },
+  "credential": {
+    "badge": {
+      "verified": "Autor verificado por ACTA",
+      "revoked": "Credencial revocada"
+    },
+    "verify": {
+      "metaTitle": "Verificar credencial",
+      "metaDescription": "Consulta el estado de una credencial verificable de ACTA Author.",
+      "title": "Verificación de credencial",
+      "description": "Esto confirma que la credencial existe en la bóveda de su titular y su estado actual en la cadena. Se vuelve a comprobar en cada visita.",
+      "statusLabel": "Estado",
+      "statusValid": "Válida",
+      "statusRevoked": "Revocada",
+      "statusInvalid": "No encontrada",
+      "credentialIdLabel": "ID de credencial",
+      "issuerLabel": "DID del emisor",
+      "subjectLabel": "DID del titular",
+      "issuedByActaNews": "Emitida por ACTA News",
+      "issuedByOther": "El emisor no coincide con ACTA News",
+      "sinceLabel": "Desde",
+      "checkedAtLabel": "Verificado el"
+    }
+  },
   "login": {
     "metaTitle": "Iniciar sesión",
     "metaDescription": "Inicia sesión en {siteName} (interfaz de vista previa).",

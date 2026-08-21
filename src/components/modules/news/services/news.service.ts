@@ -39,8 +39,18 @@ interface EmbeddedTranslation {
  * Row shape returned by the Supabase query below, with the author, article tags
  * and translations joined in.
  */
+type EmbeddedAuthorCredential = {
+  vc_id: string;
+  status: 'pending' | 'active' | 'revoked' | 'failed';
+};
+
 type ArticleRowWithRelations = ArticleRow & {
-  author: AuthorRow | null;
+  author:
+    | (AuthorRow & {
+        identity: { did: string } | null;
+        credentials: EmbeddedAuthorCredential[] | null;
+      })
+    | null;
   tags: ArticleTagRow[];
   translations: EmbeddedTranslation[] | null;
 };
@@ -61,7 +71,11 @@ const ARTICLE_SELECT = `
   created_at,
   updated_at,
   author_id,
-  author:authors ( id, slug, name, role, bio, avatar_url, social, created_at, updated_at ),
+  author:authors (
+    id, slug, name, role, bio, avatar_url, social, created_at, updated_at,
+    identity:author_identities ( did ),
+    credentials:author_credentials ( vc_id, status )
+  ),
   tags:news_article_tags ( tag_slug ),
   translations:article_translations ( locale, slug, title, summary, content, source_content_hash )
 ` as const;
@@ -123,9 +137,14 @@ function resolveArticle(row: ArticleRowWithRelations, requested: Locale): NewsAr
     tags: row.tags?.map((tag: ArticleTagRow) => tag.tag_slug) ?? [],
     author: {
       id: row.author?.id ?? row.author_id,
+      slug: row.author?.slug ?? row.author_id,
       name: row.author?.name ?? 'Unknown',
       avatarUrl: row.author?.avatar_url ?? undefined,
       role: row.author?.role ?? undefined,
+      did: row.author?.identity?.did,
+      credential: row.author?.credentials?.[0]
+        ? { vcId: row.author.credentials[0].vc_id, status: row.author.credentials[0].status }
+        : undefined,
     },
     publishedAt: row.published_at ?? row.created_at,
     updatedAt: row.updated_at,

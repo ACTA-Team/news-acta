@@ -599,6 +599,7 @@ export interface Database {
           network: 'testnet' | 'mainnet';
           status: 'pending' | 'confirmed' | 'failed';
           previous_attestation_id: string | null;
+          author_credential_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -611,6 +612,7 @@ export interface Database {
           network: 'testnet' | 'mainnet';
           status: 'pending' | 'confirmed' | 'failed';
           previous_attestation_id?: string | null;
+          author_credential_id?: string | null;
           created_at?: string;
         };
         Update: {
@@ -623,9 +625,17 @@ export interface Database {
           network?: 'testnet' | 'mainnet';
           status?: 'pending' | 'confirmed' | 'failed';
           previous_attestation_id?: string | null;
+          author_credential_id?: string | null;
           created_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'article_attestations_author_credential_id_fkey';
+            columns: ['author_credential_id'];
+            referencedRelation: 'author_credentials';
+            referencedColumns: ['id'];
+          },
+        ];
       };
 
       ecosystem_snapshots: {
@@ -711,6 +721,102 @@ export interface Database {
           },
         ];
       };
+      acta_issuer_identity: {
+        Row: {
+          id: string;
+          controller: string;
+          did: string;
+          payload: Json;
+          network: 'testnet' | 'mainnet';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          controller: string;
+          did: string;
+          payload: Json;
+          network: 'testnet' | 'mainnet';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['acta_issuer_identity']['Insert']>;
+        Relationships: [];
+      };
+      author_identities: {
+        Row: {
+          author_id: string;
+          did: string;
+          stellar_address: string;
+          vault_contract_id: string | null;
+          network: 'testnet' | 'mainnet';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          author_id: string;
+          did: string;
+          stellar_address: string;
+          vault_contract_id?: string | null;
+          network: 'testnet' | 'mainnet';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['author_identities']['Insert']>;
+        Relationships: [
+          {
+            foreignKeyName: 'author_identities_author_id_fkey';
+            columns: ['author_id'];
+            referencedRelation: 'authors';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      author_credentials: {
+        Row: {
+          id: string;
+          author_id: string;
+          vc_id: string;
+          role: string;
+          status: Database['public']['Enums']['author_credential_status'];
+          issuer_did: string;
+          subject_did: string;
+          network: 'testnet' | 'mainnet';
+          issue_tx_id: string | null;
+          revoke_tx_id: string | null;
+          issued_at: string | null;
+          revoked_at: string | null;
+          revocation_reason: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          author_id: string;
+          vc_id: string;
+          role: string;
+          status?: Database['public']['Enums']['author_credential_status'];
+          issuer_did: string;
+          subject_did: string;
+          network: 'testnet' | 'mainnet';
+          issue_tx_id?: string | null;
+          revoke_tx_id?: string | null;
+          issued_at?: string | null;
+          revoked_at?: string | null;
+          revocation_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['author_credentials']['Insert']>;
+        Relationships: [
+          {
+            foreignKeyName: 'author_credentials_author_id_fkey';
+            columns: ['author_id'];
+            referencedRelation: 'authors';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -756,6 +862,7 @@ export interface Database {
       editorial_role: 'owner' | 'editor' | 'author' | 'contributor';
       review_state: 'requested' | 'approved' | 'changes_requested';
       content_locale: 'en' | 'es';
+      author_credential_status: 'pending' | 'active' | 'revoked' | 'failed';
     };
     CompositeTypes: Record<string, never>;
   };

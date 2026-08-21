@@ -20,17 +20,35 @@ interface EmbeddedAuthorTranslation {
   bio: string | null;
 }
 
+interface EmbeddedAuthorIdentity {
+  did: string;
+}
+
+interface EmbeddedAuthorCredential {
+  vc_id: string;
+  status: 'pending' | 'active' | 'revoked' | 'failed';
+  revocation_reason: string | null;
+}
+
 type AuthorRowWithTranslations = AuthorRow & {
   translations: EmbeddedAuthorTranslation[] | null;
+  identity: EmbeddedAuthorIdentity | null;
+  credentials: EmbeddedAuthorCredential[] | null;
 };
 
 /**
  * A person's name and avatar are the same in every language; `role` and `bio`
  * are the only prose, so those are what `author_translations` carries.
+ *
+ * `identity`/`credentials` surface the did:stellar identity and the "ACTA
+ * Author" credential (issue #42) so the verified badge never needs a second
+ * round trip.
  */
 const AUTHOR_SELECT = `
   id, slug, name, role, bio, avatar_url, social, created_at, updated_at,
-  translations:author_translations ( locale, role, bio )
+  translations:author_translations ( locale, role, bio ),
+  identity:author_identities ( did ),
+  credentials:author_credentials ( vc_id, status, revocation_reason )
 ` as const;
 
 function mapAuthor(row: AuthorRowWithTranslations, requested: Locale): Author {
@@ -64,6 +82,14 @@ function mapAuthor(row: AuthorRowWithTranslations, requested: Locale): Author {
     sourceLocale: DEFAULT_LOCALE,
     isTranslated: Boolean(match),
     availableLocales: [...new Set(availableLocales)],
+    did: row.identity?.did,
+    credential: row.credentials?.[0]
+      ? {
+          vcId: row.credentials[0].vc_id,
+          status: row.credentials[0].status,
+          revocationReason: row.credentials[0].revocation_reason ?? undefined,
+        }
+      : undefined,
   };
 }
 

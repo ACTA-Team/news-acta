@@ -106,7 +106,13 @@ export async function NewsDetailPageContent({ params }: NewsDetailPageProps) {
         />
         <TagCloud tags={article.tags.map((tag) => ({ slug: tag, label: tag }))} />
         <AttestationBadge attestation={attestation} />
-        <AttestationPanel attestation={attestation} articleHash={articleHash} />
+        <AttestationPanel
+          attestation={attestation}
+          articleHash={articleHash}
+          authorDid={article.author.did}
+          authorCredentialVcId={article.author.credential?.vcId}
+          locale={locale}
+        />
 
         {/* Version history / audit trail link */}
         <div className="flex items-center gap-2 border-t border-zinc-100 pt-4 dark:border-zinc-800">

@@ -8,6 +8,7 @@
 
 import type { LocalizedContent } from '@/@types/i18n';
 import type { Locale } from '@/i18n/config';
+import type { AuthorCredentialStatus } from '@/@types/credential';
 
 export type NewsCategory = 'announcement' | 'product' | 'ecosystem' | 'engineering' | 'community';
 
@@ -20,9 +21,15 @@ export type NewsStatus = 'draft' | 'in_review' | 'scheduled' | 'published' | 'ar
 
 export interface NewsAuthor {
   id: string;
+  slug: string;
   name: string;
   avatarUrl?: string;
   role?: string;
+  did?: string;
+  credential?: {
+    vcId: string;
+    status: AuthorCredentialStatus;
+  };
 }
 
 /**

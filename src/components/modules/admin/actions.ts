@@ -851,3 +851,72 @@ export async function restoreArticleVersionAction(formData: FormData): Promise<v
   revalidateArticlePaths(article.slug, await articleSlugs(articleId));
   redirect(`/admin/news/${articleId}/edit`);
 }
+
+// ===========================================================================
+// Author identity & verifiable credentials (issue #42)
+//
+// Every on-chain call is submitted fire-and-forget: the row is claimed
+// `pending` synchronously inside the `src/lib/acta/` functions, the request
+// returns immediately, and the admin sees the final `active` / `failed`
+// state on the next load. A Stellar/ACTA outage must never hang this action.
+// ===========================================================================
+
+function revalidateAuthorPaths(slug: string, vcId?: string | null): void {
+  revalidatePath('/admin/authors');
+
+  for (const locale of LOCALES) {
+    revalidatePath(`/${locale}/authors`);
+    revalidatePath(`/${locale}/authors/${slug}`);
+    if (vcId) revalidatePath(`/${locale}/verify/${vcId}`);
+  }
+}
+
+export async function createAuthorIdentityAction(formData: FormData): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  const authorId = String(formData.get('authorId') ?? '').trim();
+  const authorSlug = String(formData.get('authorSlug') ?? '').trim();
+  if (!authorId || !authorSlug) throw new Error('Missing authorId.');
+
+  const { createAuthorIdentity } = await import('@/lib/acta');
+  await createAuthorIdentity(authorId);
+
+  revalidateAuthorPaths(authorSlug);
+  redirect('/admin/authors');
+}
+
+export async function issueAuthorCredentialAction(formData: FormData): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  const authorId = String(formData.get('authorId') ?? '').trim();
+  const authorSlug = String(formData.get('authorSlug') ?? '').trim();
+  const name = String(formData.get('name') ?? '').trim();
+  const role = String(formData.get('role') ?? '').trim() || 'Author';
+  if (!authorId || !authorSlug || !name) throw new Error('Missing required fields.');
+
+  const { issueAuthorCredential } = await import('@/lib/acta');
+  void issueAuthorCredential({ authorId, authorSlug, name, role }).catch((err) => {
+    console.error('[acta] Failed to issue author credential:', err);
+  });
+
+  revalidateAuthorPaths(authorSlug);
+  redirect('/admin/authors');
+}
+
+export async function revokeAuthorCredentialAction(formData: FormData): Promise<void> {
+  await requireRole('owner', 'editor');
+
+  const authorSlug = String(formData.get('authorSlug') ?? '').trim();
+  const vcId = String(formData.get('vcId') ?? '').trim();
+  const reason = String(formData.get('reason') ?? '').trim();
+  if (!authorSlug || !vcId) throw new Error('Missing vcId.');
+  if (!reason) throw new Error('A revocation reason is required.');
+
+  const { revokeAuthorCredential } = await import('@/lib/acta');
+  void revokeAuthorCredential(vcId, reason).catch((err) => {
+    console.error('[acta] Failed to revoke author credential:', err);
+  });
+
+  revalidateAuthorPaths(authorSlug, vcId);
+  redirect('/admin/authors');
+}
